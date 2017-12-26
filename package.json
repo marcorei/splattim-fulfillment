@@ -4,7 +4,9 @@
   "description": "Splat Tim Lambda function for DialogFlow and splatton2.ink",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "serverless deploy",
+    "package": "serverless package",
+    "start": "serverless offline start"
   },
   "author": "Markus Riegel",
   "license": "MIT",
