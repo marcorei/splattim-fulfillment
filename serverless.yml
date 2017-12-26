@@ -1,0 +1,24 @@
+service: splattim-lambda
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+package:
+  exclude:
+  include:
+    - src/handler.ts
+    - src/**/*
+
+functions:
+  splatTim:
+    handler: handler.splatTim
+    events:
+      - http:
+          path: splattim
+          method: post
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+

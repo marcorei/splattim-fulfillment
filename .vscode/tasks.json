@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "command": "",
+    "type": "shell",
+    "presentation": {
+        "echo": true,
+        "reveal": "never",
+        "focus": false,
+        "panel": "shared"
+    }
+}
