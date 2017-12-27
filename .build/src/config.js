@@ -1,4 +1,6 @@
-export const config = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = {
     splatoonInk: {
         baseUrl: 'https://splatoon2.ink',
         data: {
@@ -10,4 +12,5 @@ export const config = {
             splatnet: '/assets/splatnet'
         }
     }
-} 
+};
+//# sourceMappingURL=config.js.map
