@@ -4,5 +4,6 @@ jspm_packages
 
 # Serverless directories
 .serverless
+.build
 
 .DS_Store
