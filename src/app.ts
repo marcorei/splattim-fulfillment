@@ -10,6 +10,7 @@ import * as SchedulesAction from './actions/SchedulesAction'
 
 export function createDialogflowApp(request: Request, response: Response) {
     const dialogflowApp = new DialogflowApp({request, response})
+    dialogflowApp['lang'] = request.body['lang']
 
     interface Action {
         name: string,
