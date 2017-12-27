@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 3,
-	"__export_date": "2017-12-27T14:09:03.447Z",
+	"__export_date": "2017-12-27T16:35:22.182Z",
 	"__export_source": "insomnia.desktop.app:v5.12.4",
 	"resources": [
 		{
@@ -34,6 +34,41 @@
 			"_type": "cookie_jar"
 		},
 		{
+			"_id": "fld_936b10c4f22a48feb8a84da936ee272d",
+			"created": 1514390327739,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1514390327739,
+			"modified": 1514390327739,
+			"name": "en",
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"_type": "request_group"
+		},
+		{
+			"_id": "fld_26133eda7eb142af9cca55387ba403ac",
+			"created": 1514390369279,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1514390369279,
+			"modified": 1514390369279,
+			"name": "de",
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"_type": "request_group"
+		},
+		{
+			"_id": "env_2f090b906ab44de285367c2881f1fab1",
+			"color": null,
+			"created": 1514234816625,
+			"data": {
+				"baseUrl": "http://localhost:3000"
+			},
+			"isPrivate": false,
+			"modified": 1514234834337,
+			"name": "localhost",
+			"parentId": "env_768a1ab456e048d1a08319104461bd55",
+			"_type": "environment"
+		},
+		{
 			"_id": "req_71abd5201a814dd887664f984d7aaf1a",
 			"authentication": {},
 			"body": {
@@ -49,12 +84,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514234746199,
+			"metaSortKey": -1514381364016.875,
 			"method": "POST",
-			"modified": 1514366617717,
+			"modified": 1514390364579,
 			"name": "Request maps for ranked",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -78,12 +113,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318073066,
+			"metaSortKey": -1514381364066.875,
 			"method": "POST",
-			"modified": 1514318147892,
+			"modified": 1514390362545,
 			"name": "Request maps for all modes",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -107,12 +142,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318163842,
+			"metaSortKey": -1514381364116.875,
 			"method": "POST",
-			"modified": 1514318232845,
+			"modified": 1514390361165,
 			"name": "Request maps unspecific",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -136,12 +171,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318276946,
+			"metaSortKey": -1514381364166.875,
 			"method": "POST",
-			"modified": 1514318356320,
+			"modified": 1514390359344,
 			"name": "Request all upcoming stages for ranked",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -165,12 +200,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318398027,
+			"metaSortKey": -1514381364216.875,
 			"method": "POST",
-			"modified": 1514318577258,
+			"modified": 1514390356040,
 			"name": "Request next available rule for mode",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -194,12 +229,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318620362,
+			"metaSortKey": -1514381364266.875,
 			"method": "POST",
-			"modified": 1514318649362,
+			"modified": 1514390354780,
 			"name": "Request Salmon Run",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -223,12 +258,12 @@
 					"value": "application/json"
 				}
 			],
-			"metaSortKey": -1514318692682,
+			"metaSortKey": -1514381364316.875,
 			"method": "POST",
-			"modified": 1514318700357,
+			"modified": 1514390353511,
 			"name": "Request merchandise",
 			"parameters": [],
-			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
 			"settingEncodeUrl": true,
 			"settingSendCookies": true,
@@ -237,17 +272,33 @@
 			"_type": "request"
 		},
 		{
-			"_id": "env_2f090b906ab44de285367c2881f1fab1",
-			"color": null,
-			"created": 1514234816625,
-			"data": {
-				"baseUrl": "http://localhost:3000"
+			"_id": "req_60611877aaab4ae39dedb966887b851c",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"e73a98a5-64d9-4e4d-a878-0e64ba370d54\",\n  \"timestamp\": \"2017-12-27T15:57:59.943Z\",\n  \"lang\": \"de\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"Zeige mir die kommenden Arenen für Rangkampf\",\n    \"action\": \"all_schedules\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game-mode\": \"ranked\"\n    },\n    \"contexts\": [\n      {\n        \"name\": \"_actions_on_google_\",\n        \"parameters\": {},\n        \"lifespan\": 100\n      }\n    ],\n    \"metadata\": {\n      \"intentId\": \"71ea4a3a-925e-4667-bc97-0bdaff0fd57d\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 1084,\n      \"intentName\": \"All Stages\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"Here are the all upcoming stages for Ranked Battle.\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"Here are the all upcoming stages for Ranked Battle.\"\n        }\n      ],\n      \"data\": {\n        \"google\": {\n          \"expect_user_response\": true,\n          \"no_input_prompts\": [],\n          \"is_ssml\": false,\n          \"system_intent\": {\n            \"intent\": \"actions.intent.OPTION\",\n            \"spec\": {\n              \"option_value_spec\": {\n                \"carousel_select\": {\n                  \"items\": [\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_14_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Walleye Warehouse\",\n                      \"description\": \"now - Clam Blitz\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/65c99da154295109d6fe067005f194f681762f8c.png\",\n                        \"accessibility_text\": \"Walleye Warehouse\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_3_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Sturgeon Shipyard\",\n                      \"description\": \"now - Clam Blitz\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/bc794e337900afd763f8a88359f83df5679ddf12.png\",\n                        \"accessibility_text\": \"Sturgeon Shipyard\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_9_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Snapper Canal\",\n                      \"description\": \"in 1m - Tower Control\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/8c95053b3043e163cbfaaf1ec1e5f3eb770e5e07.png\",\n                        \"accessibility_text\": \"Snapper Canal\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_6_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Manta Maria\",\n                      \"description\": \"in 1m - Tower Control\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/070d7ee287fdf3c5df02411950c2a1ce5b238746.png\",\n                        \"accessibility_text\": \"Manta Maria\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_7_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Port Mackerel\",\n                      \"description\": \"in 2h 1m - Splat Zones\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/0907fc7dc325836a94d385919fe01dc13848612a.png\",\n                        \"accessibility_text\": \"Port Mackerel\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_11_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Blackbelly Skatepark\",\n                      \"description\": \"in 2h 1m - Splat Zones\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/758338859615898a59e93b84f7e1ca670f75e865.png\",\n                        \"accessibility_text\": \"Blackbelly Skatepark\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_13_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"MakoMart\",\n                      \"description\": \"in 4h 1m - Rainmaker\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/d9f0f6c330aaa3b975e572637b00c4c0b6b89f7d.png\",\n                        \"accessibility_text\": \"MakoMart\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_0_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"The Reef\",\n                      \"description\": \"in 4h 1m - Rainmaker\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/98baf21c0366ce6e03299e2326fe6d27a7582dce.png\",\n                        \"accessibility_text\": \"The Reef\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_1_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Musselforge Fitness\",\n                      \"description\": \"in 6h 1m - Tower Control\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/83acec875a5bb19418d7b87d5df4ba1e38ceac66.png\",\n                        \"accessibility_text\": \"Musselforge Fitness\"\n                      }\n                    },\n                    {\n                      \"option_info\": {\n                        \"key\": \"STAGE_10_4780952683920622000\",\n                        \"synonyms\": []\n                      },\n                      \"title\": \"Kelp Dome\",\n                      \"description\": \"in 6h 1m - Tower Control\",\n                      \"image\": {\n                        \"url\": \"https://splatoon2.ink/assets/splatnet/images/stage/a12e4bf9f871677a5f3735d421317fbbf09e1a78.png\",\n                        \"accessibility_text\": \"Kelp Dome\"\n                      }\n                    }\n                  ]\n                }\n              }\n            }\n          }\n        }\n      }\n    },\n    \"score\": 0.6299999952316284\n  },\n  \"status\": {\n    \"code\": 200,\n    \"errorType\": \"success\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
 			},
-			"isPrivate": false,
-			"modified": 1514234834337,
-			"name": "localhost",
-			"parentId": "env_768a1ab456e048d1a08319104461bd55",
-			"_type": "environment"
+			"created": 1514390389856,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_ac6e2eae5b83456294d4597ecce8fc7d",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514390389856,
+			"method": "POST",
+			"modified": 1514391090606,
+			"name": "Frage alle kommenden Arenen an",
+			"parameters": [],
+			"parentId": "fld_26133eda7eb142af9cca55387ba403ac",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
 		}
 	]
 }
