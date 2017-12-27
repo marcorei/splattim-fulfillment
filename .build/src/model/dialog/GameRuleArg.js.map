@@ -1,1 +1,0 @@
-{"version":3,"file":"GameRuleArg.js","sourceRoot":"","sources":["../../../../src/model/dialog/GameRuleArg.ts"],"names":[],"mappings":";;AAAa,QAAA,WAAW,GAAG;IACvB,GAAG,EAAE,WAAW;IAChB,MAAM,EAAE;QACJ,KAAK,EAAE,YAAY;QACnB,KAAK,EAAE,aAAa;QACpB,KAAK,EAAE,eAAe;QACtB,SAAS,EAAE,WAAW;QACtB,IAAI,EAAE,UAAU;KACnB;CACJ,CAAA"}
