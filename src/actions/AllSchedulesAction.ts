@@ -70,11 +70,13 @@ function repondWithScheduleList(app: DialogflowApp, dict: Dict, schedules: Sched
 // Item Builder
 
 function buildStageOptionItem(app: DialogflowApp, dict: Dict, now: number, stage: Stage, schedule: Schedule): OptionItem {
+    const ruleName = dict.api_sched_rule(schedule.rule.key, schedule.rule.name)
+    const stageName = dict.api_sched_stage(stage.id, stage.name)
     let timeString = now >= schedule.start_time ? 
         dict.a_asched_001_now : 
         dict.a_asched_001_future + secondsToTime(schedule.start_time - now)
-    return app.buildOptionItem('STAGE_' + stage.id + '_' + schedule.id)
-        .setTitle(stage.name)
-        .setDescription(timeString + ' - ' + schedule.rule.name)
+    return app.buildOptionItem('STAGE_' + stage.id + '_' + timeString)
+        .setTitle(stageName + ' - ' + timeString)
+        .setDescription(ruleName)
         .setImage(config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + stage.image, stage.name)
 }

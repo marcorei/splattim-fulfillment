@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from 'util';
 import { DialogflowApp, Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
@@ -39,13 +38,13 @@ function respondWithMerch(app: DialogflowApp, dict: Dict, merchandises: Merchand
 
 // Item Builder
 
-function buildMerchOptionItem(app: DialogflowApp, dict: Dict, merch: Merchandise, now: number): Responses.buildMerchOptionItem {
+function buildMerchOptionItem(app: DialogflowApp, dict: Dict, merch: Merchandise, now: number): Responses.OptionItem {
     const merchName = dict.api_gear_item(merch.gear.id, merch.gear.name)
     const brandName = dict.api_gear_brand(merch.gear.brand.id, merch.gear.brand.name)
     const skillName = dict.api_gear_skill(merch.skill.id, merch.skill.name)
     const eta = secondsToTime(merch.end_time - now)
-    return app.buildOptionItem('GEAR_' + merch.gear.id, [merchName])
-        .setTitle(merchName)
+    return app.buildOptionItem('GEAR_' + merch.gear.id + '_' + eta, [merchName])
+        .setTitle(merchName + ' (' + eta + ')')
         .setDescription(dict.a_merch_001(skillName, brandName, eta))
         .setImage(config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + merch.gear.image, merchName)
 }

@@ -30,7 +30,7 @@ export const dict = {
 
     a_asched_error_too_much: 'That\'s to much. Choose a specific game mode!',
     a_asched_error_empty_data: 'Meh. The schedule info is not available right now.',
-    a_asched_000: (mode: string) => `Here are the all upcoming stages for ${mode}.`,
+    a_asched_000: (mode: string) => `Here are all upcoming stages for ${mode}.`,
     a_asched_001_now: 'now',
     a_asched_001_future: 'in ',
 

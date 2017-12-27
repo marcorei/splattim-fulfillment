@@ -1,3 +1,4 @@
+import { isNullOrUndefined } from 'util'
 import { DialogflowApp, Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
@@ -51,9 +52,12 @@ function respondWithDetail(app: DialogflowApp, dict: Dict, detail: Detail) {
 
 // Item Builder
 
-function buildWeaponOptionItem(app: DialogflowApp, dict: Dict, weapon: Weapon): Responses.OptionItem {
-    const weaponName = dict.api_grizz_weapon(weapon.id, weapon.name)
-    return app.buildOptionItem('WEAPON_' + weapon.id, [weaponName])
+function buildWeaponOptionItem(app: DialogflowApp, dict: Dict, weapon: Weapon | null): Responses.OptionItem {
+    const weaponId = isNullOrUndefined(weapon) ? '?' + Math.round(Math.random() * 10000) : weapon.id
+    const weaponName = isNullOrUndefined(weapon) ? '?' : dict.api_grizz_weapon(weapon.id, weapon.name)
+    const weaponImage = isNullOrUndefined(weapon) ? 'https://splatoon2.ink/assets/img/salmon-run-random-weapon.46415a.png' : 
+        config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + weapon.image
+    return app.buildOptionItem('WEAPON_' + weaponId, [weaponName])
         .setTitle(weaponName)
-        .setImage(config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + weapon.image, weaponName)
+        .setImage(weaponImage, weaponName)
 }
