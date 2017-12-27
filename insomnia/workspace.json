@@ -1,0 +1,253 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2017-12-27T14:09:03.447Z",
+	"__export_source": "insomnia.desktop.app:v5.12.4",
+	"resources": [
+		{
+			"_id": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"created": 1514234675222,
+			"description": "",
+			"modified": 1514234804762,
+			"name": "Splat Tim",
+			"parentId": null,
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_768a1ab456e048d1a08319104461bd55",
+			"color": null,
+			"created": 1514234675237,
+			"data": {},
+			"isPrivate": false,
+			"modified": 1514234831434,
+			"name": "New Environment",
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_7457831af35148f3a2c65abf3627fe62",
+			"cookies": [],
+			"created": 1514234675242,
+			"modified": 1514234675242,
+			"name": "Default Jar",
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "req_71abd5201a814dd887664f984d7aaf1a",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"9d90fbdb-7031-4be9-b217-41347e6eb2cc\",\n  \"timestamp\": \"2017-12-27T09:23:06.19Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"What are the current maps for ranked mode\",\n    \"action\": \"schedules\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game-mode\": \"ranked\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"9c227d25-6793-4323-ad13-3a6d1e97594a\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 13,\n      \"intentName\": \"Selected Stages\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"\"\n        }\n      ]\n    },\n    \"score\": 0.8100000023841858\n  },\n  \"status\": {\n    \"code\": 206,\n    \"errorType\": \"partial_content\",\n    \"errorDetails\": \"Webhook call failed. Error: Webhook response was empty.\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514234746199,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_8907c88487da49cbb77c95367fc1c85e",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514234746199,
+			"method": "POST",
+			"modified": 1514366617717,
+			"name": "Request maps for ranked",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_e3b45e20e395408ea438e1663bc6c12f",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"892540de-b942-43f9-ab38-366d10a4ff00\",\n  \"timestamp\": \"2017-12-26T19:55:19.46Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"show me all current status\",\n    \"action\": \"schedules\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game-mode\": \"\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"9c227d25-6793-4323-ad13-3a6d1e97594a\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 1165,\n      \"intentName\": \"Selected Stages\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"for now please ask for a sepcific mode\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"for now please ask for a sepcific mode\"\n        }\n      ],\n      \"data\": {\n        \"google\": {\n          \"expect_user_response\": false,\n          \"no_input_prompts\": [],\n          \"is_ssml\": false\n        }\n      }\n    },\n    \"score\": 0.4399999976158142\n  },\n  \"status\": {\n    \"code\": 200,\n    \"errorType\": \"success\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318073066,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_bc2f29e363c947d2b97b9720424a4646",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318073066,
+			"method": "POST",
+			"modified": 1514318147892,
+			"name": "Request maps for all modes",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_5a7c1260f3124af28c08331dbd325483",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"34ff18ae-fe1d-47d3-8d9c-979d0c405123\",\n  \"timestamp\": \"2017-12-26T19:56:55.621Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"what are the current status\",\n    \"action\": \"schedules\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game-mode\": \"\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"9c227d25-6793-4323-ad13-3a6d1e97594a\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 604,\n      \"intentName\": \"Selected Stages\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"for now please ask for a sepcific mode\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"for now please ask for a sepcific mode\"\n        }\n      ],\n      \"data\": {\n        \"google\": {\n          \"expect_user_response\": false,\n          \"no_input_prompts\": [],\n          \"is_ssml\": false\n        }\n      }\n    },\n    \"score\": 0.550000011920929\n  },\n  \"status\": {\n    \"code\": 200,\n    \"errorType\": \"success\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318163842,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_b87dd919e3eb4797aa984b7a9ff88424",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318163842,
+			"method": "POST",
+			"modified": 1514318232845,
+			"name": "Request maps unspecific",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_d802e7733725422f925a27fc458b9b19",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"0ce428ad-5e8a-46f4-a66c-f397cac6bd64\",\n  \"timestamp\": \"2017-12-26T19:59:06.152Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"show me ultimate vouchers for ranked mode\",\n    \"action\": \"all_schedules\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game-mode\": \"ranked\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"71ea4a3a-925e-4667-bc97-0bdaff0fd57d\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 354,\n      \"intentName\": \"All Stages\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"\"\n        }\n      ]\n    },\n    \"score\": 1\n  },\n  \"status\": {\n    \"code\": 206,\n    \"errorType\": \"partial_content\",\n    \"errorDetails\": \"Webhook call failed. Error: 400 Bad Request\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318276946,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_8c55b359bc754ff282a1af1779a5f10e",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318276946,
+			"method": "POST",
+			"modified": 1514318356320,
+			"name": "Request all upcoming stages for ranked",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_8850eef68c664d6a90b143c8d3e0bf08",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"46da8de0-be0c-41d7-9335-f45b9cae3701\",\n  \"timestamp\": \"2017-12-26T20:02:46.579Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"when is the next Tower for league\",\n    \"action\": \"eta_rule\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"game_rule\": \"tower control\",\n      \"game-mode\": \"league\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"75b3d4a2-485a-440d-97e9-a0b3c95f1741\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 200,\n      \"intentName\": \"ETA for Rule\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"\"\n        }\n      ]\n    },\n    \"score\": 1\n  },\n  \"status\": {\n    \"code\": 206,\n    \"errorType\": \"partial_content\",\n    \"errorDetails\": \"Webhook call failed. Error: 400 Bad Request\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318398027,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_4863c168623446f5b7e29837f882139f",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318398027,
+			"method": "POST",
+			"modified": 1514318577258,
+			"name": "Request next available rule for mode",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_0766854ccc9a43f9b4204669a614ddb4",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"cb14cc6a-4dcb-4280-87ba-8c31b92b7603\",\n  \"timestamp\": \"2017-12-26T20:03:59.862Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"when can I play salmon run\",\n    \"action\": \"next_grizzco\",\n    \"actionIncomplete\": false,\n    \"parameters\": {},\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"9d727f68-5fca-4539-acca-963969fd5ed1\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 235,\n      \"intentName\": \"Next or current Grizzco\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"\"\n        }\n      ]\n    },\n    \"score\": 1\n  },\n  \"status\": {\n    \"code\": 206,\n    \"errorType\": \"partial_content\",\n    \"errorDetails\": \"Webhook call failed. Error: 400 Bad Request\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318620362,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_cad13e9703274252832cb636801578d5",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318620362,
+			"method": "POST",
+			"modified": 1514318649362,
+			"name": "Request Salmon Run",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_931bd79465d744a8a6854e1982964643",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"43b774f3-921c-4f15-9f79-96444eaea8ee\",\n  \"timestamp\": \"2017-12-26T20:04:30.525Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"what's the current merchandise\",\n    \"action\": \"merchandise\",\n    \"actionIncomplete\": false,\n    \"parameters\": {},\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"1c0e2f4e-330b-4d9d-ab6b-f9689511dd62\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 156,\n      \"intentName\": \"Merchandise\"\n    },\n    \"fulfillment\": {\n      \"speech\": \"\",\n      \"messages\": [\n        {\n          \"type\": 0,\n          \"speech\": \"\"\n        }\n      ]\n    },\n    \"score\": 0.7099999785423279\n  },\n  \"status\": {\n    \"code\": 206,\n    \"errorType\": \"partial_content\",\n    \"errorDetails\": \"Webhook call failed. Error: 400 Bad Request\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"e11e7df4-c050-430e-b95a-e7f81e5244da\"\n}"
+			},
+			"created": 1514318692682,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_76d176c3650749ad812762fba100f2a0",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1514318692682,
+			"method": "POST",
+			"modified": 1514318700357,
+			"name": "Request merchandise",
+			"parameters": [],
+			"parentId": "wrk_fd8ab6e0990f4c7e8f1b85c36431ee7e",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "env_2f090b906ab44de285367c2881f1fab1",
+			"color": null,
+			"created": 1514234816625,
+			"data": {
+				"baseUrl": "http://localhost:3000"
+			},
+			"isPrivate": false,
+			"modified": 1514234834337,
+			"name": "localhost",
+			"parentId": "env_768a1ab456e048d1a08319104461bd55",
+			"_type": "environment"
+		}
+	]
+}

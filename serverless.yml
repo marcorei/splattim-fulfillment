@@ -6,6 +6,7 @@ provider:
 
 package:
   exclude:
+    - insomnia/**/*
   include:
     - src/handler.ts
     - src/**/*
