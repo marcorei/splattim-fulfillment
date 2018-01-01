@@ -1,15 +1,14 @@
 import { isNullOrUndefined } from 'util'
-import { DialogflowApp, Responses } from 'actions-on-google'
+import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
+import { Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
-import { getDict, Dict } from '../i18n/resolver'
-import { Detail, Weapon } from '../model/api/SalmonRunSchedules'
+import { Detail, Weapon } from '../entity/api/SalmonRunSchedules'
 import { secondsToTime } from '../common/utils'
 
 export const name = 'next_grizzco'
 
-export function handler(app: DialogflowApp) {
-    const dict: Dict = getDict(app)
+export function handler(app: I18NDialogflowApp) {
     return new Splatoon2inkApi().getSalmonRunSchedules()
         .then(schedules => schedules.details
             .sort((a, b) => {
@@ -18,43 +17,43 @@ export function handler(app: DialogflowApp) {
             }))
         .then(details => {
             if (details.length === 0) {
-                app.tell(dict.a_sr_000)
+                app.tell(app.getDict().a_sr_000)
                 return
             }
-            respondWithDetail(app, dict, details[0])
+            respondWithDetail(app, details[0])
         })
         .catch(error => {
             console.error(error)
-            app.tell(dict.global_error_default)
+            app.tell(app.getDict().global_error_default)
         })
 }
 
 // Responder
 
-function respondWithDetail(app: DialogflowApp, dict: Dict, detail: Detail) {
+function respondWithDetail(app: I18NDialogflowApp, detail: Detail) {
     const now = Math.round(new Date().getTime() / 1000)
 
-    const stageString = dict.api_grizz_stage(detail.stage.name, detail.stage.name) // No key from API
+    const stageString = app.getDict().api_grizz_stage(detail.stage)
     const eta = secondsToTime(detail.start_time - now)
     
     return app.askWithCarousel({
             speech: now >= detail.start_time ?
-                dict.a_sr_002_s(stageString) :
-                dict.a_sr_003_s(stageString, eta),
+                app.getDict().a_sr_002_s(stageString) :
+                app.getDict().a_sr_003_s(stageString, eta),
             displayText: now >= detail.start_time ?
-                dict.a_sr_002_t(stageString) :
-                dict.a_sr_003_t(stageString, eta)},
+                app.getDict().a_sr_002_t(stageString) :
+                app.getDict().a_sr_003_t(stageString, eta)},
         app.buildCarousel()
             .addItems(
                 detail.weapons.map(weapon => 
-                    buildWeaponOptionItem(app, dict, weapon))))
+                    buildWeaponOptionItem(app, weapon))))
 }
 
 // Item Builder
 
-function buildWeaponOptionItem(app: DialogflowApp, dict: Dict, weapon: Weapon | null): Responses.OptionItem {
+function buildWeaponOptionItem(app: I18NDialogflowApp, weapon: Weapon | null): Responses.OptionItem {
     const weaponId = isNullOrUndefined(weapon) ? '?' + Math.round(Math.random() * 10000) : weapon.id
-    const weaponName = isNullOrUndefined(weapon) ? '?' : dict.api_grizz_weapon(weapon.id, weapon.name)
+    const weaponName = isNullOrUndefined(weapon) ? '?' : app.getDict().api_grizz_weapon(weapon)
     const weaponImage = isNullOrUndefined(weapon) ? 'https://splatoon2.ink/assets/img/salmon-run-random-weapon.46415a.png' : 
         config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + weapon.image
     return app.buildOptionItem('WEAPON_' + weaponId, [weaponName])
