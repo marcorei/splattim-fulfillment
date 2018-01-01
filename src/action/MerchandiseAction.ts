@@ -2,7 +2,7 @@ import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
 import { Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
-import { secondsToTime } from '../common/utils'
+import { secondsToTime, sortByEndTime } from '../common/utils'
 import { Merchandise } from '../entity/api/Gear';
 
 export const name = 'merchandise'
@@ -10,10 +10,7 @@ export const name = 'merchandise'
 export function handler(app: I18NDialogflowApp) {
     return new Splatoon2inkApi().getMerchandise()
         .then(merch => merch.merchandises
-            .sort((a, b) => {
-                if (a.end_time === b.end_time) return 0;
-                return a.end_time > b.end_time ? 1 : -1
-            }))
+            .sort(sortByEndTime))
         .then(mechandises => respondWithMerch(app, mechandises))
         .catch(error => {
             console.error(error)

@@ -6,7 +6,7 @@ import { config } from '../config'
 import { Schedule, Stage, GameMode, Rule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { GameRuleArg } from '../entity/dialog/GameRuleArg'
-import { secondsToTime } from '../common/utils'
+import { secondsToTime, sortByStartTime } from '../common/utils'
 
 export const name = 'eta_rule'
 
@@ -70,10 +70,7 @@ export function handler(app: I18NDialogflowApp) {
             .filter(schedule => {
                 return schedule.rule.key === ruleMatchString
             })
-            .sort((a, b) => {
-                if (a.start_time === b.start_time) return 0;
-                return a.start_time > b.start_time ? 1 : -1
-            })
+            .sort(sortByStartTime)
         )
         .then(schedules => {
             if (schedules.length === 0) {

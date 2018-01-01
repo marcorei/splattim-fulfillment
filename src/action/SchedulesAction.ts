@@ -6,6 +6,7 @@ import { config } from '../config'
 import { Schedules, Schedule, Stage, GameMode, Rule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
+import { sortByStartTime } from '../common/utils';
 
 export const name = 'schedules'
 
@@ -121,9 +122,5 @@ function buildStageOptionItem(app: I18NDialogflowApp, stage: Stage, rule: Rule, 
 
 function getCurrentSchedule(schedules: [Schedule]): Schedule | null {
     if (isNullOrUndefined(schedules) || schedules.length === 0) return null
-    const sortedSchedules = schedules.sort((a, b) => {
-        if (a.start_time === b.start_time) return 0;
-        return a.start_time > b.start_time ? 1 : -1
-    })
-    return sortedSchedules[0]
+    return schedules.sort(sortByStartTime)[0]
 }

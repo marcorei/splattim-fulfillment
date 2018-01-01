@@ -4,17 +4,14 @@ import { Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
 import { Detail, Weapon } from '../entity/api/SalmonRunSchedules'
-import { secondsToTime } from '../common/utils'
+import { secondsToTime, sortByStartTime } from '../common/utils'
 
 export const name = 'next_grizzco'
 
 export function handler(app: I18NDialogflowApp) {
     return new Splatoon2inkApi().getSalmonRunSchedules()
         .then(schedules => schedules.details
-            .sort((a, b) => {
-                if (a.start_time === b.start_time) return 0;
-                return a.start_time > b.start_time ? 1 : -1
-            }))
+            .sort(sortByStartTime))
         .then(details => {
             if (details.length === 0) {
                 app.tell(app.getDict().a_sr_000)

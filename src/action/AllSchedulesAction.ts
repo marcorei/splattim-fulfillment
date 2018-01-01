@@ -5,7 +5,7 @@ import { config } from '../config'
 import { Schedule, Stage } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
-import { secondsToTime } from '../common/utils'
+import { secondsToTime, sortByStartTime } from '../common/utils'
 
 export const name = 'all_schedules'
 
@@ -48,19 +48,15 @@ function repondWithScheduleList(app: I18NDialogflowApp, schedules: Schedule[]) {
         app.tell(app.getDict().a_asched_error_empty_data)
         return
     }
-    const sortedSchedules = schedules.sort((a, b) => {
-        if (a.start_time === b.start_time) return 0;
-        return a.start_time > b.start_time ? 1 : -1
-    })
+    const sortedSchedules = schedules.sort(sortByStartTime)
     const now = Math.round(new Date().getTime() / 1000)
-    const mode = app.getDict().api_sched_mode(schedules[0].game_mode)
+    const mode = app.getDict().api_sched_mode(sortedSchedules[0].game_mode)
     app.askWithCarousel(app.getDict().a_asched_000(mode),
         app.buildCarousel()
             .addItems(sortedSchedules.reduce((arr: OptionItem[], schedule) => {
                 arr.push(
                     buildStageOptionItem(app, now, schedule.stage_a, schedule),
-                    buildStageOptionItem(app, now, schedule.stage_b, schedule)
-                )
+                    buildStageOptionItem(app, now, schedule.stage_b, schedule))
                 return arr
             }, [])))
 }
