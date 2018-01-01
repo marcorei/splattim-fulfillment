@@ -1,15 +1,19 @@
+import * as sched from '../entity/api/Schedules'
+import * as gear from '../entity/api/Gear'
+import * as coop from '../entity/api/SalmonRunSchedules'
+
 export const dict = {
     global_error_default: 'Sad woomy. I\'ve been splatted!',
     global_error_missing_param: 'Sad woomy. More info please!',
 
-    api_sched_mode: (id: string, fallback: string): string => fallback,
-    api_sched_rule: (id: string, fallback: string): string => fallback,
-    api_sched_stage: (id: string, fallback: string): string => fallback,
-    api_gear_item: (id: string, fallback: string): string => fallback,
-    api_gear_brand: (id: string, fallback: string): string => fallback,
-    api_gear_skill: (id: string, fallback: string): string => fallback,
-    api_grizz_stage: (id: string, fallback: string): string => fallback,
-    api_grizz_weapon: (id: string, fallback: string): string => fallback,
+    api_sched_mode: (i: sched.GameMode): string => i.name,
+    api_sched_rule: (i: sched.Rule): string => i.name,
+    api_sched_stage: (i: sched.Stage): string => i.name,
+    api_gear_item: (i: gear.Gear): string => i.name,
+    api_gear_brand: (i: gear.Brand): string => i.name,
+    api_gear_skill: (i: gear.Skill): string => i.name,
+    api_grizz_stage: (i: coop.Stage): string => i.name,
+    api_grizz_weapon: (i: coop.Weapon): string => i.name,
 
     // Schedules Action
 
