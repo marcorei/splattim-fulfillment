@@ -4,7 +4,8 @@
   "description": "Splat Tim Lambda function for DialogFlow and splatton2.ink",
   "main": "handler.js",
   "scripts": {
-    "deploy": "serverless deploy",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
     "package": "serverless package",
     "start": "serverless offline start"
   },

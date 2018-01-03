@@ -30,3 +30,17 @@ export interface Schedules {
     league: [Schedule],
     gachi: [Schedule] 
 }
+
+export const gameModeKeyValues = {
+    ranked: 'gachi',
+    league: 'league',
+    regular: 'regular'
+}
+
+export const gameRuleKeyValues = {
+    blitz: 'clam_blitz',
+    zones: 'splat_zones',
+    tower: 'tower_control',
+    rainmaker: 'rainmaker',
+    turf: 'turf_war'
+}
