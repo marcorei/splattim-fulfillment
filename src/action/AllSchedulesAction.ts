@@ -1,34 +1,36 @@
 import { isNullOrUndefined } from 'util';
-import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
+import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
-import { config } from '../config'
-import { Schedule, Stage } from '../entity/api/Schedules'
+import { Schedule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
-import { secondsToTime, sortByStartTime } from '../common/utils'
+import { sortByStartTime, nowInSplatFormat } from '../common/utils'
+import { ArgParser } from '../common/dfUtils'
+import { buildOptionKey } from './SchedulesStageOptionAction'
+import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
 
 export const name = 'all_schedules'
 
+/**
+ * Lists current and future stages for a given game mode as carousel.
+ * Asks on which stage the user wants to get splatted.
+ */
 export function handler(app: I18NDialogflowApp) {
-    const gameModeArgValue = app.getArgument(GameModeArg.key) // Required
-    if (isNullOrUndefined(gameModeArgValue)) {
-        console.error('required parameter is missing: ' + GameModeArg.key)
-        app.tell(app.getDict().global_error_missing_param)
-        return
-    }
-    const requestedGameMode = gameModeArgValue.toString()
+    const argParser = new ArgParser(app)
+    const requestedGameMode = argParser.string(GameModeArg.key)
+    if (!argParser.isOk()) return argParser.tellAndLog()
     
-    return new Splatoon2inkApi().getSchedules()
+    return new Splatoon2inkApi().readSchedules()
         .then(schedules => {
             switch (requestedGameMode) {
                 case GameModeArg.values.regular:
-                    repondWithScheduleList(app, schedules.regular)
+                    repondWithScheduleCarousel(app, schedules.regular)
                     break
                 case GameModeArg.values.ranked:
-                    repondWithScheduleList(app, schedules.gachi)
+                    repondWithScheduleCarousel(app, schedules.gachi)
                     break
                 case GameModeArg.values.league:
-                    repondWithScheduleList(app, schedules.league)
+                    repondWithScheduleCarousel(app, schedules.league)
                     break
                 case GameModeArg.values.all:
                 default:
@@ -41,36 +43,53 @@ export function handler(app: I18NDialogflowApp) {
         })
 }
 
-// Responder
-
-function repondWithScheduleList(app: I18NDialogflowApp, schedules: Schedule[]) {
-    if (isNullOrUndefined(schedules) || schedules.length === 0) {
-        app.tell(app.getDict().a_asched_error_empty_data)
-        return
+/**
+ * Responds by providing a carousel of stages.
+ * The carousel includes all stages while the speech response features only two.
+ */
+function repondWithScheduleCarousel(app: I18NDialogflowApp, schedules: Schedule[]) {
+    if (isNullOrUndefined(schedules) || schedules.length < 2) {
+        return app.tell(app.getDict().a_asched_error_empty_data)
     }
-    const sortedSchedules = schedules.sort(sortByStartTime)
-    const now = Math.round(new Date().getTime() / 1000)
-    const mode = app.getDict().api_sched_mode(sortedSchedules[0].game_mode)
-    app.askWithCarousel(app.getDict().a_asched_000(mode),
+
+    const gameModeName = app.getDict().api_sched_mode(schedules[0].game_mode)
+    const now = nowInSplatFormat()
+    const scheduleInfos: ScheduleInfo[] = schedules
+        .sort(sortByStartTime)
+        .map(schedule => mapScheduleToInfo(schedule, now, app.getDict()))
+
+    return app.askWithCarousel({
+            speech: app.getDict().a_asched_000_s(
+                gameModeName,
+                scheduleInfos[0].ruleName,
+                scheduleInfos[0].stageA.name,
+                scheduleInfos[0].stageB.name,
+                scheduleInfos[1].ruleName,
+                scheduleInfos[1].timeString,
+                scheduleInfos[1].stageA.name,
+                scheduleInfos[1].stageB.name),
+            displayText: app.getDict().a_asched_000_t(gameModeName)
+        },
         app.buildCarousel()
-            .addItems(sortedSchedules.reduce((arr: OptionItem[], schedule) => {
+            .addItems(scheduleInfos.reduce((arr: OptionItem[], info) => {
                 arr.push(
-                    buildStageOptionItem(app, now, schedule.stage_a, schedule),
-                    buildStageOptionItem(app, now, schedule.stage_b, schedule))
+                    buildStageOptionItem(app, info.stageA, info),
+                    buildStageOptionItem(app, info.stageB, info))
                 return arr
             }, [])))
 }
 
-// Item Builder
+/**
+ * Builds an OptionItem which can trigger a ScheduleStageOption.
+ */
+function buildStageOptionItem(app: I18NDialogflowApp, stageInfo: StageInfo, info: ScheduleInfo): OptionItem {
+    const optionKey = buildOptionKey(stageInfo.name, undefined, info.timeDiff)
+    const etaTimeString = info.timeDiff <= 0 ? 
+        app.getDict().a_asched_001_now :
+        app.getDict().a_asched_001_future + info.timeString
 
-function buildStageOptionItem(app: I18NDialogflowApp, now: number, stage: Stage, schedule: Schedule): OptionItem {
-    const ruleName = app.getDict().api_sched_rule(schedule.rule)
-    const stageName = app.getDict().api_sched_stage(stage)
-    let timeString = now >= schedule.start_time ? 
-        app.getDict().a_asched_001_now : 
-        app.getDict().a_asched_001_future + secondsToTime(schedule.start_time - now)
-    return app.buildOptionItem('STAGE_' + stage.id + '_' + timeString)
-        .setTitle(stageName + ' - ' + timeString)
-        .setDescription(ruleName)
-        .setImage(config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + stage.image, stage.name)
+    return app.buildOptionItem(optionKey, stageInfo.name)
+        .setTitle(`${stageInfo.name} - ${etaTimeString}`)
+        .setDescription(info.ruleName)
+        .setImage(stageInfo.image, stageInfo.name)
 }

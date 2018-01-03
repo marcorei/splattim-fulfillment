@@ -1,14 +1,19 @@
-import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
+import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
-import { config } from '../config'
-import { secondsToTime, sortByEndTime } from '../common/utils'
-import { Merchandise } from '../entity/api/Gear';
+import { sortByEndTime, nowInSplatFormat } from '../common/utils'
+import { Merchandise } from '../entity/api/Gear'
+import { mapMerchandiseToInfo, MerchInfo } from './mapper/MerchandiseMapper'
+import { buildOptionKey } from './MerchandiseMerchOptionAction'
 
 export const name = 'merchandise'
 
+/**
+ * Lists all available gear as carousel.
+ * Also gives a shorter spech overview.
+ */
 export function handler(app: I18NDialogflowApp) {
-    return new Splatoon2inkApi().getMerchandise()
+    return new Splatoon2inkApi().readMerchandise()
         .then(merch => merch.merchandises
             .sort(sortByEndTime))
         .then(mechandises => respondWithMerch(app, mechandises))
@@ -18,28 +23,38 @@ export function handler(app: I18NDialogflowApp) {
         })
 }
 
-// Responder
-
 function respondWithMerch(app: I18NDialogflowApp, merchandises: Merchandise[]) {
-    const now = Math.round(new Date().getTime() / 1000)
-
+    if (merchandises.length < 3) {
+        return app.getDict().a_merch_002
+    }
+    
+    const now = nowInSplatFormat()
+    const infos = merchandises.map(merch => {
+        return mapMerchandiseToInfo(merch, now, app.getDict())
+    })
+    
     return app.askWithCarousel({
-            speech: app.getDict().a_merch_000_s,
+            speech: app.getDict().a_merch_000_s(
+                infos[0].merchName,
+                infos[1].merchName,
+                infos[2].merchName
+            ),
             displayText: app.getDict().a_merch_000_t},
         app.buildCarousel()
             .addItems(
-                merchandises.map(merch => buildMerchOptionItem(app, merch, now))))
+                infos.map(merch => buildMerchOptionItem(app, merch))))
 }
 
-// Item Builder
-
-function buildMerchOptionItem(app: I18NDialogflowApp, merch: Merchandise, now: number): Responses.OptionItem {
-    const merchName = app.getDict().api_gear_item(merch.gear)
-    const brandName = app.getDict().api_gear_brand(merch.gear.brand)
-    const skillName = app.getDict().api_gear_skill(merch.skill)
-    const eta = secondsToTime(merch.end_time - now)
-    return app.buildOptionItem('GEAR_' + merch.gear.id + '_' + eta, [merchName])
-        .setTitle(merchName + ' (' + eta + ')')
-        .setDescription(app.getDict().a_merch_001(skillName, brandName, eta))
-        .setImage(config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + merch.gear.image, merchName)
+function buildMerchOptionItem(app: I18NDialogflowApp, merchInfo: MerchInfo): Responses.OptionItem {
+    const optionKey = buildOptionKey(
+        merchInfo.merchName, 
+        merchInfo.skillName,
+        merchInfo.timeDiff)
+    return app.buildOptionItem(optionKey, [merchInfo.merchName])
+        .setTitle(merchInfo.merchName + ' (' + merchInfo.timeString + ')')
+        .setDescription(app.getDict().a_merch_001(
+            merchInfo.skillName, 
+            merchInfo.brandName,
+            merchInfo.timeString))
+        .setImage(merchInfo.merchImage, merchInfo.merchName)
 }

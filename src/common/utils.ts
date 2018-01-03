@@ -1,4 +1,6 @@
 export function secondsToTime(seconds: number): string {
+    if (seconds < 1) return ''
+
     const minutes = Math.floor((seconds/60)%60)
     const hours = Math.floor((seconds/(60*60))%24)
     const days = Math.floor(seconds/(60*60*24))
@@ -26,4 +28,8 @@ interface EndTimeSortable {
 export function sortByEndTime(a: EndTimeSortable, b: EndTimeSortable): number {
     if (a.end_time === b.end_time) return 0;
     return a.end_time > b.end_time ? 1 : -1
+}
+
+export function nowInSplatFormat(): number {
+    return Math.round(new Date().getTime() / 1000)
 }

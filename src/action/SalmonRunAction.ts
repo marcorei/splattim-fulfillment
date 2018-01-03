@@ -1,23 +1,26 @@
-import { isNullOrUndefined } from 'util'
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
 import { Responses } from 'actions-on-google'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
-import { config } from '../config'
-import { Detail, Weapon } from '../entity/api/SalmonRunSchedules'
-import { secondsToTime, sortByStartTime } from '../common/utils'
+import { Detail } from '../entity/api/SalmonRunSchedules'
+import { sortByStartTime, nowInSplatFormat } from '../common/utils'
+import { mapDetailToInfo, WeaponInfo } from './mapper/SalmonRunMapper'
+import { buildOptionKey } from './SalmonRunWeaponOptionAction'
 
 export const name = 'next_grizzco'
 
+/**
+ * Info about current or upcoming Salmon Run.
+ * Also shows weapons in a carousel.
+ */
 export function handler(app: I18NDialogflowApp) {
-    return new Splatoon2inkApi().getSalmonRunSchedules()
+    return new Splatoon2inkApi().readSalmonRunSchedules()
         .then(schedules => schedules.details
             .sort(sortByStartTime))
         .then(details => {
             if (details.length === 0) {
-                app.tell(app.getDict().a_sr_000)
-                return
+                return app.tell(app.getDict().a_sr_000)
             }
-            respondWithDetail(app, details[0])
+            return respondWithDetail(app, details[0])
         })
         .catch(error => {
             console.error(error)
@@ -25,35 +28,44 @@ export function handler(app: I18NDialogflowApp) {
         })
 }
 
-// Responder
-
+/**
+ * Responds with a list of weapons available and a text about the next or current schedule.
+ */
 function respondWithDetail(app: I18NDialogflowApp, detail: Detail) {
-    const now = Math.round(new Date().getTime() / 1000)
-
-    const stageString = app.getDict().api_grizz_stage(detail.stage)
-    const eta = secondsToTime(detail.start_time - now)
+    if (detail.weapons.length < 4) {
+        console.error('less than four weapons in salmon run info')
+        return app.tell(app.getDict().a_sr_000)
+    }
+    const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict())
     
     return app.askWithCarousel({
-            speech: now >= detail.start_time ?
-                app.getDict().a_sr_002_s(stageString) :
-                app.getDict().a_sr_003_s(stageString, eta),
-            displayText: now >= detail.start_time ?
-                app.getDict().a_sr_002_t(stageString) :
-                app.getDict().a_sr_003_t(stageString, eta)},
+            speech: info.open ?
+                app.getDict().a_sr_002_s(
+                    info.stageName, 
+                    info.timeString,
+                    info.weapons[0].name,
+                    info.weapons[1].name,
+                    info.weapons[2].name,
+                    info.weapons[3].name) :
+                app.getDict().a_sr_003_s(
+                    info.stageName, 
+                    info.timeString,
+                    info.weapons[0].name,
+                    info.weapons[1].name,
+                    info.weapons[2].name,
+                    info.weapons[3].name),
+            displayText: info.open ?
+                app.getDict().a_sr_002_t(info.stageName, info.timeString) :
+                app.getDict().a_sr_003_t(info.stageName, info.timeString)},
         app.buildCarousel()
             .addItems(
-                detail.weapons.map(weapon => 
+                info.weapons.map(weapon => 
                     buildWeaponOptionItem(app, weapon))))
 }
 
-// Item Builder
-
-function buildWeaponOptionItem(app: I18NDialogflowApp, weapon: Weapon | null): Responses.OptionItem {
-    const weaponId = isNullOrUndefined(weapon) ? '?' + Math.round(Math.random() * 10000) : weapon.id
-    const weaponName = isNullOrUndefined(weapon) ? '?' : app.getDict().api_grizz_weapon(weapon)
-    const weaponImage = isNullOrUndefined(weapon) ? 'https://splatoon2.ink/assets/img/salmon-run-random-weapon.46415a.png' : 
-        config.splatoonInk.baseUrl + config.splatoonInk.assets.splatnet + weapon.image
-    return app.buildOptionItem('WEAPON_' + weaponId, [weaponName])
-        .setTitle(weaponName)
-        .setImage(weaponImage, weaponName)
+function buildWeaponOptionItem(app: I18NDialogflowApp, weaponInfo: WeaponInfo): Responses.OptionItem {
+    const optionKey = buildOptionKey(weaponInfo.name)
+    return app.buildOptionItem(optionKey, [weaponInfo.name])
+        .setTitle(weaponInfo.name)
+        .setImage(weaponInfo.image, weaponInfo.name)
 }
