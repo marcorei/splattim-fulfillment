@@ -66,7 +66,7 @@ function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule | null) 
             speech: app.getDict().a_sched_002_s(
                 info.ruleName,
                 info.modeName,
-                info.stageB.name,
+                info.stageA.name,
                 info.stageB.name),
             displayText: app.getDict().a_sched_002_t(
                 info.ruleName,

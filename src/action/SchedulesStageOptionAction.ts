@@ -15,6 +15,9 @@ export function buildOptionKey(stageName: string, modeKey?: string, timeDiff?: n
     ].join(seperator)
 }
 
+/**
+ * Replies to a stage selected previously.
+ */
 export function handler(app: I18NDialogflowApp) {
     const optionKeyParts = app.getSelectedOption().split(seperator)
     if (optionKeyParts.length < 4) {

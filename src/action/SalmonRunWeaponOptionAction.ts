@@ -10,6 +10,9 @@ export function buildOptionKey(weaponName: string): string {
     ].join(seperator)
 }
 
+/**
+ * Replies to a salmon run weapon selected previously.
+ */
 export function handler(app: I18NDialogflowApp) {
     const optionKeyParts = app.getSelectedOption().split(seperator)
     if (optionKeyParts.length < 2) {

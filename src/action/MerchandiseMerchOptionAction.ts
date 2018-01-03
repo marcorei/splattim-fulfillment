@@ -14,6 +14,9 @@ export function buildOptionKey(merchName: string, skillName: string, timeDiff?: 
     ].join(seperator)
 }
 
+/**
+ * Replies to a merch option that waa selected previously.
+ */
 export function handler(app: I18NDialogflowApp) {
     const optionKeyParts = app.getSelectedOption().split(seperator)
     if (optionKeyParts.length < 4) {

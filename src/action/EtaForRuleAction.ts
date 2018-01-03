@@ -108,5 +108,5 @@ function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageI
     return app.buildOptionItem(optionKey, [stageInfo.name])
         .setTitle(stageInfo.name)
         .setDescription(info.ruleName)
-        .setImage(getSplatnetResUrl(stageInfo.image), stageInfo.name)
+        .setImage(stageInfo.image, stageInfo.name)
 }
