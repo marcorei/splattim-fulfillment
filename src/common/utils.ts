@@ -6,7 +6,7 @@ export function secondsToTime(seconds: number): string {
     const days = Math.floor(seconds/(60*60*24))
 
     if (hours < 1) {
-        return minutes + 'm'
+        return minutes + 'min'
     } else if(days < 1) {
         return hours + 'h ' + minutes + 'm'
     } else {
