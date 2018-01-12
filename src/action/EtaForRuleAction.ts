@@ -9,6 +9,7 @@ import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { ArgParser } from '../common/dfUtils';
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
+import { isNullOrUndefined } from 'util';
 
 export const name = 'eta_rule'
 
@@ -46,18 +47,21 @@ export function handler(app: I18NDialogflowApp) {
                 .then(schedules => requestedGameMode == GameModeArg.values.league ?
                         schedules.league :
                         schedules.gachi)
-                .then(schedules => schedules
-                    .filter(schedule => {
-                        return schedule.rule.key === ruleKey
-                    })
-                    .sort(sortByStartTime)
-                )
-                .then(schedules => {
-                    if (schedules.length === 0) {
-                        app.tell(app.getDict().a_eta_000)
+                .then(schedules => { 
+                    if (isNullOrUndefined(schedules)) {
+                        return app.tell(app.getDict().a_eta_000)
                     } else {
-                        respondWithSchedule(app, schedules[0])
-                    }
+                        const filteredSchedules = schedules
+                            .filter(schedule => {
+                                return schedule.rule.key === ruleKey
+                            })
+                            .sort(sortByStartTime)
+                        if (filteredSchedules.length === 0) {
+                            return app.tell(app.getDict().a_eta_000)
+                        } else {
+                            return respondWithSchedule(app, filteredSchedules[0])
+                        }
+                    }   
                 })
                 .catch(error => {
                     console.error(error)
