@@ -17,7 +17,7 @@ export const dict = {
 
     // [Action] Schedules
 
-    a_sched_000_s: (url: string) => `I can't help you squiddo. But check out ${url}!`,
+    a_sched_000_s: (url: string) => `I can't help you right now. But check out ${url}!`,
     a_sched_000_t: 'I can\'t help you squiddo. But check out this link!',
     a_sched_002_s: (rule: string, mode: string, stage1: string, stage2: string) => `You can play ${rule} in ${mode} on ${stage1} and ${stage2}. Which do you like more?`,
     a_sched_002_t: (rule: string, mode: string) => `You can play ${rule} in ${mode} on these two maps. Which do you like more?`,
