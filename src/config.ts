@@ -4,7 +4,8 @@ export const config = {
         data: {
             schedules: '/data/schedules.json',
             coopSchedules: '/data/coop-schedules.json',
-            merchandise: '/data/merchandises.json'
+            merchandise: '/data/merchandises.json',
+            splatfest: '/data/festivals.json'
         },
         assets: {
             splatnet: '/assets/splatnet'
