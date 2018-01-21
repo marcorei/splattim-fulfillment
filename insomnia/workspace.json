@@ -1,7 +1,7 @@
 {
 	"_type": "export",
 	"__export_format": 3,
-	"__export_date": "2017-12-27T16:35:22.182Z",
+	"__export_date": "2018-01-21T14:07:10.089Z",
 	"__export_source": "insomnia.desktop.app:v5.12.4",
 	"resources": [
 		{
@@ -262,6 +262,64 @@
 			"method": "POST",
 			"modified": 1514390353511,
 			"name": "Request merchandise",
+			"parameters": [],
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_e03ca7a2459648f79c3b3c4dc947af07",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"8162b726-6f38-4a99-a103-23cf17834712\",\n  \"timestamp\": \"2018-01-21T10:27:28.32Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"What's the result of the last Splatfest in Europe?\",\n    \"action\": \"splatfest_result\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"region\": \"eu\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"f648c3f7-2519-451f-a06e-90df49824f90\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 474,\n      \"intentName\": \"Splatfest Result\"\n    },\n   \"score\": 0.6800000071525574\n  },\n  \"status\": {\n    \"code\": 200,\n    \"errorType\": \"success\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"ad00c282-6577-451f-9226-5ad5b5e45fd8\"\n}"
+			},
+			"created": 1516530325433,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_58b38a57c304452eb3b314e0de8718d0",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1516530325433,
+			"method": "POST",
+			"modified": 1516530513239,
+			"name": "Request last Splatfest",
+			"parameters": [],
+			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ baseUrl }}/splattim",
+			"_type": "request"
+		},
+		{
+			"_id": "req_50f0daf2ea284c73aeff6583026f1c18",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n  \"id\": \"5b2619be-d037-4a63-ba6d-01e8a037693e\",\n  \"timestamp\": \"2018-01-21T12:55:53.258Z\",\n  \"lang\": \"en\",\n  \"result\": {\n    \"source\": \"agent\",\n    \"resolvedQuery\": \"Europe\",\n    \"action\": \"splatfest_upcoming\",\n    \"actionIncomplete\": false,\n    \"parameters\": {\n      \"region\": \"eu\"\n    },\n    \"contexts\": [],\n    \"metadata\": {\n      \"intentId\": \"7f83f9c5-8cbe-4636-a213-4dadd3b60abc\",\n      \"webhookUsed\": \"true\",\n      \"webhookForSlotFillingUsed\": \"false\",\n      \"webhookResponseTime\": 1020,\n      \"intentName\": \"Splatfest Upcoming\"\n    },\n    \"score\": 1\n  },\n  \"status\": {\n    \"code\": 200,\n    \"errorType\": \"success\",\n    \"webhookTimedOut\": false\n  },\n  \"sessionId\": \"ad00c282-6577-451f-9226-5ad5b5e45fd8\"\n}"
+			},
+			"created": 1516539307201,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_58b38a57c304452eb3b314e0de8718d0",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"metaSortKey": -1515460357644.5,
+			"method": "POST",
+			"modified": 1516539384278,
+			"name": "Request upcoming Splatfest",
 			"parameters": [],
 			"parentId": "fld_936b10c4f22a48feb8a84da936ee272d",
 			"settingDisableRenderRequestBody": false,
