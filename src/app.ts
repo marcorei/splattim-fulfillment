@@ -9,6 +9,8 @@ import * as merchandiseAction from './action/MerchandiseAction'
 import * as merchandiseMerchOptionAction from './action/MerchandiseMerchOptionAction'
 import * as salmonRunAction from './action/SalmonRunAction'
 import * as salmonRunWeaponOptionAction from './action/SalmonRunWeaponOptionAction'
+import * as splatfestResultAction from './action/SplatfestResultAction'
+import * as splatfestUpcomingAction from './action/SplatfestUpcomingAction'
 
 interface Action {
     name: string,
@@ -25,7 +27,9 @@ export function createDialogflowApp(request: Request, response: Response) {
         merchandiseAction,
         merchandiseMerchOptionAction,
         salmonRunAction,
-        salmonRunWeaponOptionAction
+        salmonRunWeaponOptionAction,
+        splatfestResultAction,
+        splatfestUpcomingAction
     ]
 
     app.handleRequest(actions.reduce(

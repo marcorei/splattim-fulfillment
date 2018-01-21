@@ -69,9 +69,33 @@ export const dict = {
     a_merch_001: (skill: string, brand: string, eta: string) => `with ${skill} by ${brand} (${eta} remaining)`,
     a_merch_002: 'Take a look in the app, I can\'t get any info about that right now.',
     
-    // [Action] Options
+    // [Action] Splatfest Result
 
-    a_opt_000: 'Good choice!',
+    a_splres_000: (winner: string, loser: string) => `Team ${winner} won against team ${loser} in the last Splatfest.`,
+    a_splres_001: 'They won all three categories',
+    a_splres_002: (won1: string, won2: string, lost: string) => `They won ${won1} and ${won2} but lost ${lost}.`,
+    a_splres_002_votes: 'the votes',
+    a_splres_002_solo: 'solo battles',
+    a_splres_002_team: 'team battles',
+    a_splres_003: (alpha: string, bravo: string) => `${alpha} vs ${bravo}`,
+    a_splres_004: (name: string, alphaRate: number, bravoRate: number) => `**${name}**: ${alphaRate}% - ${bravoRate}%`,
+    a_splres_004_votes: 'Votes',
+    a_splres_004_solo: 'Solo',
+    a_splres_004_team: 'Team',
+    a_splres_005: 'Splafest panel',
+    a_splres_006: (winner: string) => `Winner: ${winner}`,
+
+    // [Action] Splatfest Upcoming
+
+    a_splup_000: 'I currently don\'t have any infos on upcoming Splatfests.',
+    a_splup_001: (alpha: string, bravo: string) => `${alpha} vs ${bravo}`,
+    a_splup_002: 'Splafest panel',
+    a_splup_003_s: (time: string, alpha: string, bravo: string) => `It\'s Splatfest time! ${alpha} vs ${bravo}. You still got ${time} left!`,
+    a_splup_003_t: (time: string) => `It's Splatfest time! Still ${time} left.`,
+    a_splup_003_b: (time: string) => `${time} left`,
+    a_splup_004_s: (time: string, alpha: string, bravo: string) => `The next Splatfest starts in ${time}! ${alpha} vs ${bravo}.`,
+    a_splup_004_t: (time: string) => `The next Splatfest starts in ${time}.`,
+    a_splup_004_b: (time: string) => `in ${time}`,
 
     // [Option] Schedule Stage
 
