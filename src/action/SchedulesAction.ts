@@ -62,6 +62,14 @@ function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule | null) 
 
     const info = mapScheduleToInfo(schedule, nowInSplatFormat(), app.getDict())
 
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(app.getDict().a_sched_002_a(
+            info.ruleName,
+            info.modeName,
+            info.stageA.name,
+            info.stageB.name))
+    }
+
     return app.askWithList({
             speech: app.getDict().a_sched_002_s(
                 info.ruleName,
@@ -89,8 +97,12 @@ function respondWithoutSpecificSchedule(app: I18NDialogflowApp, schedules: Sched
         .filter(schedule => schedule != null)
         .map(schedule => mapScheduleToInfo(schedule!, now, app.getDict()))
     
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(buildSpeechOverview(app.getDict(), infos, false))
+    }
+
     return app.askWithCarousel({
-            speech: buildSpeechOverview(app.getDict(), infos),
+            speech: buildSpeechOverview(app.getDict(), infos, true),
             displayText: app.getDict().a_sched_004
         }, 
         app.buildCarousel()
@@ -107,7 +119,7 @@ function respondWithoutSpecificSchedule(app: I18NDialogflowApp, schedules: Sched
  * Builds a string containing all stages of the given StageInfos 
  * intended for a spoken overview.
  */
-function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[]): string {
+function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[], appendQuestion: boolean): string {
     let output = dict.a_sched_005_start
     infos.forEach((info, index, all) => {
         switch (index) {
@@ -122,7 +134,12 @@ function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[]): string {
         }
         output += dict.a_sched_005_middle(info.modeName, info.stageA.name, info.stageB.name)
     })
-    output += dict.a_sched_005_end
+    if (appendQuestion) {
+        output += dict.a_sched_005_end
+    } else {
+        output += '!'
+    }
+    
     return output
 }
 

@@ -79,6 +79,15 @@ function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule) {
     const eta = info.timeString === '' ? 
         app.getDict().a_eta_001_now : 
         app.getDict().a_eta_001_future + info.timeString
+
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(app.getDict().a_eta_002_a(
+            info.ruleName,
+            info.modeName,
+            eta,
+            info.stageA.name,
+            info.stageB.name))
+    }
     
     return app.askWithList({
             speech: app.getDict().a_eta_002_s(

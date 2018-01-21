@@ -44,6 +44,7 @@ export const dict: typeof index = {
 
     a_sched_000_s: (url: string) => `Ich kann Dir nicht helfen. Aber schau mal auf ${url}!`,
     a_sched_000_t: 'Ich kann Dir nicht helfen. Aber schau mal auf dieser Website nach!',
+    a_sched_002_a: (rule: string, mode: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} in den Arenen ${stage1} und ${stage2} spielen.`,
     a_sched_002_s: (rule: string, mode: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} in den Arenen ${stage1} und ${stage2} spielen. Welche magst Du lieber?`,
     a_sched_002_t: (rule: string, mode: string) => `Du kannst ${rule} im ${mode} auf diesen Arenen spielen. Welche magst Du lieber?`,
     a_sched_003: (mode: string) => `Aktuelle Arenen für ${mode}`,
@@ -59,6 +60,7 @@ export const dict: typeof index = {
 
     a_asched_error_too_much: 'Das ist eine Menge Info. Such Dir einen Spiel-Modus aus!',
     a_asched_error_empty_data: 'Hm. Die Infos sind gerade nicht verfügbar.',
+    a_asched_000_a: (mode: string, rule1: string, stage1a: string, stage1b: string, rule2: string, time2: string, stage2a: string, stage2b: string) => `Hier sind die kommenden Arenen für ${mode}: Aktuell ist ${rule1} in den Arenen ${stage1a} und ${stage1b} aktiv. In ${time2} kannst Du ${rule2} in den Arenen ${stage2a} und ${stage2b} spielen.`,
     a_asched_000_s: (mode: string, rule1: string, stage1a: string, stage1b: string, rule2: string, time2: string, stage2a: string, stage2b: string) => `Hier sind die kommenden Arenen für ${mode}: Aktuell ist ${rule1} in den Arenen ${stage1a} und ${stage1b} aktiv. In ${time2} kannst Du ${rule2} in den Arenen ${stage2a} und ${stage2b} spielen. Welche Arena ist dein Favorit?`,
     a_asched_000_t: (mode: string) => `Hier sind die kommenden Arenen für ${mode}. Welche Arena ist dein Favorit?`,
     a_asched_001_now: 'jetzt',
@@ -74,6 +76,7 @@ export const dict: typeof index = {
     a_eta_000: 'Dieser Spiel-Typ wird erstmal nicht zur Verfügung stehen.',
     a_eta_001_now: 'jetzt',
     a_eta_001_future: 'in ',
+    a_eta_002_a: (rule: string, mode: string, time: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} ${time} in den Arenen ${stage1} und ${stage2} spielen!`,
     a_eta_002_s: (rule: string, mode: string, time: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} ${time} in den Arenen ${stage1} und ${stage2} spielen! Welche Arena ist cooler?`,
     a_eta_002_t: (rule: string, mode: string, time: string) => `Du kannst ${rule} im ${mode} ${time} in diesen Arenen spielen. Welche ist cooler?`,
     a_eta_003: 'Arenen',
@@ -81,14 +84,17 @@ export const dict: typeof index = {
     // [Action] Salmon Run
 
     a_sr_000: 'Sorry, ich habe keine Infos zu kommenden Salmon Run Zeiten.',
+    a_sr_002_a: (stage: string, remaining: string, weapon1: string, weapon2: string, weapon3: string, weapon4: string) => `Herr Bär stellt noch ${remaining} ein! Sammle Fischeier auf der Karte ${stage} mit den Waffen ${weapon1}, ${weapon2}, ${weapon3} und ${weapon4}!`,
     a_sr_002_s: (stage: string, remaining: string, weapon1: string, weapon2: string, weapon3: string, weapon4: string) => `Herr Bär stellt noch ${remaining} ein! Sammle Fischeier auf der Karte ${stage} mit den Waffen ${weapon1}, ${weapon2}, ${weapon3} und ${weapon4}! Mit welcher spielst Du am besten?`,
     a_sr_002_t: (stage: string, remaining: string) => `Herr Bär stellt noch ${remaining} ein, auf ${stage}. Hier sind die verfügbaren Waffen:`,
+    a_sr_003_a: (stage: string, eta: string, weapon1: string, weapon2: string, weapon3: string, weapon4: string) => `Salmon Run ist wieder in ${eta} auf der Karte ${stage} geöffnet. Die Waffen sind ${weapon1}, ${weapon2}, ${weapon3} und ${weapon4}.`,
     a_sr_003_s: (stage: string, eta: string, weapon1: string, weapon2: string, weapon3: string, weapon4: string) => `Salmon Run ist wieder in ${eta} auf der Karte ${stage} geöffnet. Die Waffen sind ${weapon1}, ${weapon2}, ${weapon3} und ${weapon4}. Welche ist dein Favorit?`,
     a_sr_003_t: (stage: string, eta: string) => `Salmon Run wird in ${eta} wieder auf der Map ${stage} offen sein. Hier sind die Waffen. Welche ist dein Favorit?`,
     a_sr_004: 'Unbekannt',
 
     // [Action] Merchandise
 
+    a_merch_000_a: (merch1: string, merch2: string, merch3: string) => `${merch1}, ${merch2}, ${merch3} und drei weitere sind im Angebot.`,
     a_merch_000_s: (merch1: string, merch2: string, merch3: string) => `${merch1}, ${merch2}, ${merch3} und drei weitere sind im Angebot. Ist was für dich dabei?`,
     a_merch_000_t: 'Das hier ist gerade im Angebot. Ist was für Dich dabei?',
     a_merch_001: (skill: string, brand: string, eta: string) => `mit ${skill} von ${brand} (noch ${eta})`,

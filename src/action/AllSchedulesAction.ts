@@ -58,6 +58,18 @@ function repondWithScheduleCarousel(app: I18NDialogflowApp, schedules: Schedule[
         .sort(sortByStartTime)
         .map(schedule => mapScheduleToInfo(schedule, now, app.getDict()))
 
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(app.getDict().a_asched_000_a(
+            gameModeName,
+            scheduleInfos[0].ruleName,
+            scheduleInfos[0].stageA.name,
+            scheduleInfos[0].stageB.name,
+            scheduleInfos[1].ruleName,
+            scheduleInfos[1].timeString,
+            scheduleInfos[1].stageA.name,
+            scheduleInfos[1].stageB.name))
+    }
+
     return app.askWithCarousel({
             speech: app.getDict().a_asched_000_s(
                 gameModeName,

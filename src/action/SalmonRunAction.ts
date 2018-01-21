@@ -38,6 +38,24 @@ function respondWithDetail(app: I18NDialogflowApp, detail: Detail) {
     }
     const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict())
     
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(info.open ?
+            app.getDict().a_sr_002_a(
+                info.stageName, 
+                info.timeString,
+                info.weapons[0].name,
+                info.weapons[1].name,
+                info.weapons[2].name,
+                info.weapons[3].name) :
+            app.getDict().a_sr_003_a(
+                info.stageName, 
+                info.timeString,
+                info.weapons[0].name,
+                info.weapons[1].name,
+                info.weapons[2].name,
+                info.weapons[3].name))
+    }
+
     return app.askWithCarousel({
             speech: info.open ?
                 app.getDict().a_sr_002_s(
