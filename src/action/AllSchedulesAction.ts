@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from 'util';
+import { isNullOrUndefined } from 'util'
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { Schedule } from '../entity/api/Schedules'
