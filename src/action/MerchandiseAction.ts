@@ -32,6 +32,14 @@ function respondWithMerch(app: I18NDialogflowApp, merchandises: Merchandise[]) {
     const infos = merchandises.map(merch => {
         return mapMerchandiseToInfo(merch, now, app.getDict())
     })
+
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(app.getDict().a_merch_000_a(
+            infos[0].merchName,
+            infos[1].merchName,
+            infos[2].merchName
+        ))
+    }
     
     return app.askWithCarousel({
             speech: app.getDict().a_merch_000_s(
