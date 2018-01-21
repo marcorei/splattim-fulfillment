@@ -1,6 +1,7 @@
 import { Schedules } from '../entity/api/Schedules'
 import { SalmonRunSchedules } from '../entity/api/SalmonRunSchedules'
 import { Inventory } from '../entity/api/Gear'
+import { Splatfests } from '../entity/api/Splatfest'
 import * as httpsPromise from '../common/httpsPromise'
 import * as jsonPromise from '../common/jsonPromise'
 import { config } from '../config'
@@ -19,6 +20,11 @@ export class Splatoon2inkApi {
     readMerchandise(): Promise<Inventory> {
         return httpsPromise.loadContent(config.splatoonInk.baseUrl + config.splatoonInk.data.merchandise)
             .then(json => jsonPromise.parse<Inventory>(json))
+    }
+
+    readSplatfest(): Promise<Splatfests> {
+        return httpsPromise.loadContent(config.splatoonInk.baseUrl + config.splatoonInk.data.splatfest)
+            .then(json => jsonPromise.parse<Splatfests>(json))
     }
 }
 

@@ -93,11 +93,35 @@ export const dict: typeof index = {
     a_merch_000_t: 'Das hier ist gerade im Angebot. Ist was für Dich dabei?',
     a_merch_001: (skill: string, brand: string, eta: string) => `mit ${skill} von ${brand} (noch ${eta})`,
     a_merch_002: 'Diese Info habe ich gerade nicht. Schau doch mal in der App!',
+
+    // [Action] Splatfest Result
+
+    a_splres_000: (winner: string, loser: string) => `Im letzten Splatfest hat Team ${winner} hat gegen Team ${loser} gewonnen.`,
+    a_splres_001: 'Sie haben in allen drei Kategorien gewonnen!',
+    a_splres_002: (won1: string, won2: string, lost: string) => `Sie haben ${won1} und ${won2} gewonnen, aber ${lost} verloren.`,
+    a_splres_002_votes: 'die Abstimmung',
+    a_splres_002_solo: 'Solo-Kämpfe',
+    a_splres_002_team: 'Team-Kämpfe',
+    a_splres_003: (alpha: string, bravo: string) => `${alpha} gegen ${bravo}`,
+    a_splres_004: (name: string, alphaRate: number, bravoRate: number) => `**${name}**: ${alphaRate}% - ${bravoRate}%`,
+    a_splres_004_votes: 'Abstimmung',
+    a_splres_004_solo: 'Solo',
+    a_splres_004_team: 'Team',
+    a_splres_005: 'Splafest Übersicht',
+    a_splres_006: (winner: string) => `Gewinner: ${winner}`,
+
+    // [Action] Splatfest Upcoming
+
+    a_splup_000: 'Ich habe aktuell keine Informationen zu kommenden Splatfests.',
+    a_splup_001: (alpha: string, bravo: string) => `${alpha} gegen ${bravo}`,
+    a_splup_002: 'Splafest Übersicht',
+    a_splup_003_s: (time: string, alpha: string, bravo: string) => `Es ist Splatfest! ${alpha} gegen ${bravo}. Noch ${time} !`,
+    a_splup_003_t: (time: string) => `Es ist Splatfest! Noch ${time}.`,
+    a_splup_003_b: (time: string) => `Noch ${time}.`,
+    a_splup_004_s: (time: string, alpha: string, bravo: string) => `Das nächste Splatfest beginnt in ${time}! ${alpha} gegen ${bravo}.`,
+    a_splup_004_t: (time: string) => `Das nächste Splatfest beginnt in ${time}.`,
+    a_splup_004_b: (time: string) => `in ${time}`,
     
-    // [Action] Options
-
-    a_opt_000: 'Die mag ich auch!',
-
     // [Option] Schedule Stage
 
     o_schedstage_000: 'Fresh! Immer fleißig alles einfärben!',

@@ -1,6 +1,6 @@
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
 import { Responses } from 'actions-on-google'
-import { Splatoon2inkApi, getSplatnetResUrl } from '../data/Splatoon2inkApi'
+import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { Schedule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { GameRuleArg } from '../entity/dialog/GameRuleArg'
