@@ -25,7 +25,30 @@ export const dict: typeof index = {
             default: return i.name
         }   
     },
-    api_sched_stage: (i: sched.Stage): string => i.name,
+    api_sched_stage: (i: sched.Stage): string => {
+        const names = [
+            'Korallenviertel', // 0 - The Reef
+            'Molluskelbude', // 1 - Musselforge Fitness
+            'Seeigel-Rockbühne', // 2 - Starfish Mainstage
+            'Störwerft', // 3 - Sturgeon Shipyard
+            'Perlmutt-Akademie', // 4 - Inkblot Art Academy
+            'Buckelwal-Piste', // 5 - Humpback Pump Track
+            'Manta Maria', // 6 - Manta Maria
+            'Heilbutt-Hafen', // 7 - Port Mackerel
+            'Muränentürme', // 8 - Moray Towers
+            'Grätenkanal', // 9 - Snapper Canal
+            'Tümmlerkuppel', // 10 - Kelp Dome
+            'Punkasius-Skatepark', // 11 - Blackbelly Skatepark
+            'Abyssal-Museum', // 12 - Shellendorf Institute
+            'Cetacea-Markt', // 13 - MakoMart
+            'Kofferfisch-Lager', // 14 - Walleye Warehouse
+        ]
+        const id = parseInt(i.id)
+        if (id < names.length) {
+            return names[id]
+        }
+        return i.name
+    },
     api_gear_item: (i: gear.Gear): string => i.name,
     api_gear_brand: (i: gear.Brand): string => i.name,
     api_gear_skill: (i: gear.Skill): string => i.name,
