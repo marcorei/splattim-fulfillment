@@ -80,6 +80,15 @@ export const dict = {
     a_eta_002_t: (rule: string, mode: string, time: string) => `You can play ${rule} in ${mode} ${time} on these stages. Which one is cooler?`,
     a_eta_003: 'Stages',
 
+    // [Action] Stage Schedule
+
+    a_ssched_000: (stage: string) => `${stage} doesn't seem to be coming up any time soon.`,
+    a_ssched_001_t: (stage: string) => `Here are the next opportunities to play on ${stage}.`,
+    a_ssched_002_start: (stage: string) => `The next opportunities to play on the stage ${stage} are:`,
+    a_ssched_002_middle: (rule: string, mode: string, time: string) => `${rule} in ${mode} in ${time}`,
+    a_ssched_002_connector: ' and ',
+    a_ssched_002_end: '. When are you going to play?',
+    
     // [Action] Salmon Run
 
     a_sr_000: 'Sorry, I have no information on upcoming Salmon Run shifts.',
