@@ -86,8 +86,10 @@ export const dict = {
     a_ssched_001_t: (stage: string) => `Here are the next opportunities to play on ${stage}.`,
     a_ssched_002_start: (stage: string) => `The next opportunities to play on the stage ${stage} are:`,
     a_ssched_002_middle: (rule: string, mode: string, time: string) => `${rule} in ${mode} in ${time}`,
+    a_ssched_002_middle_now: (rule: string, mode: string) => `${rule} in ${mode} right now`,
     a_ssched_002_connector: ' and ',
     a_ssched_002_end: '. When are you going to play?',
+    a_ssched_004: 'now',
     
     // [Action] Salmon Run
 

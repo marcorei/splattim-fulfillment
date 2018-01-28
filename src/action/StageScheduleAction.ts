@@ -50,18 +50,11 @@ function respondWithSchedules(app: I18NDialogflowApp, schedules: Schedule[], sta
     })()
 
     if (schedules.length == 0) {
-        return app.tell(dict.a_ssched_000(requestedStageName)) // TODO fallback
+        return app.tell(dict.a_ssched_000(requestedStageName))
     }
 
     const now = nowInSplatFormat()
     const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, dict))
-
-    // Let's see when you can play again on stage BLA.
-    // Upcoming opportunities to play on stage BLA. 
-    // I searched for stage BLA:
-    // Stage BLA in the upcoming schedule:
-    // These are the options to play on stage BLA
-    // The next opportunities to play on stage BLA are:
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(buildSpeechOverview(dict, infos, requestedStageName, false))
@@ -91,7 +84,9 @@ function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[], stageName: strin
             default: 
                 output += ', '
         }
-        output += dict.a_ssched_002_middle(info.ruleName, info.modeName, info.timeString)
+        output += info.timeDiff > 0 ? 
+            dict.a_ssched_002_middle(info.ruleName, info.modeName, info.timeString) :
+            dict.a_ssched_002_middle_now(info.ruleName, info.modeName)
     })
     if (appendQuestion) {
         output += dict.a_ssched_002_end
@@ -107,7 +102,9 @@ function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[], stageName: strin
 function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageName: string): Responses.OptionItem {
     const desc = `${info.ruleName} in ${info.modeName}`
     const optionKey = buildOptionKey(stageName, info.modeName, info.timeDiff)
-    const timeInfo = `in ${info.timeString}`
+    const timeInfo = info.timeDiff > 0 ? 
+        `in ${info.timeString}` : 
+        app.getDict().a_ssched_004
 
     return app.buildOptionItem(optionKey, [timeInfo, info.modeName])
         .setTitle(timeInfo)
