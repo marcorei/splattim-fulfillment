@@ -15,6 +15,30 @@ export const dict = {
     api_grizz_stage: (i: coop.Stage): string => i.name,
     api_grizz_weapon: (i: coop.Weapon): string => i.name,
 
+    stage_name: (id: number): string | undefined => {
+        const names = [
+            'The Reef', // 0 - The Reef
+            'Musselforge Fitness', // 1 - Musselforge Fitness
+            'Starfish Mainstage', // 2 - Starfish Mainstage
+            'Sturgeon Shipyard', // 3 - Sturgeon Shipyard
+            'Inkblot Art Academy', // 4 - Inkblot Art Academy
+            'Humpback Pump Track', // 5 - Humpback Pump Track
+            'Manta Maria', // 6 - Manta Maria
+            'Port Mackerel', // 7 - Port Mackerel
+            'Moray Towers', // 8 - Moray Towers
+            'Snapper Canal', // 9 - Snapper Canal
+            'Kelp Dome', // 10 - Kelp Dome
+            'Blackbelly Skatepark', // 11 - Blackbelly Skatepark
+            'Shellendorf Institute', // 12 - Shellendorf Institute
+            'MakoMart', // 13 - MakoMart
+            'Walleye Warehouse', // 14 - Walleye Warehouse
+        ]
+        if (id < names.length) {
+            return names[id]
+        }
+        return undefined
+    },
+
     // [Action] Schedules
 
     a_sched_000_s: (url: string) => `I can't help you right now. But check out ${url}!`,
