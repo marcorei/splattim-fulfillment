@@ -1,5 +1,5 @@
-import { isNullOrUndefined } from 'util';
-import { I18NDialogflowApp } from "../i18n/I18NDialogflowApp";
+import { isNullOrUndefined } from 'util'
+import { I18NDialogflowApp } from "../i18n/I18NDialogflowApp"
 
 export class ArgParser {
     private app: I18NDialogflowApp
@@ -7,6 +7,16 @@ export class ArgParser {
 
     constructor(app: I18NDialogflowApp) {
         this.app = app
+    }
+
+    int(key: string): number {
+        if (!this.isOk()) return -1
+        const arg = this.app.getArgument(key)
+        if (isNullOrUndefined(arg)) {
+            this.missingArgKey = key
+            return -1
+        }
+        return parseInt(arg.toString())
     }
 
     string(key: string): string {

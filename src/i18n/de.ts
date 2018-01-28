@@ -2,6 +2,7 @@ import { dict as index } from './en'
 import * as sched from '../entity/api/Schedules'
 import * as gear from '../entity/api/Gear'
 import * as coop from '../entity/api/SalmonRunSchedules'
+import { isNullOrUndefined } from 'util';
 
 export const dict: typeof index = {
     global_error_default: 'Trauriges woomy. Mich hat\'s erwischt!',
@@ -26,6 +27,25 @@ export const dict: typeof index = {
         }   
     },
     api_sched_stage: (i: sched.Stage): string => {
+        const id = parseInt(i.id)
+        const stageName = dict.stage_name(id)
+        return isNullOrUndefined(stageName) ? i.name : stageName
+    },
+    api_gear_item: (i: gear.Gear): string => i.name,
+    api_gear_brand: (i: gear.Brand): string => i.name,
+    api_gear_skill: (i: gear.Skill): string => i.name,
+    api_grizz_stage: (i: coop.Stage): string => {
+        switch (i.name) { // No key available
+            case 'Spawning Grounds': return 'Salmoninden-Damm'
+            case 'Salmonid Smokeyard': return 'Räucherwerk'
+            case 'Marooner\'s Bay': return 'Schiffswrack-Insel'
+            case 'Lost Outpost': return 'Siedlungsruine'
+            default: return i.name
+        }
+    },
+    api_grizz_weapon: (i: coop.Weapon): string => i.name,
+
+    stage_name: (id: number): string | undefined => {
         const names = [
             'Korallenviertel', // 0 - The Reef
             'Molluskelbude', // 1 - Musselforge Fitness
@@ -43,25 +63,11 @@ export const dict: typeof index = {
             'Cetacea-Markt', // 13 - MakoMart
             'Kofferfisch-Lager', // 14 - Walleye Warehouse
         ]
-        const id = parseInt(i.id)
         if (id < names.length) {
             return names[id]
         }
-        return i.name
+        return undefined
     },
-    api_gear_item: (i: gear.Gear): string => i.name,
-    api_gear_brand: (i: gear.Brand): string => i.name,
-    api_gear_skill: (i: gear.Skill): string => i.name,
-    api_grizz_stage: (i: coop.Stage): string => {
-        switch (i.name) { // No key available
-            case 'Spawning Grounds': return 'Salmoninden-Damm'
-            case 'Salmonid Smokeyard': return 'Räucherwerk'
-            case 'Marooner\'s Bay': return 'Schiffswrack-Insel'
-            case 'Lost Outpost': return 'Siedlungsruine'
-            default: return i.name
-        }
-    },
-    api_grizz_weapon: (i: coop.Weapon): string => i.name,
 
     // [Action] Schedules
 
@@ -103,6 +109,15 @@ export const dict: typeof index = {
     a_eta_002_s: (rule: string, mode: string, time: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} ${time} in den Arenen ${stage1} und ${stage2} spielen! Welche Arena ist cooler?`,
     a_eta_002_t: (rule: string, mode: string, time: string) => `Du kannst ${rule} im ${mode} ${time} in diesen Arenen spielen. Welche ist cooler?`,
     a_eta_003: 'Arenen',
+
+    // [Action] Stage Schedule
+
+    a_ssched_000: (stage: string) => `${stage} scheint kommt erstmal nicht dran.`,
+    a_ssched_001_t: (stage: string) => `Hier sind die nächsten Gelegenheiten in der Arena ${stage} zu spielen.`,
+    a_ssched_002_start: (stage: string) => `Die nächsten Gelegenheiten in der Arena ${stage} sind:`,
+    a_ssched_002_middle: (rule: string, mode: string, time: string) => `${rule} in ${mode} in ${time}`,
+    a_ssched_002_connector: ' und ',
+    a_ssched_002_end: '. Wann wirst Du spielen?',
 
     // [Action] Salmon Run
 
