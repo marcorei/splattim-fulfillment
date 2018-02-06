@@ -1,43 +1,43 @@
-import * as sched from '../entity/api/Schedules'
-import * as gear from '../entity/api/Gear'
-import * as coop from '../entity/api/SalmonRunSchedules'
+// import * as sched from '../entity/api/Schedules'
+// import * as gear from '../entity/api/Gear'
+// import * as coop from '../entity/api/SalmonRunSchedules'
 
 export const dict = {
     global_error_default: 'Sad woomy. I\'ve been splatted!',
     global_error_missing_param: 'Sad woomy. More info please!',
 
-    api_sched_mode: (i: sched.GameMode): string => i.name,
-    api_sched_rule: (i: sched.Rule): string => i.name,
-    api_sched_stage: (i: sched.Stage): string => i.name,
-    api_gear_item: (i: gear.Gear): string => i.name,
-    api_gear_brand: (i: gear.Brand): string => i.name,
-    api_gear_skill: (i: gear.Skill): string => i.name,
-    api_grizz_stage: (i: coop.Stage): string => i.name,
-    api_grizz_weapon: (i: coop.Weapon): string => i.name,
+    // api_sched_mode: (i: sched.GameMode): string => i.name,
+    // api_sched_rule: (i: sched.Rule): string => i.name,
+    // api_sched_stage: (i: sched.Stage): string => i.name,
+    // api_gear_item: (i: gear.Gear): string => i.name,
+    // api_gear_brand: (i: gear.Brand): string => i.name,
+    // api_gear_skill: (i: gear.Skill): string => i.name,
+    // api_grizz_stage: (i: coop.Stage): string => i.name,
+    // api_grizz_weapon: (i: coop.Weapon): string => i.name,
 
-    stage_name: (id: number): string | undefined => {
-        const names = [
-            'The Reef', // 0 - The Reef
-            'Musselforge Fitness', // 1 - Musselforge Fitness
-            'Starfish Mainstage', // 2 - Starfish Mainstage
-            'Sturgeon Shipyard', // 3 - Sturgeon Shipyard
-            'Inkblot Art Academy', // 4 - Inkblot Art Academy
-            'Humpback Pump Track', // 5 - Humpback Pump Track
-            'Manta Maria', // 6 - Manta Maria
-            'Port Mackerel', // 7 - Port Mackerel
-            'Moray Towers', // 8 - Moray Towers
-            'Snapper Canal', // 9 - Snapper Canal
-            'Kelp Dome', // 10 - Kelp Dome
-            'Blackbelly Skatepark', // 11 - Blackbelly Skatepark
-            'Shellendorf Institute', // 12 - Shellendorf Institute
-            'MakoMart', // 13 - MakoMart
-            'Walleye Warehouse', // 14 - Walleye Warehouse
-        ]
-        if (id < names.length) {
-            return names[id]
-        }
-        return undefined
-    },
+    // stage_name: (id: number): string | undefined => {
+    //     const names = [
+    //         'The Reef', // 0 - The Reef
+    //         'Musselforge Fitness', // 1 - Musselforge Fitness
+    //         'Starfish Mainstage', // 2 - Starfish Mainstage
+    //         'Sturgeon Shipyard', // 3 - Sturgeon Shipyard
+    //         'Inkblot Art Academy', // 4 - Inkblot Art Academy
+    //         'Humpback Pump Track', // 5 - Humpback Pump Track
+    //         'Manta Maria', // 6 - Manta Maria
+    //         'Port Mackerel', // 7 - Port Mackerel
+    //         'Moray Towers', // 8 - Moray Towers
+    //         'Snapper Canal', // 9 - Snapper Canal
+    //         'Kelp Dome', // 10 - Kelp Dome
+    //         'Blackbelly Skatepark', // 11 - Blackbelly Skatepark
+    //         'Shellendorf Institute', // 12 - Shellendorf Institute
+    //         'MakoMart', // 13 - MakoMart
+    //         'Walleye Warehouse', // 14 - Walleye Warehouse
+    //     ]
+    //     if (id < names.length) {
+    //         return names[id]
+    //     }
+    //     return undefined
+    // },
 
     // [Action] Schedules
 
