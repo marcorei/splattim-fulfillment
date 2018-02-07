@@ -5,7 +5,7 @@ export function loadContent(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         const request = https.get(url, response => {
             if (isNullOrUndefined(response.statusCode) || response.statusCode < 200 || response.statusCode > 299) {
-                reject(new Error('Failed to content, status code: ' + response.statusCode))
+                reject(new Error(`Failed to load content from ${url}, status code: ${response.statusCode}`))
             }
 
             const body: any[] = []

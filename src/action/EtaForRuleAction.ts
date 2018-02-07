@@ -1,6 +1,5 @@
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
 import { Responses } from 'actions-on-google'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { Schedule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { GameRuleArg } from '../entity/dialog/GameRuleArg'
@@ -9,6 +8,8 @@ import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { ArgParser } from '../common/dfUtils';
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'eta_rule'
 
@@ -42,22 +43,25 @@ export function handler(app: I18NDialogflowApp) {
         case GameRuleArg.values.zones:
 
             const ruleKey = gameRuleArgToApi(requestedGameRule)
-            return new Splatoon2inkApi().readSchedules()
-                .then(schedules => requestedGameMode == GameModeArg.values.league ?
-                        schedules.league :
-                        schedules.gachi)
-                .then(schedules => schedules
-                    .filter(schedule => {
-                        return schedule.rule.key === ruleKey
-                    })
-                    .sort(sortByStartTime)
-                )
-                .then(schedules => {
-                    if (schedules.length === 0) {
-                        app.tell(app.getDict().a_eta_000)
-                    } else {
-                        respondWithSchedule(app, schedules[0])
-                    }
+            return new I18NSplatoon2API(app).readSchedules()
+                .then(result => {
+                    return Promise.resolve(result.content)
+                        .then(schedules => requestedGameMode == GameModeArg.values.league ?
+                            schedules.league :
+                            schedules.gachi)
+                        .then(schedules => schedules
+                            .filter(schedule => {
+                                return schedule.rule.key === ruleKey
+                            })
+                            .sort(sortByStartTime)
+                        )
+                        .then(schedules => {
+                            if (schedules.length === 0) {
+                                app.tell(app.getDict().a_eta_000)
+                            } else {
+                                respondWithSchedule(app, result.contentDict, schedules[0])
+                            }
+                        })
                 })
                 .catch(error => {
                     console.error(error)
@@ -74,8 +78,8 @@ export function handler(app: I18NDialogflowApp) {
 /**
  * Reponds by showing two stges in a list format.
  */
-function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule) {
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), app.getDict())
+function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedule: Schedule) {
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
     const eta = info.timeString === '' ? 
         app.getDict().a_eta_001_now : 
         app.getDict().a_eta_001_future + info.timeString

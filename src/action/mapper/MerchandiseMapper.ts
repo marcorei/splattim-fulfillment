@@ -1,7 +1,7 @@
-import { Dict } from '../../i18n/I18NDialogflowApp'
 import { secondsToTime } from '../../common/utils'
 import { getSplatnetResUrl } from '../../data/Splatoon2inkApi'
 import { Merchandise } from '../../entity/api/Gear'
+import { ContentDict } from '../../i18n/ContentDict'
 
 export interface MerchInfo {
     merchName: string,
@@ -12,13 +12,13 @@ export interface MerchInfo {
     timeString: string
 }
 
-export function mapMerchandiseToInfo(merch: Merchandise, now: number, dict: Dict): MerchInfo {
+export function mapMerchandiseToInfo(merch: Merchandise, now: number, contentDict: ContentDict): MerchInfo {
     const timeDiff = merch.end_time - now
     return {
-        merchName: dict.api_gear_item(merch.gear),
+        merchName: contentDict.gear(merch.gear),
         merchImage: getSplatnetResUrl(merch.gear.image),
-        brandName: dict.api_gear_brand(merch.gear.brand),
-        skillName: dict.api_gear_skill(merch.skill),
+        brandName: contentDict.brand(merch.gear.brand),
+        skillName: contentDict.skill(merch.skill),
         timeDiff: timeDiff,
         timeString: secondsToTime(timeDiff)
     }

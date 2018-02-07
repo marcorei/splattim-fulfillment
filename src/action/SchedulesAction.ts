@@ -1,7 +1,6 @@
 import { isNullOrUndefined } from 'util'
 import { I18NDialogflowApp, Dict } from '../i18n/I18NDialogflowApp';
 import { Responses } from 'actions-on-google'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { config } from '../config'
 import { Schedules, Schedule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
@@ -10,6 +9,8 @@ import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { ArgParser } from '../common/dfUtils'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'schedules'
 
@@ -24,21 +25,21 @@ export function handler(app: I18NDialogflowApp) {
     const requestedGameMode = argParser.stringWithDefault(GameModeArg.key, GameModeArg.values.all)
     if (!argParser.isOk()) return argParser.tellAndLog()
     
-    return new Splatoon2inkApi().readSchedules()
-        .then(schedules => {
+    return new I18NSplatoon2API(app).readSchedules()
+        .then(result => {
             switch (requestedGameMode) {
                 case GameModeArg.values.regular:
-                    respondWithSchedule(app, currentScheduleFrom(schedules.regular))
+                    respondWithSchedule(app, result.contentDict, currentScheduleFrom(result.content.regular))
                     break
                 case GameModeArg.values.ranked:
-                    respondWithSchedule(app, currentScheduleFrom(schedules.gachi))
+                    respondWithSchedule(app, result.contentDict, currentScheduleFrom(result.content.gachi))
                     break
                 case GameModeArg.values.league:
-                    respondWithSchedule(app,  currentScheduleFrom(schedules.league))
+                    respondWithSchedule(app, result.contentDict, currentScheduleFrom(result.content.league))
                     break
                 case GameModeArg.values.all:
                 default:
-                    respondWithoutSpecificSchedule(app, schedules)
+                    respondWithoutSpecificSchedule(app, result.contentDict, result.content)
             }
         })
         .catch(error => {
@@ -50,7 +51,7 @@ export function handler(app: I18NDialogflowApp) {
 /**
  * Responds by showing two stages of a given schedule in a list.
  */
-function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule | null) {
+function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedule: Schedule | null) {
     if (isNullOrUndefined(schedule)) {
         return app.tell(app.buildRichResponse()
             .addSimpleResponse({
@@ -60,7 +61,7 @@ function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule | null) 
             .addSuggestionLink('Splatoon.ink', config.splatoonInk.baseUrl))
     }
 
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), app.getDict())
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(app.getDict().a_sched_002_a(
@@ -90,12 +91,12 @@ function respondWithSchedule(app: I18NDialogflowApp, schedule: Schedule | null) 
 /**
  * Reponds by showing all stages of all active schedules in a carousel.
  */
-function respondWithoutSpecificSchedule(app: I18NDialogflowApp, schedules: Schedules) {
+function respondWithoutSpecificSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedules) {
     const now = nowInSplatFormat()
     const infos: ScheduleInfo[] = [schedules.regular, schedules.gachi, schedules.league]
         .map(schedules => currentScheduleFrom(schedules))
         .filter(schedule => schedule != null)
-        .map(schedule => mapScheduleToInfo(schedule!, now, app.getDict()))
+        .map(schedule => mapScheduleToInfo(schedule!, now, contentDict))
     
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(buildSpeechOverview(app.getDict(), infos, false))
