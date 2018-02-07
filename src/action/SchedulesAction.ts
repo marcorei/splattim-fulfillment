@@ -9,8 +9,8 @@ import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { ArgParser } from '../common/dfUtils'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
-import { ContentDict } from '../i18n/ContentDict';
-import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api';
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'schedules'
 

@@ -1,73 +1,8 @@
 import { dict as index } from './en'
-// import * as sched from '../entity/api/Schedules'
-// import * as gear from '../entity/api/Gear'
-// import * as coop from '../entity/api/SalmonRunSchedules'
-// import { isNullOrUndefined } from 'util';
 
 export const dict: typeof index = {
     global_error_default: 'Trauriges woomy. Mich hat\'s erwischt!',
     global_error_missing_param: 'Trauriges woomy. Ich brauche mehr Infos!',
-
-    // api_sched_mode: (i: sched.GameMode): string => {
-    //     switch (i.key) {
-    //         case sched.gameModeKeyValues.league: return 'Ligakampf'
-    //         case sched.gameModeKeyValues.ranked: return 'Rangkampf'
-    //         case sched.gameModeKeyValues.regular: return 'Standardkampf'
-    //         default: return i.name
-    //     }
-    // },
-    // api_sched_rule: (i: sched.Rule): string => {
-    //     switch (i.key) {
-    //         case sched.gameRuleKeyValues.blitz: return 'Muschelchaos'
-    //         case sched.gameRuleKeyValues.rainmaker: return 'Goldfisch'
-    //         case sched.gameRuleKeyValues.tower: return 'Turm-Kommando'
-    //         case sched.gameRuleKeyValues.turf: return 'Revierkampf'
-    //         case sched.gameRuleKeyValues.zones: return 'Herrschaft'
-    //         default: return i.name
-    //     }   
-    // },
-    // api_sched_stage: (i: sched.Stage): string => {
-    //     const id = parseInt(i.id)
-    //     const stageName = dict.stage_name(id)
-    //     return isNullOrUndefined(stageName) ? i.name : stageName
-    // },
-    // api_gear_item: (i: gear.Gear): string => i.name,
-    // api_gear_brand: (i: gear.Brand): string => i.name,
-    // api_gear_skill: (i: gear.Skill): string => i.name,
-    // api_grizz_stage: (i: coop.Stage): string => {
-    //     switch (i.name) { // No key available
-    //         case 'Spawning Grounds': return 'Salmoninden-Damm'
-    //         case 'Salmonid Smokeyard': return 'Räucherwerk'
-    //         case 'Marooner\'s Bay': return 'Schiffswrack-Insel'
-    //         case 'Lost Outpost': return 'Siedlungsruine'
-    //         default: return i.name
-    //     }
-    // },
-    // api_grizz_weapon: (i: coop.Weapon): string => i.name,
-
-    // stage_name: (id: number): string | undefined => {
-    //     const names = [
-    //         'Korallenviertel', // 0 - The Reef
-    //         'Molluskelbude', // 1 - Musselforge Fitness
-    //         'Seeigel-Rockbühne', // 2 - Starfish Mainstage
-    //         'Störwerft', // 3 - Sturgeon Shipyard
-    //         'Perlmutt-Akademie', // 4 - Inkblot Art Academy
-    //         'Buckelwal-Piste', // 5 - Humpback Pump Track
-    //         'Manta Maria', // 6 - Manta Maria
-    //         'Heilbutt-Hafen', // 7 - Port Mackerel
-    //         'Muränentürme', // 8 - Moray Towers
-    //         'Grätenkanal', // 9 - Snapper Canal
-    //         'Tümmlerkuppel', // 10 - Kelp Dome
-    //         'Punkasius-Skatepark', // 11 - Blackbelly Skatepark
-    //         'Abyssal-Museum', // 12 - Shellendorf Institute
-    //         'Cetacea-Markt', // 13 - MakoMart
-    //         'Kofferfisch-Lager', // 14 - Walleye Warehouse
-    //     ]
-    //     if (id < names.length) {
-    //         return names[id]
-    //     }
-    //     return undefined
-    // },
 
     // [Action] Schedules
 
