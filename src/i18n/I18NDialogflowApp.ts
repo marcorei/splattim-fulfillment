@@ -10,6 +10,13 @@ function resolveLang(lang: string): Dict {
     }
 }
 
+function cleanLang(lang: string): string {
+    switch(lang) {
+        case 'de': return 'de'
+        default: return 'en'
+    }
+}
+
 export type Dict = typeof dict
 
 export class I18NDialogflowApp extends DialogflowApp {
@@ -18,7 +25,7 @@ export class I18NDialogflowApp extends DialogflowApp {
 
     constructor(options: DialogflowAppOptions) {
         super(options)
-        this.lang = options.request.body['lang']
+        this.lang = cleanLang(options.request.body['lang'])
         this.dict = resolveLang(this.lang)
     }
 
