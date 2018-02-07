@@ -1,13 +1,14 @@
 import { I18NDialogflowApp, Dict } from '../i18n/I18NDialogflowApp'
 import { ArgParser } from '../common/dfUtils'
 import { StageArg } from '../entity/dialog/StageArg'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { Schedule } from '../entity/api/Schedules'
 import { isNullOrUndefined } from 'util'
 import { ScheduleInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { Responses } from 'actions-on-google'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
+import { ContentDict } from '../i18n/ContentDict'
 
 export const name = 'stage_schedule'
 
@@ -16,15 +17,18 @@ export function handler(app: I18NDialogflowApp) {
     const requestedStage = argParser.int(StageArg.key)
     if (!argParser.isOk()) return argParser.tellAndLog()
 
-    return new Splatoon2inkApi().readSchedules()
-        .then(schedules => [
-            findStageIn(schedules.league, requestedStage),
-            findStageIn(schedules.gachi, requestedStage),
-            findStageIn(schedules.regular, requestedStage)]
-            .filter(schedule => !isNullOrUndefined(schedule))
-            .map(schedule => schedule as Schedule) // not undefined!
-            .sort(sortByStartTime))
-        .then((schedules) => respondWithSchedules(app, schedules, requestedStage))
+    return new I18NSplatoon2API(app).readSchedules()
+        .then(result => {
+            Promise.resolve(result.content)
+                .then(schedules => [
+                    findStageIn(schedules.league, requestedStage),
+                    findStageIn(schedules.gachi, requestedStage),
+                    findStageIn(schedules.regular, requestedStage)]
+                    .filter(schedule => !isNullOrUndefined(schedule))
+                    .map(schedule => schedule as Schedule) // not undefined!
+                    .sort(sortByStartTime))
+                .then((schedules) => respondWithSchedules(app, result.contentDict, schedules, requestedStage))
+        })
         .catch(error => {
             console.error(error)
             app.tell(app.getDict().global_error_default)
@@ -41,20 +45,16 @@ function findStageIn(schedules: Schedule[], stage: number) : Schedule | undefine
 /**
  * Responds by showing a list of upcoming modes.
  */
-function respondWithSchedules(app: I18NDialogflowApp, schedules: Schedule[], stageId: number) {
+function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedule[], stageId: number) {
     const dict = app.getDict()
-    const requestedStageName: string = (() =>{
-        let name = dict.stage_name(stageId)
-        if (!isNullOrUndefined(name)) return name
-        return 'Unknown'
-    })()
+    const requestedStageName = contentDict.schedStageId(stageId.toString())
 
     if (schedules.length == 0) {
         return app.tell(dict.a_ssched_000(requestedStageName))
     }
 
     const now = nowInSplatFormat()
-    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, dict))
+    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict))
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(buildSpeechOverview(dict, infos, requestedStageName, false))

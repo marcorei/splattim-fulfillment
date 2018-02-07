@@ -1,6 +1,5 @@
 import { isNullOrUndefined } from 'util'
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { Schedule } from '../entity/api/Schedules'
 import { GameModeArg } from '../entity/dialog/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
@@ -8,6 +7,8 @@ import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { ArgParser } from '../common/dfUtils'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from './mapper/SchedulesMapper'
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'all_schedules'
 
@@ -20,17 +21,17 @@ export function handler(app: I18NDialogflowApp) {
     const requestedGameMode = argParser.string(GameModeArg.key)
     if (!argParser.isOk()) return argParser.tellAndLog()
     
-    return new Splatoon2inkApi().readSchedules()
-        .then(schedules => {
+    return new I18NSplatoon2API(app).readSchedules()
+        .then(result => {
             switch (requestedGameMode) {
                 case GameModeArg.values.regular:
-                    repondWithScheduleCarousel(app, schedules.regular)
+                    repondWithScheduleCarousel(app, result.contentDict, result.content.regular)
                     break
                 case GameModeArg.values.ranked:
-                    repondWithScheduleCarousel(app, schedules.gachi)
+                    repondWithScheduleCarousel(app, result.contentDict, result.content.gachi)
                     break
                 case GameModeArg.values.league:
-                    repondWithScheduleCarousel(app, schedules.league)
+                    repondWithScheduleCarousel(app, result.contentDict, result.content.league)
                     break
                 case GameModeArg.values.all:
                 default:
@@ -47,16 +48,16 @@ export function handler(app: I18NDialogflowApp) {
  * Responds by providing a carousel of stages.
  * The carousel includes all stages while the speech response features only two.
  */
-function repondWithScheduleCarousel(app: I18NDialogflowApp, schedules: Schedule[]) {
+function repondWithScheduleCarousel(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedule[]) {
     if (isNullOrUndefined(schedules) || schedules.length < 2) {
         return app.tell(app.getDict().a_asched_error_empty_data)
     }
 
-    const gameModeName = app.getDict().api_sched_mode(schedules[0].game_mode)
+    const gameModeName = contentDict.mode(schedules[0].game_mode)
     const now = nowInSplatFormat()
     const scheduleInfos: ScheduleInfo[] = schedules
         .sort(sortByStartTime)
-        .map(schedule => mapScheduleToInfo(schedule, now, app.getDict()))
+        .map(schedule => mapScheduleToInfo(schedule, now, contentDict))
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(app.getDict().a_asched_000_a(

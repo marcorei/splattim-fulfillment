@@ -1,10 +1,11 @@
 import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Responses } from 'actions-on-google'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { sortByEndTime, nowInSplatFormat } from '../common/utils'
 import { Merchandise } from '../entity/api/Gear'
 import { mapMerchandiseToInfo, MerchInfo } from './mapper/MerchandiseMapper'
 import { buildOptionKey } from './MerchandiseMerchOptionAction'
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'merchandise'
 
@@ -13,24 +14,27 @@ export const name = 'merchandise'
  * Also gives a shorter spech overview.
  */
 export function handler(app: I18NDialogflowApp) {
-    return new Splatoon2inkApi().readMerchandise()
-        .then(merch => merch.merchandises
-            .sort(sortByEndTime))
-        .then(mechandises => respondWithMerch(app, mechandises))
+    return new I18NSplatoon2API(app).readMerchandise()
+        .then(result => {
+            return Promise.resolve(result.content)
+                .then(merch => merch.merchandises
+                    .sort(sortByEndTime))
+                .then(mechandises => respondWithMerch(app, result.contentDict, mechandises))
+        })
         .catch(error => {
             console.error(error)
             app.tell(app.getDict().global_error_default)
         })
 }
 
-function respondWithMerch(app: I18NDialogflowApp, merchandises: Merchandise[]) {
+function respondWithMerch(app: I18NDialogflowApp, contentDict: ContentDict, merchandises: Merchandise[]) {
     if (merchandises.length < 3) {
         return app.getDict().a_merch_002
     }
     
     const now = nowInSplatFormat()
     const infos = merchandises.map(merch => {
-        return mapMerchandiseToInfo(merch, now, app.getDict())
+        return mapMerchandiseToInfo(merch, now, contentDict)
     })
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {

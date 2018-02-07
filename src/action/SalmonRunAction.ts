@@ -1,10 +1,11 @@
-import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp';
+import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Responses } from 'actions-on-google'
-import { Splatoon2inkApi } from '../data/Splatoon2inkApi'
 import { Detail } from '../entity/api/SalmonRunSchedules'
 import { sortByStartTime, nowInSplatFormat } from '../common/utils'
 import { mapDetailToInfo, WeaponInfo } from './mapper/SalmonRunMapper'
 import { buildOptionKey } from './SalmonRunWeaponOptionAction'
+import { ContentDict } from '../i18n/ContentDict'
+import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
 
 export const name = 'next_grizzco'
 
@@ -13,14 +14,17 @@ export const name = 'next_grizzco'
  * Also shows weapons in a carousel.
  */
 export function handler(app: I18NDialogflowApp) {
-    return new Splatoon2inkApi().readSalmonRunSchedules()
-        .then(schedules => schedules.details
-            .sort(sortByStartTime))
-        .then(details => {
-            if (details.length === 0) {
-                return app.tell(app.getDict().a_sr_000)
-            }
-            return respondWithDetail(app, details[0])
+    return new I18NSplatoon2API(app).readSalmonRunSchedules()
+        .then(result => {
+            Promise.resolve(result.content)
+                .then(schedules => schedules.details
+                    .sort(sortByStartTime))
+                .then(details => {
+                    if (details.length === 0) {
+                        return app.tell(app.getDict().a_sr_000)
+                    }
+                    return respondWithDetail(app, result.contentDict, details[0])
+                })
         })
         .catch(error => {
             console.error(error)
@@ -31,12 +35,12 @@ export function handler(app: I18NDialogflowApp) {
 /**
  * Responds with a list of weapons available and a text about the next or current schedule.
  */
-function respondWithDetail(app: I18NDialogflowApp, detail: Detail) {
+function respondWithDetail(app: I18NDialogflowApp, contentDict: ContentDict, detail: Detail) {
     if (detail.weapons.length < 4) {
         console.error('less than four weapons in salmon run info')
         return app.tell(app.getDict().a_sr_000)
     }
-    const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict())
+    const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict(), contentDict)
     
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(info.open ?

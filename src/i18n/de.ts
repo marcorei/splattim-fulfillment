@@ -115,7 +115,7 @@ export const dict: typeof index = {
     a_ssched_000: (stage: string) => `${stage} scheint kommt erstmal nicht dran.`,
     a_ssched_001_t: (stage: string) => `Hier sind die nächsten Gelegenheiten in der Arena ${stage} zu spielen.`,
     a_ssched_002_start: (stage: string) => `Die nächsten Gelegenheiten in der Arena ${stage} sind:`,
-    a_ssched_002_middle: (rule: string, mode: string, time: string) => `${rule} in ${mode} in ${time}`,
+    a_ssched_002_middle: (rule: string, mode: string, time: string) => `${rule} im ${mode} in ${time}`,
     a_ssched_002_middle_now: (rule: string, mode: string) => `${rule} in ${mode} jetzt gerade`,
     a_ssched_002_connector: ' und ',
     a_ssched_002_end: '. Wann wirst Du spielen?',

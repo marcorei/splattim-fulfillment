@@ -27,9 +27,14 @@ export class ContentDict {
         return isNullOrUndefined(t) ? i.name : t.name
     }
 
-    sched_stage(i: sched.Stage): string {
+    schedStage(i: sched.Stage): string {
         const t = this.locale.stages[i.id] as HasName
         return isNullOrUndefined(t) ? i.name : t.name
+    }
+
+    schedStageId(id: string): string {
+        const t = this.locale.stages[id] as HasName
+        return isNullOrUndefined(t) ? 'Unknown' : t.name
     }
 
     gear(i: gear.Gear): string {
@@ -58,7 +63,7 @@ export class ContentDict {
         return isNullOrUndefined(t) ? i.name : t.name
     }
 
-    coop_stage(i: coop.Stage): string {
+    coopStage(i: coop.Stage): string {
         const t = this.locale.coop_stages[i.image] as HasName
         return isNullOrUndefined(t) ? i.name : t.name
     }
