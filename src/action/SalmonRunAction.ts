@@ -2,10 +2,11 @@ import { I18NDialogflowApp } from '../i18n/I18NDialogflowApp'
 import { Responses } from 'actions-on-google'
 import { Detail } from '../entity/api/SalmonRunSchedules'
 import { sortByStartTime, nowInSplatFormat } from '../common/utils'
-import { mapDetailToInfo, WeaponInfo } from './mapper/SalmonRunMapper'
+import { mapDetailToInfo, WeaponInfo, DetailInfo } from './mapper/SalmonRunMapper'
 import { buildOptionKey } from './SalmonRunWeaponOptionAction'
 import { ContentDict } from '../i18n/ContentDict'
 import { I18NSplatoon2API } from '../i18n/I18NSplatoon2Api'
+import { isNullOrUndefined } from 'util';
 
 export const name = 'next_grizzco'
 
@@ -41,7 +42,16 @@ function respondWithDetail(app: I18NDialogflowApp, contentDict: ContentDict, det
         return app.tell(app.getDict().a_sr_000)
     }
     const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict(), contentDict)
+    const uniqueWeapons = removeDuplicateWeapons(info.weapons)
     
+    if (uniqueWeapons.length > 1) {
+        return respondWithMultipleWeapons(app, info, uniqueWeapons)
+    } else {
+        return respondWithSingleWeapon(app, info, uniqueWeapons[0])
+    }
+}
+
+function respondWithMultipleWeapons(app: I18NDialogflowApp, info: DetailInfo, uniqueWeapons: WeaponInfo[]) {
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(info.open ?
             app.getDict().a_sr_002_a(
@@ -81,8 +91,37 @@ function respondWithDetail(app: I18NDialogflowApp, contentDict: ContentDict, det
                 app.getDict().a_sr_003_t(info.stageName, info.timeString)},
         app.buildCarousel()
             .addItems(
-                info.weapons.map(weapon => 
+                uniqueWeapons.map(weapon => 
                     buildWeaponOptionItem(app, weapon))))
+}
+
+function respondWithSingleWeapon(app: I18NDialogflowApp, info: DetailInfo, weaponInfo: WeaponInfo) {
+    const speech = info.open ?
+        app.getDict().a_sr_005_s(
+            info.stageName, 
+            info.timeString,
+            weaponInfo.name) :
+        app.getDict().a_sr_006_s(
+            info.stageName, 
+            info.timeString,
+            weaponInfo.name)
+    
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+        return app.tell(speech)
+    }
+
+    const text = info.open ?
+        app.getDict().a_sr_005_t(info.stageName, info.timeString) :
+        app.getDict().a_sr_006_t(info.stageName, info.timeString)
+    const card = app.buildBasicCard()
+        .setTitle(weaponInfo.name)
+        .setImage(weaponInfo.image, weaponInfo.name)
+    return app.tell(app.buildRichResponse()
+        .addSimpleResponse({
+            speech: speech,
+            displayText: text
+        })
+        .addBasicCard(card))
 }
 
 function buildWeaponOptionItem(app: I18NDialogflowApp, weaponInfo: WeaponInfo): Responses.OptionItem {
@@ -90,4 +129,15 @@ function buildWeaponOptionItem(app: I18NDialogflowApp, weaponInfo: WeaponInfo): 
     return app.buildOptionItem(optionKey, [weaponInfo.name])
         .setTitle(weaponInfo.name)
         .setImage(weaponInfo.image, weaponInfo.name)
+}
+
+function removeDuplicateWeapons(weapons: WeaponInfo[]): WeaponInfo[] {
+    const uniqueWeaponsLookup: {[id: string] : boolean} = {}
+    return weapons.filter(weapon => {
+        if (isNullOrUndefined(uniqueWeaponsLookup[weapon.name])) {
+            uniqueWeaponsLookup[weapon.name] = true
+            return true
+        }
+        return false
+    })
 }
