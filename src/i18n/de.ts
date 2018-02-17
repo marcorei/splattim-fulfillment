@@ -93,7 +93,7 @@ export const dict: typeof index = {
 
     // [Action] Splatfest Upcoming
 
-    a_splup_000: 'Ich habe aktuell keine Informationen zu kommenden Splatfests.',
+    a_splup_000: 'Ich habe aktuell keine Informationen zu kommenden Splatfests in dieser Region.',
     a_splup_001: (alpha: string, bravo: string) => `${alpha} gegen ${bravo}`,
     a_splup_002: 'Splafest Übersicht',
     a_splup_003_s: (time: string, alpha: string, bravo: string) => `Es ist Splatfest! ${alpha} gegen ${bravo}. Noch ${time} !`,

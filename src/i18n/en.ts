@@ -68,7 +68,7 @@ export const dict = {
     a_sr_005_s: (stage: string, remaining: string, weapon: string) => `Mr. Grizz is hiring for another ${remaining}! Fight Salmonids on ${stage}. The available weapon is ${weapon}.`,
     a_sr_005_t: (stage: string, remaining: string) => `Mr. Grizz is hiring for another ${remaining}! Fight Salmonids on ${stage}. Here is the available weapon:`,
     a_sr_006_s: (stage: string, eta: string, weapon: string) => `Salmon Run will be open again in ${eta} on ${stage}. The available weapon will be ${weapon}`,
-    a_sr_006_t: (stage: string, eta: string) => `Salmon Run will be open again in ${eta} on ${stage}. THis will be your weapon:`,
+    a_sr_006_t: (stage: string, eta: string) => `Salmon Run will be open again in ${eta} on ${stage}. This will be your weapon:`,
 
     // [Action] Merchandise
 
@@ -96,7 +96,7 @@ export const dict = {
 
     // [Action] Splatfest Upcoming
 
-    a_splup_000: 'I currently don\'t have any infos on upcoming Splatfests.',
+    a_splup_000: 'I currently don\'t have any infos on upcoming Splatfests in this region.',
     a_splup_001: (alpha: string, bravo: string) => `${alpha} vs ${bravo}`,
     a_splup_002: 'Splafest panel',
     a_splup_003_s: (time: string, alpha: string, bravo: string) => `It\'s Splatfest time! ${alpha} vs ${bravo}. You still got ${time} left!`,
