@@ -66,6 +66,10 @@ export const dict: typeof index = {
     a_sr_003_s: (stage: string, eta: string, weapon1: string, weapon2: string, weapon3: string, weapon4: string) => `Salmon Run ist wieder in ${eta} auf der Karte ${stage} geöffnet. Die Waffen sind ${weapon1}, ${weapon2}, ${weapon3} und ${weapon4}. Welche ist dein Favorit?`,
     a_sr_003_t: (stage: string, eta: string) => `Salmon Run wird in ${eta} wieder auf der Map ${stage} offen sein. Hier sind die Waffen. Welche ist dein Favorit?`,
     a_sr_004: 'Unbekannt',
+    a_sr_005_s: (stage: string, remaining: string, weapon: string) => `Herr Bär stellt noch ${remaining} ein! Sammle Fischeier auf der Karte ${stage}. Die verfügbare Waffe ist ${weapon}.`,
+    a_sr_005_t: (stage: string, remaining: string) => `Herr Bär stellt noch ${remaining} ein! Sammle Fischeier auf der Karte ${stage}. Hier ist die verfügbare Waffe:`,
+    a_sr_006_s: (stage: string, eta: string, weapon: string) => `Salmon Run ist wieder in ${eta} auf der Karte ${stage} geöffnet. Die verfügbare Waffe ist ${weapon}.`,
+    a_sr_006_t: (stage: string, eta: string) => `Salmon Run wird in ${eta} wieder auf der Map ${stage} offen sein. Das wird deine Waffe sein:`,
 
     // [Action] Merchandise
 
@@ -93,7 +97,7 @@ export const dict: typeof index = {
 
     // [Action] Splatfest Upcoming
 
-    a_splup_000: 'Ich habe aktuell keine Informationen zu kommenden Splatfests.',
+    a_splup_000: 'Ich habe aktuell keine Informationen zu kommenden Splatfests in dieser Region.',
     a_splup_001: (alpha: string, bravo: string) => `${alpha} gegen ${bravo}`,
     a_splup_002: 'Splafest Übersicht',
     a_splup_003_s: (time: string, alpha: string, bravo: string) => `Es ist Splatfest! ${alpha} gegen ${bravo}. Noch ${time} !`,
