@@ -12,11 +12,17 @@ package:
     - src/**/*
 
 functions:
-  splatTim:
-    handler: handler.splatTim
+  splatTimGoogle:
+    handler: src/integrations/google/handler.splatTim
     events:
       - http:
-          path: splattim
+          path: splattimgoogle
+          method: post
+  splatTimAmazon:
+    handler: src/integrations/amazon/handler.splatTim
+    events:
+      - http:
+          path: splattimamazon
           method: post
 
 plugins:
