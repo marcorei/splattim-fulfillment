@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { I18NDialogflowApp } from './I18NDialogflowApp'
 
-import * as schedulesAction from './action/SchedulesAction'
-import * as allSchedulesAction from './action/AllSchedulesAction'
-import * as etaForRuleAction from './action/EtaForRuleAction'
+import * as schedulesCurrentAction from './action/SchedulesCurrentAction'
+import * as schedulesUpcomingAction from './action/SchedulesUpcomingAction'
+import * as scheduleForRuleAndModeAction from './action/ScheduleForRuleAndModeAction'
 import * as schedulesStageOptionAction from './action/SchedulesStageOptionAction'
 import * as merchandiseAction from './action/MerchandiseAction'
 import * as merchandiseMerchOptionAction from './action/MerchandiseMerchOptionAction'
@@ -11,7 +11,7 @@ import * as salmonRunAction from './action/SalmonRunAction'
 import * as salmonRunWeaponOptionAction from './action/SalmonRunWeaponOptionAction'
 import * as splatfestResultAction from './action/SplatfestResultAction'
 import * as splatfestUpcomingAction from './action/SplatfestUpcomingAction'
-import * as stageScheduleAction from './action/StageScheduleAction'
+import * as scheduleForStageAction from './action/ScheduleForStageAction'
 
 interface Action {
     name: string,
@@ -21,9 +21,9 @@ interface Action {
 export function createDialogflowApp(request: Request, response: Response) {
     const app = new I18NDialogflowApp({ request, response })
     const actions: Action[] = [
-        schedulesAction,
-        allSchedulesAction,
-        etaForRuleAction,
+        schedulesCurrentAction,
+        schedulesUpcomingAction,
+        scheduleForRuleAndModeAction,
         schedulesStageOptionAction,
         merchandiseAction,
         merchandiseMerchOptionAction,
@@ -31,7 +31,7 @@ export function createDialogflowApp(request: Request, response: Response) {
         salmonRunWeaponOptionAction,
         splatfestResultAction,
         splatfestUpcomingAction,
-        stageScheduleAction
+        scheduleForStageAction
     ]
 
     app.handleRequest(actions.reduce(

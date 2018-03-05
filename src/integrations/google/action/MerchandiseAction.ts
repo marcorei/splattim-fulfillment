@@ -14,7 +14,7 @@ export const name = 'merchandise'
  * Also gives a shorter spech overview.
  */
 export function handler(app: I18NDialogflowApp) {
-    new MerchandiseAggregator(app.getLang()).merchandiseSorted()
+    return new MerchandiseAggregator(app.getLang()).merchandiseSorted()
         .then(result => respondWithMerch(app, result.contentDict, result.content))
         .catch(error => {
             console.error(error)
@@ -24,7 +24,7 @@ export function handler(app: I18NDialogflowApp) {
 
 function respondWithMerch(app: I18NDialogflowApp, contentDict: ContentDict, merchandises: Merchandise[]) {
     if (merchandises.length < 3) {
-        return app.getDict().a_merch_002
+        return app.tell(app.getDict().a_merch_002)
     }
     
     const now = nowInSplatFormat()
