@@ -33,3 +33,7 @@ export function sortByEndTime(a: EndTimeSortable, b: EndTimeSortable): number {
 export function nowInSplatFormat(): number {
     return Math.round(new Date().getTime() / 1000)
 }
+
+export function randomEntry<T>(arr: T[]) : T {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
