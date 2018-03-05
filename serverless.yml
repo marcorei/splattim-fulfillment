@@ -1,5 +1,7 @@
 service: splattim-lambda
 
+custom: ${file(./env.${opt:stage, 'dev'}.yml)}
+
 provider:
   name: aws
   runtime: nodejs6.10
@@ -21,9 +23,9 @@ functions:
   splatTimAmazon:
     handler: src/integrations/amazon/handler.splatTim
     events:
-      - http:
-          path: splattimamazon
-          method: post
+      - alexaSkill
+    environment:
+      ALEXA_APP_ID: ${self:custom.ALEXA_APP_ID}
 
 plugins:
   - serverless-plugin-typescript
