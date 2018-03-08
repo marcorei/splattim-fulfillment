@@ -20,6 +20,7 @@ export const dict: typeof index = {
     a_sched_005_middle: (mode: string, stage1: string, stage2: string) => `${mode} in den Arenen ${stage1} und ${stage2}`,
     a_sched_005_connector: ' und ',
     a_sched_005_end: '! Auf welcher wirst du spielen?',
+    a_sched_006: 'Arenen',
 
     // [Action] All Schedules
 

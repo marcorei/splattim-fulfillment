@@ -6,13 +6,13 @@ import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { GameModeArg } from '../model/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
 import { nowInSplatFormat } from '../../../util/utils'
-import { ArgParser } from '../util/dfUtils'
+import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
-import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
+import { ScheduleInfo, StageInfo, mapScheduleToInfo, buildCurrentStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { Dict } from '../../../i18n/Dict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator';
-import { gameModeArgToApi } from '../util/Converter'
+import { Converter } from '../util/Converter'
 
 export const name = 'schedules'
 
@@ -27,7 +27,8 @@ export function handler(app: I18NDialogflowApp) {
     const requestedGameMode = argParser.stringWithDefault(GameModeArg.key, GameModeArg.values.all)
     if (!argParser.isOk()) return argParser.tellAndLog()
 
-    const modeKey = gameModeArgToApi(requestedGameMode)
+    const converter = new Converter()
+    const modeKey = converter.modeToApi(requestedGameMode)
     return new SchedulesAggregator(app.getLang()).currentSchedulesForModeOrAll(modeKey)
         .then(result => {
             if (result.content.length > 1) {
@@ -91,11 +92,11 @@ function respondWithoutSpecificSchedule(app: I18NDialogflowApp, contentDict: Con
         .map(schedule => mapScheduleToInfo(schedule!, now, contentDict))
     
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        return app.tell(buildSpeechOverview(app.getDict(), infos, false))
+        return app.tell(buildCurrentStageSpeechOverview(app.getDict(), infos, false))
     }
 
     return app.askWithCarousel({
-            speech: buildSpeechOverview(app.getDict(), infos, true),
+            speech: buildCurrentStageSpeechOverview(app.getDict(), infos, true),
             displayText: app.getDict().a_sched_004
         }, 
         app.buildCarousel()
@@ -106,34 +107,6 @@ function respondWithoutSpecificSchedule(app: I18NDialogflowApp, contentDict: Con
                 )
                 return arr
             }, [])))
-}
-
-/**
- * Builds a string containing all stages of the given StageInfos 
- * intended for a spoken overview.
- */
-function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[], appendQuestion: boolean): string {
-    let output = dict.a_sched_005_start
-    infos.forEach((info, index, all) => {
-        switch (index) {
-            case 0: 
-                output += ' ' 
-                break
-            case all.length - 1: 
-                output += dict.a_sched_005_connector 
-                break
-            default: 
-                output += ', '
-        }
-        output += dict.a_sched_005_middle(info.modeName, info.stageA.name, info.stageB.name)
-    })
-    if (appendQuestion) {
-        output += dict.a_sched_005_end
-    } else {
-        output += '!'
-    }
-    
-    return output
 }
 
 /**

@@ -1,11 +1,11 @@
 import { I18NDialogflowApp } from '../I18NDialogflowApp'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
-import { ArgParser } from '../util/dfUtils'
+import { ArgParser } from '../util/ArgParser'
 import { RegionArg } from '../model/RegionArg'
 import { Festival } from '../../../splatoon2ink/model/Splatfest'
 import { nowInSplatFormat, secondsToTime } from '../../../util/utils'
 import { ContentDict } from '../../../i18n/ContentDict'
-import { regionArgToApi } from '../util/Converter'
+import { Converter } from '../util/Converter'
 import { SplatfestAggregator } from '../../../procedure/aggregate/SplatfestAggregator'
 
 export const name = 'splatfest_upcoming'
@@ -19,7 +19,8 @@ export function handler(app: I18NDialogflowApp) {
     const requestedRegion = argParser.string(RegionArg.key)
     if (!argParser.isOk()) return argParser.tellAndLog()
     
-    const regionId = regionArgToApi(requestedRegion)
+    const converter = new Converter()
+    const regionId = converter.regionToApi(requestedRegion)
     new SplatfestAggregator(app.getLang()).latestFestival(regionId)
         .then(result => respond(app, result.contentDict, result.content))
         .catch(error => {

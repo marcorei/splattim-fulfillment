@@ -9,7 +9,7 @@ interface HasName {
     name: string
 }
 
-interface FestivalTranslation {
+export interface FestivalTranslation {
     alpha: string,
     bravo: string
 }

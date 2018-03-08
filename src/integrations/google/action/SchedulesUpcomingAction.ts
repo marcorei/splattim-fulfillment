@@ -4,11 +4,11 @@ import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { GameModeArg } from '../model/GameModeArg'
 import { OptionItem } from 'actions-on-google/response-builder'
 import { sortByStartTime, nowInSplatFormat } from '../../../util/utils'
-import { ArgParser } from '../util/dfUtils'
+import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
-import { gameModeArgToApi } from '../util/Converter'
+import { Converter } from '../util/Converter'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 
 export const name = 'all_schedules'
@@ -26,9 +26,11 @@ export function handler(app: I18NDialogflowApp) {
         return app.tell(app.getDict().a_asched_error_too_much)
     }
 
+    const converter = new Converter()
+    const modeKey = converter.modeToApi(requestedGameMode)
     return new SchedulesAggregator(app.getLang())
-        .scheduleForMode(gameModeArgToApi(requestedGameMode))
-        .then(result => respondWithScheduleCarousel(app, result.contentDict, result.content))
+        .scheduleForMode(modeKey)
+        .then(result => respondWithSchedules(app, result.contentDict, result.content))
         .catch(error => {
             console.error(error)
             app.tell(app.getDict().global_error_default)
@@ -39,7 +41,7 @@ export function handler(app: I18NDialogflowApp) {
  * Responds by providing a carousel of stages.
  * The carousel includes all stages while the speech response features only two.
  */
-function respondWithScheduleCarousel(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedule[]) {
+function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedule[]) {
     if (isNullOrUndefined(schedules) || schedules.length < 2) {
         return app.tell(app.getDict().a_asched_error_empty_data)
     }

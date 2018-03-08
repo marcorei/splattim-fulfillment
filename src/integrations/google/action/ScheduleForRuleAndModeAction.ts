@@ -3,9 +3,9 @@ import { Responses } from 'actions-on-google'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { GameModeArg } from '../model/GameModeArg'
 import { GameRuleArg } from '../model/GameRuleArg'
-import { gameRuleArgToApi, gameModeArgToApi } from '../util/Converter'
+import { Converter } from '../util/Converter'
 import { nowInSplatFormat } from '../../../util/utils'
-import { ArgParser } from '../util/dfUtils';
+import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
@@ -19,6 +19,7 @@ export const name = 'eta_rule'
  * Asks a followup question about the maps.
  */
 export function handler(app: I18NDialogflowApp) {
+    const converter = new Converter()
     const argParser = new ArgParser(app)
     const requestedGameMode = argParser.string(GameModeArg.key)
     const requestedGameRule = argParser.string(GameRuleArg.key)
@@ -42,8 +43,8 @@ export function handler(app: I18NDialogflowApp) {
         case GameRuleArg.values.tower:
         case GameRuleArg.values.zones:
 
-            const ruleKey = gameRuleArgToApi(requestedGameRule)
-            const modeKey = gameModeArgToApi(requestedGameMode)
+            const ruleKey = converter.ruleToApi(requestedGameRule)
+            const modeKey = converter.modeToApi(requestedGameMode)
 
             return new SchedulesAggregator(app.getLang())
                 .scheduleForModeAndRule(modeKey, ruleKey)

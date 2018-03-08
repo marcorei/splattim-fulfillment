@@ -19,6 +19,7 @@ export const dict = {
     a_sched_005_middle: (mode: string, stage1: string, stage2: string) => `${mode} on ${stage1} and ${stage2}`,
     a_sched_005_connector: ' and ',
     a_sched_005_end: '! On which one are you going to play?',
+    a_sched_006: 'Schedule',
 
     // [Action] All Schedules
 

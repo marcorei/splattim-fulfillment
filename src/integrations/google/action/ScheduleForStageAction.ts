@@ -1,9 +1,9 @@
 import { I18NDialogflowApp } from '../I18NDialogflowApp'
-import { ArgParser } from '../util/dfUtils'
+import { ArgParser } from '../util/ArgParser'
 import { StageArg } from '../model/StageArg'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
-import { ScheduleInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
+import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { Responses } from 'actions-on-google'
 import { ContentDict } from '../../../i18n/ContentDict'
@@ -40,44 +40,17 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
     const now = nowInSplatFormat()
     const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict))
 
-    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        return app.tell(buildSpeechOverview(dict, infos, requestedStageName, false))
+    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT) || 
+        infos.length == 1) {
+        return app.tell(buildScheduleForStageSpeechOverview(dict, infos, requestedStageName, false))
     }
 
     return app.askWithList({
-            speech: buildSpeechOverview(dict, infos, requestedStageName, true),
+            speech: buildScheduleForStageSpeechOverview(dict, infos, requestedStageName, true),
             displayText: dict.a_ssched_001_t(requestedStageName)
         }, 
         app.buildList(requestedStageName)
             .addItems(infos.map(info => buildStageOptionItem(app, info, requestedStageName))))
-}
-
-/**
- * Builds a string containing all stages. Meant for a spoken overview.
- */
-function buildSpeechOverview(dict: Dict, infos: ScheduleInfo[], stageName: string, appendQuestion: boolean): string {
-    let output = dict.a_ssched_002_start(stageName)
-    infos.forEach((info, index, all) => {
-        switch (index) {
-            case 0: 
-                output += ' ' 
-                break
-            case all.length - 1: 
-                output += dict.a_ssched_002_connector
-                break
-            default: 
-                output += ', '
-        }
-        output += info.timeDiff > 0 ? 
-            dict.a_ssched_002_middle(info.ruleName, info.modeName, info.timeString) :
-            dict.a_ssched_002_middle_now(info.ruleName, info.modeName)
-    })
-    if (appendQuestion) {
-        output += dict.a_ssched_002_end
-    } else {
-        output += '.'
-    }
-    return output
 }
 
 /**

@@ -21,6 +21,7 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
             return respondWithDetail(this, dict, result.contentDict, result.content[0])
         })
         .catch(error => {
+            console.error(error)
             this.response.speak(dict.global_error_default)
             return this.emit(':responseReady')
         })
@@ -86,13 +87,15 @@ function respondWithSingleWeapon(handler: Alexa.Handler<Alexa.Request>, dict: Di
             info.timeString,
             weaponInfo.name))
 
-    handler.response.cardRenderer(
-        weaponInfo.name, 
-        info.timeString, 
-        {
-            smallImageUrl: weaponInfo.image,
-            largeImageUrl: weaponInfo.image
-        })
+    if (handler.event.context.System.device.supportedInterfaces.Display) {
+        handler.response.cardRenderer(
+            weaponInfo.name, 
+            info.timeString, 
+            {
+                smallImageUrl: weaponInfo.image,
+                largeImageUrl: weaponInfo.image
+            })
+    }
         
     return handler.emit(':responseReady')
 }
