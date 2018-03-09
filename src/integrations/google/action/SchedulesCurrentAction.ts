@@ -10,7 +10,6 @@ import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo, buildCurrentStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
-import { Dict } from '../../../i18n/Dict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator';
 import { Converter } from '../util/Converter'
 
@@ -27,8 +26,13 @@ export function handler(app: I18NDialogflowApp) {
     const requestedGameMode = argParser.stringWithDefault(GameModeArg.key, GameModeArg.values.all)
     if (!argParser.isOk()) return argParser.tellAndLog()
 
-    const converter = new Converter()
-    const modeKey = converter.modeToApi(requestedGameMode)
+    var modeKey: string
+    if (requestedGameMode == GameModeArg.values.all) {
+        modeKey = GameModeArg.values.all
+    } else {
+        const converter = new Converter()
+        modeKey = converter.modeToApi(requestedGameMode)
+    }
     return new SchedulesAggregator(app.getLang()).currentSchedulesForModeOrAll(modeKey)
         .then(result => {
             if (result.content.length > 1) {

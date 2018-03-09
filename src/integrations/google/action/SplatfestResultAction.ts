@@ -34,7 +34,7 @@ function respond(app: I18NDialogflowApp, contentDict: ContentDict, tuple: Festiv
     const dict = app.getDict()
     const translatedNames = contentDict.festival(tuple.festival)
     
-    const info = resultsToInfo(translatedNames, tuple.result, dict)
+    const info = resultsToInfo(translatedNames, tuple.result, dict, true)
 
     const card = app.buildBasicCard()
         .setTitle(dict.a_splres_003(info.alpha, info.bravo))

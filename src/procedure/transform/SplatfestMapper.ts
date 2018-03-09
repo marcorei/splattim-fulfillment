@@ -12,7 +12,7 @@ export type SplafestResultInfo = {
     rates: string
 }
 
-export function resultsToInfo(fest: FestivalTranslation, result: Result, dict: Dict) : SplafestResultInfo {
+export function resultsToInfo(fest: FestivalTranslation, result: Result, dict: Dict, boldTitles: boolean) : SplafestResultInfo {
     const summary = result.summary
     const nameAlpha = fest.alpha
     const nameBravo = fest.bravo
@@ -45,7 +45,13 @@ export function resultsToInfo(fest: FestivalTranslation, result: Result, dict: D
         {a: rates.vote.alpha, b: rates.vote.bravo, n: dict.a_splres_004_votes},
         {a: rates.solo.alpha, b: rates.solo.bravo, n: dict.a_splres_004_solo},
         {a: rates.team.alpha, b: rates.team.bravo, n: dict.a_splres_004_team}]
-        .map(r => dict.a_splres_004(r.n, r.a, r.b))
+        .map(r => {
+            if (boldTitles) {
+                return dict.a_splres_004(r.n, r.a, r.b)
+            } else {
+                return dict.a_splres_004_x(r.n, r.a, r.b)
+            }
+        })
         .join('  \n')
 
     return {

@@ -93,6 +93,7 @@ export const dict: typeof index = {
     a_splres_002_team: 'Team-Kämpfe',
     a_splres_003: (alpha: string, bravo: string) => `${alpha} gegen ${bravo}`,
     a_splres_004: (name: string, alphaRate: number, bravoRate: number) => `**${name}**: ${alphaRate}% - ${bravoRate}%`,
+    a_splres_004_x: (name: string, alphaRate: number, bravoRate: number) => `${name}: ${alphaRate}% - ${bravoRate}%`,
     a_splres_004_votes: 'Abstimmung',
     a_splres_004_solo: 'Solo',
     a_splres_004_team: 'Team',

@@ -1,10 +1,10 @@
 export const GameRuleSlot = {
     key: 'gameruleslot',
     values: {
-        blitz: 'clam blitz',
-        zones: 'splat zones',
-        tower: 'tower control',
+        blitz: 'clam_blitz',
+        zones: 'splat_zones',
+        tower: 'tower_control',
         rainmaker: 'rainmaker',
-        turf: 'turf war'
+        turf: 'turf_war'
     }
 }

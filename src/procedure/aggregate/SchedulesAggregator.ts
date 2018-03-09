@@ -21,6 +21,7 @@ export class SchedulesAggregator {
                         break
                     case gameModeKeyValues.league:
                         data = [result.content.league]
+                        break
                     default:
                         data = [result.content.regular, result.content.gachi, result.content.league]
                 }

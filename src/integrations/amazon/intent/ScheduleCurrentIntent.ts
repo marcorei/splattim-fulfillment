@@ -17,15 +17,18 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 
-    if (this.event.request['dialogState'] !== 'COMPLETED'){
-        return this.emit(':delegate')
-    }
+    // Nop dialog model since slot is optional
     const slotParser = new SlotParser(this, dict)
     const requestedGameMode = slotParser.stringWithDefault(GameModeSlot.key, GameModeSlot.values.all)
     if (!slotParser.isOk()) return slotParser.tellAndLog()
 
-    const converter = new Converter()
-    const modeKey = converter.modeToApi(requestedGameMode)
+    var modeKey: string
+    if (requestedGameMode == GameModeSlot.values.all) {
+        modeKey = GameModeSlot.values.all
+    } else {
+        const converter = new Converter()
+        modeKey = converter.modeToApi(requestedGameMode)
+    }
     return new SchedulesAggregator(dictProvider.getLang()).currentSchedulesForModeOrAll(modeKey)
         .then(result => {
             if (result.content.length > 1) {

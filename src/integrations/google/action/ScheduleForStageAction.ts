@@ -7,7 +7,6 @@ import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } 
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { Responses } from 'actions-on-google'
 import { ContentDict } from '../../../i18n/ContentDict'
-import { Dict } from '../../../i18n/Dict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 
 export const name = 'stage_schedule'

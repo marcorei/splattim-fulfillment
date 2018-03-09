@@ -3,11 +3,11 @@ import { Dict, DictProvider } from '../DictProvider'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { SlotParser } from '../util/SlotParser'
 import { Converter } from '../util/Converter'
-import { RegionArg } from '../../google/model/RegionArg'
 import { SplatfestAggregator } from '../../../procedure/aggregate/SplatfestAggregator'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
 import { nowInSplatFormat, secondsToTime } from '../../../util/utils'
 import { Festival } from '../../../splatoon2ink/model/Splatfest'
+import { RegionSlot } from '../model/RegionSlot'
 
 export const name = 'RequestSplatfestUpcoming'
 
@@ -19,7 +19,7 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
         return this.emit(':delegate')
     }
     const slotParser = new SlotParser(this, dict)
-    const requestedRegion = slotParser.string(RegionArg.key)
+    const requestedRegion = slotParser.string(RegionSlot.key)
     if (!slotParser.isOk()) return slotParser.tellAndLog()
 
     const converter = new Converter()
@@ -57,7 +57,7 @@ function respond(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict:
         const image = getSplatnetResUrl(fest.images.panel)
         handler.response.cardRenderer(
             dict.a_splup_001(translated.alpha, translated.bravo), 
-            dict.a_splres_006(subtitle), 
+            subtitle, 
             {
                 smallImageUrl: image,
                 largeImageUrl: image

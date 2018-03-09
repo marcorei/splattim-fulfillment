@@ -92,6 +92,7 @@ export const dict = {
     a_splres_002_team: 'team battles',
     a_splres_003: (alpha: string, bravo: string) => `${alpha} vs ${bravo}`,
     a_splres_004: (name: string, alphaRate: number, bravoRate: number) => `**${name}**: ${alphaRate}% - ${bravoRate}%`,
+    a_splres_004_x: (name: string, alphaRate: number, bravoRate: number) => `${name}: ${alphaRate}% - ${bravoRate}%`,
     a_splres_004_votes: 'Votes',
     a_splres_004_solo: 'Solo',
     a_splres_004_team: 'Team',

@@ -3,10 +3,10 @@ import { Dict, DictProvider } from '../DictProvider'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { SlotParser } from '../util/SlotParser'
 import { Converter } from '../util/Converter'
-import { RegionArg } from '../../google/model/RegionArg'
 import { resultsToInfo } from '../../../procedure/transform/SplatfestMapper'
 import { SplatfestAggregator, FestivalResultTuple } from '../../../procedure/aggregate/SplatfestAggregator'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
+import { RegionSlot } from '../model/RegionSlot'
 
 export const name = 'RequestSplatfestResult'
 
@@ -18,7 +18,7 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
         return this.emit(':delegate')
     }
     const slotParser = new SlotParser(this, dict)
-    const requestedRegion = slotParser.string(RegionArg.key)
+    const requestedRegion = slotParser.string(RegionSlot.key)
     if (!slotParser.isOk()) return slotParser.tellAndLog()
 
     const converter = new Converter()
@@ -34,7 +34,7 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
 
 function respond(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, tuple: FestivalResultTuple) {
     const translatedNames = contentDict.festival(tuple.festival)
-    const info = resultsToInfo(translatedNames, tuple.result, dict)
+    const info = resultsToInfo(translatedNames, tuple.result, dict, false)
     const image = getSplatnetResUrl(tuple.festival.images.panel)
 
     handler.response.speak(`${info.part1} ${info.part2}`)
