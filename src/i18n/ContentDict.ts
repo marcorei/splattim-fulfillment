@@ -1,15 +1,15 @@
-import { Locale } from '../entity/api/Localization'
-import * as sched from '../entity/api/Schedules'
-import * as gear from '../entity/api/Gear'
-import * as coop from '../entity/api/SalmonRunSchedules'
-import * as splatfest from '../entity/api/Splatfest'
+import { Locale } from '../splatoon2ink/model/Localization'
+import * as sched from '../splatoon2ink/model/Schedules'
+import * as gear from '../splatoon2ink/model/Gear'
+import * as coop from '../splatoon2ink/model/SalmonRunSchedules'
+import * as splatfest from '../splatoon2ink/model/Splatfest'
 import { isNullOrUndefined } from 'util'
 
 interface HasName {
     name: string
 }
 
-interface FestivalTranslation {
+export interface FestivalTranslation {
     alpha: string,
     bravo: string
 }

@@ -7,3 +7,7 @@ jspm_packages
 .build
 
 .DS_Store
+
+# Envs
+env.dev.yml
+env.prod.yml

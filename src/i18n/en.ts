@@ -2,6 +2,7 @@
 export const dict = {
     global_error_default: 'Sad woomy. I\'ve been splatted!',
     global_error_missing_param: 'Sad woomy. More info please!',
+    global_reprompt: 'What do you want to know?',
 
     // [Action] Schedules
 
@@ -18,6 +19,7 @@ export const dict = {
     a_sched_005_middle: (mode: string, stage1: string, stage2: string) => `${mode} on ${stage1} and ${stage2}`,
     a_sched_005_connector: ' and ',
     a_sched_005_end: '! On which one are you going to play?',
+    a_sched_006: 'Schedule',
 
     // [Action] All Schedules
 
@@ -69,6 +71,7 @@ export const dict = {
     a_sr_005_t: (stage: string, remaining: string) => `Mr. Grizz is hiring for another ${remaining}! Fight Salmonids on ${stage}. Here is the available weapon:`,
     a_sr_006_s: (stage: string, eta: string, weapon: string) => `Salmon Run will be open again in ${eta} on ${stage}. The available weapon will be ${weapon}`,
     a_sr_006_t: (stage: string, eta: string) => `Salmon Run will be open again in ${eta} on ${stage}. This will be your weapon:`,
+    a_sr_007: 'Salmon Run',
 
     // [Action] Merchandise
 
@@ -77,6 +80,7 @@ export const dict = {
     a_merch_000_t: 'These items are available in the shop. Like something?',
     a_merch_001: (skill: string, brand: string, eta: string) => `with ${skill} by ${brand} (${eta} remaining)`,
     a_merch_002: 'Take a look in the app, I can\'t get any info about that right now.',
+    a_merch_003: 'Merchandise',
     
     // [Action] Splatfest Result
 
@@ -88,6 +92,7 @@ export const dict = {
     a_splres_002_team: 'team battles',
     a_splres_003: (alpha: string, bravo: string) => `${alpha} vs ${bravo}`,
     a_splres_004: (name: string, alphaRate: number, bravoRate: number) => `**${name}**: ${alphaRate}% - ${bravoRate}%`,
+    a_splres_004_x: (name: string, alphaRate: number, bravoRate: number) => `${name}: ${alphaRate}% - ${bravoRate}%`,
     a_splres_004_votes: 'Votes',
     a_splres_004_solo: 'Solo',
     a_splres_004_team: 'Team',
@@ -124,5 +129,56 @@ export const dict = {
     o_merch_000: 'Stay fresh!',
     o_merch_001: (time: string) => `This one is still available for about ${time}.`,
     o_merch_002: (skill: string) => `Cool, this one got ${skill}`,
-    o_merch_003: (merch: string) => `${merch} looks fresh!`
+    o_merch_003: (merch: string) => `${merch} looks fresh!`,
+
+    // [Simple] Welcome
+
+    s_welcome_000: 'Hi! I\'m Splat Tim. How can I help?',
+    s_welcome_001: 'Woomy! What do you want to know?',
+    s_welcome_002: 'Ng-yes! What do you want to know?',
+
+    // [Simple] Cancel
+
+    s_cancel_000: 'Ok.',
+
+    // [Simple] Help
+
+    s_help_000: 'I\'m Splat Tim. You can ask me about the current stages for ranked battles. Or if Mr. Grizz is hiring. What do you want to know?',
+    s_help_001: 'I\'m Splat Tim. I can tell you what Merchandise is available on Splatnet. Or the upcoming stages for league battles. What do you want to know?',
+    s_help_002: 'I\'m Splat Tim and I\'m here to help. Ask me about current stages for regular battles. Or if Mr. Grizz is hiring. What do you want to know?',
+
+    // [Simple] Age
+
+    s_age_000: 'I answered the first question in January 2018. Is there something you want to know?',
+    s_age_001: 'I was publish in January 2018. How can I help you?',
+
+    // [Simple] Hello
+
+    s_hello_000: 'Woomy! How can I help?',
+    s_hello_001: 'Hey! Got a question for me?',
+
+    // [Simple] How are you
+
+    s_how_000: 'I\'m great, thanks! Can I help you with something?',
+    s_how_001: 'Thanks for asking. Doing well! What do you want to know?',
+
+    // [Simple] Insult
+
+    s_insult_000: 'Don\'t be salty! Can I help you with something?',
+    s_insult_001: 'No reason to be salty. Is there something you want to know?',
+
+    // [Simple] Unknown
+
+    s_unknown_000: 'Sorry, can you say that again?',
+    s_unknown_001: 'Sorry, I don\'t understand. How can I help?',
+
+    // [Simple] Meme1
+
+    s_meme1_000: 'It Splat Tim!',
+    s_meme1_001: 'Woomy!',
+
+    // [Simple] Meme2
+
+    s_meme2_000: 'He does it!',
+    s_meme2_001: 'Booyah!'
 }
