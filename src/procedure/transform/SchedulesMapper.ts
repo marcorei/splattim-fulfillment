@@ -1,8 +1,9 @@
-import { secondsToTime } from '../../util/utils'
+import { SecondsToTimeType } from '../../util/utils'
 import { Schedule } from '../../splatoon2ink/model/Schedules'
 import { getSplatnetResUrl } from '../../splatoon2ink/Splatoon2inkApi'
 import { ContentDict } from '../../i18n/ContentDict'
 import { Dict } from '../../i18n/Dict'
+import { isNullOrUndefined } from 'util';
 
 export interface StageInfo {
     name: string,
@@ -18,7 +19,7 @@ export interface ScheduleInfo {
     timeString: string
 }
 
-export function mapScheduleToInfo(schedule: Schedule, now: number, contentDict: ContentDict): ScheduleInfo {
+export function mapScheduleToInfo(schedule: Schedule, now: number, contentDict: ContentDict, secondsToTime: SecondsToTimeType): ScheduleInfo {
     const timeDiff = schedule.start_time - now
     return {
         modeName: contentDict.mode(schedule.game_mode),
@@ -68,7 +69,7 @@ export function buildCurrentStageSpeechOverview(dict: Dict, infos: ScheduleInfo[
  * For an overview of the availability of a certain stage.
  * Builds a string containing all stages. Meant for a spoken overview.
  */
-export function buildScheduleForStageSpeechOverview(dict: Dict, infos: ScheduleInfo[], stageName: string, appendQuestion: boolean): string {
+export function buildScheduleForStageSpeechOverview(dict: Dict, infos: ScheduleInfo[], stageName: string, appendQuestion: boolean, wrapTime?: (input: string) => string): string {
     let output = dict.a_ssched_002_start(stageName)
     infos.forEach((info, index, all) => {
         switch (index) {
@@ -81,8 +82,11 @@ export function buildScheduleForStageSpeechOverview(dict: Dict, infos: ScheduleI
             default: 
                 output += ', '
         }
+        const timeString: string = isNullOrUndefined(wrapTime) ? 
+            info.timeString :
+            wrapTime(info.timeString)
         output += info.timeDiff > 0 ? 
-            dict.a_ssched_002_middle(info.ruleName, info.modeName, info.timeString) :
+            dict.a_ssched_002_middle(info.ruleName, info.modeName, timeString) :
             dict.a_ssched_002_middle_now(info.ruleName, info.modeName)
     })
     if (appendQuestion) {

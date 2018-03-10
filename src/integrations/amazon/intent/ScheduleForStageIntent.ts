@@ -8,6 +8,7 @@ import { SlotParser } from '../util/SlotParser'
 import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { StageSlot } from '../model/StageSlot'
 import { ImageFreeItemBuilder } from '../util/ImageFreeItemBuilder'
+import { secondsToTime, wrapTimeString } from '../util/utils'
 
 export const name = 'RequestScheduleForStage'
 
@@ -41,9 +42,9 @@ function respondWithSchedules(handler: Alexa.Handler<Alexa.Request>, dict: Dict,
     }
 
     const now = nowInSplatFormat()
-    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict))
+    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
-    handler.response.speak(buildScheduleForStageSpeechOverview(dict, infos, requestedStageName, false))
+    handler.response.speak(buildScheduleForStageSpeechOverview(dict, infos, requestedStageName, false, wrapTimeString))
 
     if (handler.event.context.System.device.supportedInterfaces.Display && infos.length > 0) {
         const listItemBuilder = new ImageFreeItemBuilder()

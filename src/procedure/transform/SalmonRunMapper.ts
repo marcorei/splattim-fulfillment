@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from 'util'
-import { secondsToTime } from '../../util/utils'
+import { SecondsToTimeType } from '../../util/utils'
 import { getSplatnetResUrl } from '../../splatoon2ink/Splatoon2inkApi'
 import { Detail } from '../../splatoon2ink/model/SalmonRunSchedules'
 import { ContentDict } from '../../i18n/ContentDict'
@@ -17,7 +17,7 @@ export interface WeaponInfo {
     image: string
 }
 
-export function mapDetailToInfo(detail: Detail, now: number, dict:Dict, contentDict: ContentDict): DetailInfo {
+export function mapDetailToInfo(detail: Detail, now: number, dict:Dict, contentDict: ContentDict, secondsToTime: SecondsToTimeType): DetailInfo {
     const open = now >= detail.start_time
     const timeDiff = open ? detail.end_time - now : detail.start_time - now
     return {

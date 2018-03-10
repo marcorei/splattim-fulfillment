@@ -10,6 +10,7 @@ import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'eta_rule'
 
@@ -71,7 +72,7 @@ export function handler(app: I18NDialogflowApp) {
  * Reponds by showing two stges in a list format.
  */
 function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedule: Schedule) {
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
     const eta = info.timeString === '' ? 
         app.getDict().a_eta_001_now : 
         app.getDict().a_eta_001_future + info.timeString

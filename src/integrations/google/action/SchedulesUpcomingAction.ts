@@ -10,6 +10,7 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/t
 import { ContentDict } from '../../../i18n/ContentDict'
 import { Converter } from '../util/Converter'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'all_schedules'
 
@@ -50,7 +51,7 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
     const now = nowInSplatFormat()
     const scheduleInfos: ScheduleInfo[] = schedules
         .sort(sortByStartTime)
-        .map(schedule => mapScheduleToInfo(schedule, now, contentDict))
+        .map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(app.getDict().a_asched_000_a(

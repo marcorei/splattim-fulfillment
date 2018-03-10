@@ -5,6 +5,7 @@ import { nowInSplatFormat } from '../../../util/utils'
 import { Detail } from '../../../splatoon2ink/model/SalmonRunSchedules'
 import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from '../../../procedure/transform/SalmonRunMapper'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
+import { secondsToTime, wrapTimeString } from '../util/utils'
 
 export const name = 'RequestSalmonRun'
 
@@ -34,7 +35,7 @@ function respondWithDetail(handler: Alexa.Handler<Alexa.Request>, dict: Dict, co
         return handler.emit(':responseReady')
     }
 
-    const info = mapDetailToInfo(detail, nowInSplatFormat(), dict, contentDict)
+    const info = mapDetailToInfo(detail, nowInSplatFormat(), dict, contentDict, secondsToTime)
     const uniqueWeapons = removeDuplicateWeapons(info.weapons)
     
     if (uniqueWeapons.length > 1) {
@@ -48,14 +49,14 @@ function respondWithMultipleWeapons(handler: Alexa.Handler<Alexa.Request>, dict:
     handler.response.speak(info.open ?
         dict.a_sr_002_a(
             info.stageName, 
-            info.timeString,
+            wrapTimeString(info.timeString),
             info.weapons[0].name,
             info.weapons[1].name,
             info.weapons[2].name,
             info.weapons[3].name) :
         dict.a_sr_003_a(
             info.stageName, 
-            info.timeString,
+            wrapTimeString(info.timeString),
             info.weapons[0].name,
             info.weapons[1].name,
             info.weapons[2].name,
@@ -80,11 +81,11 @@ function respondWithSingleWeapon(handler: Alexa.Handler<Alexa.Request>, dict: Di
     handler.response.speak(info.open ?
         dict.a_sr_005_s(
             info.stageName, 
-            info.timeString,
+            wrapTimeString(info.timeString),
             weaponInfo.name) :
         dict.a_sr_006_s(
             info.stageName, 
-            info.timeString,
+            wrapTimeString(info.timeString),
             weaponInfo.name))
 
     if (handler.event.context.System.device.supportedInterfaces.Display) {

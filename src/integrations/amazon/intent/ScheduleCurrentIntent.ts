@@ -10,6 +10,7 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo, buildCurrentStageSpeechOver
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { config } from '../../../config'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'RequestStagesCurrent'
 
@@ -49,7 +50,7 @@ function respondWithSchedule(handler: Alexa.Handler<Alexa.Request>, dict: Dict, 
         return handler.emit(':responseReady')
     }
 
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
 
     handler.response.speak(dict.a_sched_002_a(
         info.ruleName,
@@ -77,7 +78,7 @@ function respondWithoutSpecificSchedule(handler: Alexa.Handler<Alexa.Request>, d
     const now = nowInSplatFormat()
     const infos: ScheduleInfo[] = schedules
         .filter(schedule => schedule != null)
-        .map(schedule => mapScheduleToInfo(schedule!, now, contentDict))
+        .map(schedule => mapScheduleToInfo(schedule!, now, contentDict, secondsToTime))
     
     handler.response.speak(buildCurrentStageSpeechOverview(dict, infos, false))
 

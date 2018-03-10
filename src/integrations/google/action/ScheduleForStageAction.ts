@@ -8,6 +8,7 @@ import { buildOptionKey } from './SchedulesStageOptionAction'
 import { Responses } from 'actions-on-google'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'stage_schedule'
 
@@ -37,7 +38,7 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
     }
 
     const now = nowInSplatFormat()
-    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict))
+    const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT) || 
         infos.length == 1) {

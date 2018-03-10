@@ -6,6 +6,7 @@ import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from 
 import { buildOptionKey } from './SalmonRunWeaponOptionAction'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'next_grizzco'
 
@@ -35,7 +36,7 @@ function respondWithDetail(app: I18NDialogflowApp, contentDict: ContentDict, det
         console.error('less than four weapons in salmon run info')
         return app.tell(app.getDict().a_sr_000)
     }
-    const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict(), contentDict)
+    const info = mapDetailToInfo(detail, nowInSplatFormat(), app.getDict(), contentDict, secondsToTime)
     const uniqueWeapons = removeDuplicateWeapons(info.weapons)
     
     if (uniqueWeapons.length > 1) {

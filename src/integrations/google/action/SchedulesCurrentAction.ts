@@ -10,8 +10,9 @@ import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo, buildCurrentStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { ContentDict } from '../../../i18n/ContentDict'
-import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator';
+import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 import { Converter } from '../util/Converter'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'schedules'
 
@@ -59,7 +60,7 @@ function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, s
             .addSuggestionLink('Splatoon.ink', config.splatoonInk.baseUrl))
     }
 
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(app.getDict().a_sched_002_a(
@@ -93,7 +94,7 @@ function respondWithoutSpecificSchedule(app: I18NDialogflowApp, contentDict: Con
     const now = nowInSplatFormat()
     const infos: ScheduleInfo[] = schedules
         .filter(schedule => schedule != null)
-        .map(schedule => mapScheduleToInfo(schedule!, now, contentDict))
+        .map(schedule => mapScheduleToInfo(schedule!, now, contentDict, secondsToTime))
     
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(buildCurrentStageSpeechOverview(app.getDict(), infos, false))

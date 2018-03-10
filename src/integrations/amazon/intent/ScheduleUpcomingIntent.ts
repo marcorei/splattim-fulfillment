@@ -9,6 +9,7 @@ import { Converter } from '../util/Converter'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
+import { secondsToTime, wrapTimeString } from '../util/utils'
 
 export const name = 'RequestStagesUpcoming'
 
@@ -46,7 +47,7 @@ function respondWithSchedules(handler: Alexa.Handler<Alexa.Request>, dict: Dict,
     const now = nowInSplatFormat()
     const scheduleInfos: ScheduleInfo[] = schedules
         .sort(sortByStartTime)
-        .map(schedule => mapScheduleToInfo(schedule, now, contentDict))
+        .map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
     handler.response.speak(dict.a_asched_000_a(
         gameModeName,
@@ -54,7 +55,7 @@ function respondWithSchedules(handler: Alexa.Handler<Alexa.Request>, dict: Dict,
         scheduleInfos[0].stageA.name,
         scheduleInfos[0].stageB.name,
         scheduleInfos[1].ruleName,
-        scheduleInfos[1].timeString,
+        wrapTimeString(scheduleInfos[1].timeString),
         scheduleInfos[1].stageA.name,
         scheduleInfos[1].stageB.name))
 

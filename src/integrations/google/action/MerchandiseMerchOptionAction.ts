@@ -1,6 +1,6 @@
 import { I18NDialogflowApp } from '../I18NDialogflowApp'
 import { isNullOrUndefined } from 'util'
-import { secondsToTime } from '../../../util/utils'
+import { secondsToTime } from '..//util/utils'
 const seperator = '_'
 
 export const name = 'merchandise-option-merch'

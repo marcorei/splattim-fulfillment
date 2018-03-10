@@ -1,4 +1,4 @@
-import { secondsToTime } from '../../util/utils'
+import { SecondsToTimeType } from '../../util/utils'
 import { getSplatnetResUrl } from '../../splatoon2ink/Splatoon2inkApi'
 import { Merchandise } from '../../splatoon2ink/model/Gear'
 import { ContentDict } from '../../i18n/ContentDict'
@@ -12,7 +12,7 @@ export interface MerchInfo {
     timeString: string
 }
 
-export function mapMerchandiseToInfo(merch: Merchandise, now: number, contentDict: ContentDict): MerchInfo {
+export function mapMerchandiseToInfo(merch: Merchandise, now: number, contentDict: ContentDict, secondsToTime: SecondsToTimeType): MerchInfo {
     const timeDiff = merch.end_time - now
     return {
         merchName: contentDict.gear(merch.gear),

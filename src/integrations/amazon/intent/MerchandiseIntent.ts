@@ -5,6 +5,7 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { Merchandise } from '../../../splatoon2ink/model/Gear'
 import { nowInSplatFormat } from '../../../util/utils'
 import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/MerchandiseMapper'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'RequestMerchandise'
 
@@ -29,7 +30,7 @@ function respondWithMerch(handler: Alexa.Handler<Alexa.Request>, dict: Dict, con
 
     const now = nowInSplatFormat()
     const infos = merchandises.map(merch => {
-        return mapMerchandiseToInfo(merch, now, contentDict)
+        return mapMerchandiseToInfo(merch, now, contentDict, secondsToTime)
     })
 
     handler.response.speak(dict.a_merch_000_a(

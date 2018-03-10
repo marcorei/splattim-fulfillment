@@ -5,9 +5,10 @@ import { SlotParser } from '../util/SlotParser'
 import { Converter } from '../util/Converter'
 import { SplatfestAggregator } from '../../../procedure/aggregate/SplatfestAggregator'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
-import { nowInSplatFormat, secondsToTime } from '../../../util/utils'
+import { nowInSplatFormat } from '../../../util/utils'
 import { Festival } from '../../../splatoon2ink/model/Splatfest'
 import { RegionSlot } from '../model/RegionSlot'
+import { secondsToTime, wrapTimeString } from '../util/utils'
 
 export const name = 'RequestSplatfestUpcoming'
 
@@ -44,13 +45,13 @@ function respond(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict:
     
     var subtitle: string
     if (now >= fest.times.start) {
-        const timeTillEnd = secondsToTime(fest.times.end - now)
-        handler.response.speak(dict.a_splup_003_s(timeTillEnd, translated.alpha, translated.bravo))
-        subtitle = dict.a_splup_003_b(timeTillEnd)
+        const timeString = secondsToTime(fest.times.end - now)
+        handler.response.speak(dict.a_splup_003_s(wrapTimeString(timeString), translated.alpha, translated.bravo))
+        subtitle = dict.a_splup_003_b(timeString)
     } else {
-        const timeTillStart = secondsToTime(fest.times.start - now)
-        handler.response.speak(dict.a_splup_004_s(timeTillStart, translated.alpha, translated.bravo))
-        subtitle = dict.a_splup_004_b(timeTillStart)
+        const timeString = secondsToTime(fest.times.start - now)
+        handler.response.speak(dict.a_splup_004_s(wrapTimeString(timeString), translated.alpha, translated.bravo))
+        subtitle = dict.a_splup_004_b(timeString)
     } 
     
     if (handler.event.context.System.device.supportedInterfaces.Display) {

@@ -6,6 +6,7 @@ import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/Me
 import { buildOptionKey } from './MerchandiseMerchOptionAction'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { MerchandiseAggregator } from '../../../procedure/aggregate/MerchandiseAggregator'
+import { secondsToTime } from '../util/utils'
 
 export const name = 'merchandise'
 
@@ -29,7 +30,7 @@ function respondWithMerch(app: I18NDialogflowApp, contentDict: ContentDict, merc
     
     const now = nowInSplatFormat()
     const infos = merchandises.map(merch => {
-        return mapMerchandiseToInfo(merch, now, contentDict)
+        return mapMerchandiseToInfo(merch, now, contentDict, secondsToTime)
     })
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {

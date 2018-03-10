@@ -9,6 +9,8 @@ import { GameModeSlot } from '../model/GameModeSlot'
 import { Converter } from '../util/Converter'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { GameRuleSlot } from '../model/GameRuleSlot'
+import { secondsToTime, wrapTimeString } from '../util/utils'
+
 export const name = 'RequestScheduleForRuleAndMode'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
@@ -74,10 +76,10 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
 }
 
 function respondWithSchedule(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, schedule: Schedule) {
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict)
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
     const eta = info.timeString === '' ? 
         dict.a_eta_001_now : 
-        dict.a_eta_001_future + info.timeString
+        dict.a_eta_001_future + wrapTimeString(info.timeString)
 
     handler.response.speak(dict.a_eta_002_a(
         info.ruleName,
