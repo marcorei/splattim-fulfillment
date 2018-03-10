@@ -10,7 +10,7 @@ function resolveLang(lang: string): Dict {
     }
 }
 
-function cleanLang(lang: string): string {
+function cleanLang(lang: string | undefined): string {
     // List of locales:
     // https://developer.amazon.com/docs/custom-skills/develop-skills-in-multiple-languages.html#h2-code-changes
     switch(lang) {
@@ -24,7 +24,7 @@ export class DictProvider {
     private lang: string
 
     constructor(private handler: Alexa.Handler<Alexa.Request>) {
-        this.lang = cleanLang(this.handler.locale)
+        this.lang = cleanLang(this.handler.event.request.locale)
         this.dict = resolveLang(this.lang)
     }
 
