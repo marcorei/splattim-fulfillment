@@ -85,7 +85,7 @@ export const dict: typeof index = {
 
     // [Action] Splatfest Result
 
-    a_splres_000: (winner: string, loser: string) => `Im letzten Splatfest hat Team ${winner} hat gegen Team ${loser} gewonnen.`,
+    a_splres_000: (winner: string, loser: string) => `Im letzten Splatfest hat Team ${winner} gegen Team ${loser} gewonnen.`,
     a_splres_001: 'Sie haben in allen drei Kategorien gewonnen!',
     a_splres_002: (won1: string, won2: string, lost: string) => `Sie haben ${won1} und ${won2} gewonnen, aber ${lost} verloren.`,
     a_splres_002_votes: 'die Abstimmung',
