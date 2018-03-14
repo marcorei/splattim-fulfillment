@@ -12,6 +12,5 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
         dict.s_meme1_000,
         dict.s_meme1_001,
     ]))
-    this.response.listen(dict.global_reprompt)
     this.emit(':responseReady')
 }
