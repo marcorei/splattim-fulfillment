@@ -81,9 +81,17 @@ export class ContentDict {
                 bravo: t['names']['bravo_short']
             }
         }
+        // return {
+        //     alpha: i.names.alpha_short,
+        //     bravo: i.names.bravo_short
+        // }
+        
+        // Some Splatfests are not translated.
+        // Using untranslated version (e.g. Japanese) causes problems
+        // for the voice assistants. Use generic terms for now.
         return {
-            alpha: i.names.alpha_short,
-            bravo: i.names.bravo_short
+            alpha: 'A',
+            bravo: 'B'
         }
     }
 }
