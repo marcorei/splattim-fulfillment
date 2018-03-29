@@ -6,10 +6,12 @@ import { Merchandise } from '../../../splatoon2ink/model/Gear'
 import { nowInSplatFormat } from '../../../util/utils'
 import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/MerchandiseMapper'
 import { secondsToTime } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestMerchandise'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

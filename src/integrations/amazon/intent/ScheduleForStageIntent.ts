@@ -9,10 +9,12 @@ import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } 
 import { StageSlot } from '../model/StageSlot'
 import { ImageFreeItemBuilder } from '../util/ImageFreeItemBuilder'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestScheduleForStage'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

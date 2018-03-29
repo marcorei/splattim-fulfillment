@@ -9,10 +9,12 @@ import { nowInSplatFormat } from '../../../util/utils'
 import { Festival } from '../../../splatoon2ink/model/Splatfest'
 import { RegionSlot } from '../model/RegionSlot'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestSplatfestUpcoming'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

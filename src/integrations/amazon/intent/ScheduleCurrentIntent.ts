@@ -11,10 +11,12 @@ import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { config } from '../../../config'
 import { secondsToTime } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestStagesCurrent'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

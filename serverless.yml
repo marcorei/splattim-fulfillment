@@ -26,6 +26,7 @@ functions:
       - alexaSkill
     environment:
       ALEXA_APP_ID: ${self:custom.ALEXA_APP_ID}
+      ALEXA_ATTRIBUTES_TABLE: ${self:custom.ALEXA_ATTRIBUTES_TABLE}
 
 plugins:
   - serverless-plugin-typescript

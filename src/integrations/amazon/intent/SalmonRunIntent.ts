@@ -6,10 +6,12 @@ import { Detail } from '../../../splatoon2ink/model/SalmonRunSchedules'
 import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from '../../../procedure/transform/SalmonRunMapper'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestSalmonRun'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

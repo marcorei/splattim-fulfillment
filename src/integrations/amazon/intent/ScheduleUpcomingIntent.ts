@@ -10,10 +10,12 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/t
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestStagesUpcoming'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

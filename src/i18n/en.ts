@@ -3,6 +3,13 @@ export const dict = {
     global_error_default: 'Sad woomy. I\'ve been splatted!',
     global_error_missing_param: 'Sad woomy. More info please!',
     global_reprompt: 'What do you want to know?',
+    global_suggest_salmon: 'Salmon Run',
+    global_suggest_stages: 'current stages',
+    global_suggest_merchandise: 'merchandise',
+    global_suggest_splatfest: 'Splatfest',
+    global_suggest_help: 'help',
+    global_suggest_command_link_name: 'list of all commands',
+    global_suggest_command_link_url: 'https://splat-tim.com/commands',
 
     // [Action] Schedules
 
@@ -133,19 +140,22 @@ export const dict = {
 
     // [Simple] Welcome
 
-    s_welcome_000: 'Hi! I\'m Splat Tim. How can I help?',
-    s_welcome_001: 'Woomy! What do you want to know?',
-    s_welcome_002: 'Ng-yes! What do you want to know?',
-
+    s_welcome_hi_000: 'Hi!',
+    s_welcome_hi_001: 'Hey!',
+    s_welcome_intro: 'I\'m Splat Tim.',
+    s_welcome_returning: 'Long time no see!',
+    s_welcome_help_long: 'Do you want to know about current stages, Salmon Run, merchandise or Splatfest?',
+    s_welcome_help_short_000: 'What do you want to know?',
+    s_welcome_help_short_001: 'How can I help?',
+    
     // [Simple] Cancel
 
     s_cancel_000: 'Ok.',
 
     // [Simple] Help
 
-    s_help_000: 'I\'m Splat Tim. You can ask me about the current stages for ranked battles. Or if Mr. Grizz is hiring. What do you want to know?',
-    s_help_001: 'I\'m Splat Tim. I can tell you what Merchandise is available on Splatnet. Or the upcoming stages for league battles. What do you want to know?',
-    s_help_002: 'I\'m Splat Tim and I\'m here to help. Ask me about current stages for regular battles. Or if Mr. Grizz is hiring. What do you want to know?',
+    s_help_complete: 'I\'m Splat Tim. Ask me about current stage of Splatoon 2, Salmon Run, merchandise or Splatfest. What do you want to know?',
+
 
     // [Simple] Age
 

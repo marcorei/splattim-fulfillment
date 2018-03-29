@@ -10,10 +10,12 @@ import { Converter } from '../util/Converter'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { GameRuleSlot } from '../model/GameRuleSlot'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestScheduleForRuleAndMode'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 

@@ -7,10 +7,12 @@ import { resultsToInfo } from '../../../procedure/transform/SplatfestMapper'
 import { SplatfestAggregator, FestivalResultTuple } from '../../../procedure/aggregate/SplatfestAggregator'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
 import { RegionSlot } from '../model/RegionSlot'
+import { AttributeHelper } from '../util/Attributes'
 
 export const name = 'RequestSplatfestResult'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
+    new AttributeHelper(this).updateLastSeen()
     const dictProvider = new DictProvider(this)
     const dict = dictProvider.getDict()
 
