@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from "util"
 
 const en = new Map<string, string>([
 ])
@@ -32,7 +31,7 @@ export class Phonetics {
         var regex = new RegExp(Array.from(mapObj.keys()).join('|'), 'g')
         return input.replace(regex, matched => {
             const phonetic = mapObj.get(matched)
-            return `<phoneme alphabet="ipa" ph="${phonetic}">${input}</phoneme>`
+            return `<phoneme alphabet="ipa" ph="${phonetic}">${matched}</phoneme>`
         })
     }
 }
