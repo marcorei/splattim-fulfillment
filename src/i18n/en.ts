@@ -190,5 +190,9 @@ export const dict = {
     // [Simple] Meme2
 
     s_meme2_000: 'He does it!',
-    s_meme2_001: 'Booyah!'
+    s_meme2_001: 'It\'s him!',
+
+    // [Simple] Booyah
+
+    s_meme_booyah: 'Booyah!'
 }

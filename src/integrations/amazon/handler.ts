@@ -8,6 +8,7 @@ import * as defaultSessionEndedRequest from './intent/DefaultSessionEndedRequest
 import * as defaulWelcomeIntent from './intent/DefaultWelcomeIntent'
 import * as meme1Intent from './intent/Meme1Intent'
 import * as meme2Intent from './intent/Meme2Intent'
+import * as memeBooyahIntent from './intent/MemeBooyahIntent'
 import * as merchandiseIntent from './intent/MerchandiseIntent'
 import * as salmonRunIntent from './intent/SalmonRunIntent'
 import * as scheduleCurrentIntent from './intent/ScheduleCurrentIntent'
@@ -39,6 +40,7 @@ module.exports.splatTim = function(event: Alexa.RequestBody<Alexa.Request>, cont
         defaulWelcomeIntent,
         meme1Intent,
         meme2Intent,
+        memeBooyahIntent,
         merchandiseIntent,
         salmonRunIntent,
         scheduleCurrentIntent,
