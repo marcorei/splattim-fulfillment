@@ -1,6 +1,5 @@
 import * as Alexa from 'alexa-sdk'
-import { Dict, DictProvider } from '../DictProvider'
-import { ContentDict } from '../../../i18n/ContentDict'
+import { Dict } from '../DictProvider'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
@@ -10,17 +9,17 @@ import { Converter } from '../util/Converter'
 import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/transform/SchedulesMapper'
 import { GameRuleSlot } from '../model/GameRuleSlot'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { HandlerHelper } from '../util/HandlerHelper'
 
 export const name = 'RequestScheduleForRuleAndMode'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const dictProvider = new DictProvider(this)
-    const dict = dictProvider.getDict()
+    const helper = new HandlerHelper(this)
 
-    if (this.event.request['dialogState'] !== 'COMPLETED'){
+    if (this.event.request['dialogState'] !== 'COMPLETED') {
         return this.emit(':delegate')
     }
-    const slotParser = new SlotParser(this, dict)
+    const slotParser = new SlotParser(this, helper.dict)
     const requestedGameMode = slotParser.string(GameModeSlot.key)
     const requestedGameRule = slotParser.string(GameRuleSlot.key)
     if (!slotParser.isOk()) return slotParser.tellAndLog()
@@ -30,14 +29,11 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
         case GameModeSlot.values.ranked:
             break
         case GameModeSlot.values.all:
-            this.response.speak(dict.a_eta_error_incomp_mode_all)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.a_eta_error_incomp_mode_all)
         case GameModeSlot.values.regular:
-            this.response.speak(dict.a_eta_error_incomp_mode_regular)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.a_eta_error_incomp_mode_regular)
         default: 
-            this.response.speak(dict.a_eta_error_unknown_mode)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.a_eta_error_unknown_mode)
     }
 
     switch (requestedGameRule) {
@@ -50,38 +46,34 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
             const modeKey = converter.modeToApi(requestedGameMode)
             const ruleKey = converter.ruleToApi(requestedGameRule)
 
-            return new SchedulesAggregator(dictProvider.getLang())
+            return new SchedulesAggregator(helper.lang)
                 .scheduleForModeAndRule(modeKey, ruleKey)
                 .then(result => {
                     if (result.content.length === 0) {
-                        this.response.speak(dict.a_eta_000)
-                        return this.emit(':responseReady')
+                        return helper.speakRplcEmit(helper.dict.a_eta_000)
                     } else {
-                        return respondWithSchedule(this, dict, result.contentDict, result.content[0])
+                        return respondWithSchedule(helper.withContentDict(result.contentDict), result.content[0])
                     }
                 })
                 .catch(error => {
                     console.error(error)
-                    this.response.speak(dict.global_error_default)
-                    return this.emit(':responseReady')
+                    return helper.speakRplcEmit(helper.dict.global_error_default)
                 })
 
         case GameRuleSlot.values.turf:
-            this.response.speak(dict.a_eta_error_incomp_mode_regular)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.a_eta_error_incomp_mode_regular)
         default:
-            this.response.speak(dict.a_eta_error_unknown_rule)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.a_eta_error_unknown_rule)
     }
 }
 
-function respondWithSchedule(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, schedule: Schedule) {
-    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
+function respondWithSchedule(helper: HandlerHelper, schedule: Schedule) {
+    const info = mapScheduleToInfo(schedule, nowInSplatFormat(), helper.contentDict, secondsToTime)
     const eta = info.timeString === '' ? 
-        dict.a_eta_001_now : 
-        dict.a_eta_001_future + wrapTimeString(info.timeString)
+        helper.dict.a_eta_001_now : 
+        helper.dict.a_eta_001_future + wrapTimeString(info.timeString)
 
-    handler.response.speak(dict.a_eta_002_a(
+    helper.speakRplc(helper.dict.a_eta_002_a(
         info.ruleName,
         info.modeName,
         eta,
@@ -89,20 +81,20 @@ function respondWithSchedule(handler: Alexa.Handler<Alexa.Request>, dict: Dict, 
         info.stageB.name
     ))
 
-    if (handler.event.context.System.device.supportedInterfaces.Display) {
+    if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
         const stages = [info.stageA, info.stageB]
-        stages.forEach((stage, index) => buildStageListItem(listItemBuilder, dict, info, stage, false))
+        stages.forEach((stage, index) => buildStageListItem(listItemBuilder, helper.dict, info, stage, false))
 
         const template = new Alexa.templateBuilders.ListTemplate1Builder()
             .setToken('stageList')
-            .setTitle(dict.a_sched_006)
+            .setTitle(helper.dict.a_sched_006)
             .setListItems(listItemBuilder.build())
             .build()
-        handler.response.renderTemplate(template)
+        helper.handler.response.renderTemplate(template)
     }
 
-    return handler.emit(':responseReady')
+    return helper.emit()
 }
 
 function buildStageListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, info: ScheduleInfo, stageInfo: StageInfo, useMode: boolean) {

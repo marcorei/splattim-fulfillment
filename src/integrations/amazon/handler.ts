@@ -4,9 +4,11 @@ import * as defaultCancelIntent from './intent/DefaultCancelIntent'
 import * as defaultHelpIntent from './intent/DefaultHelpIntent'
 import * as defaultStopIntent from './intent/DefaultStopIntent'
 import * as defaultUnhandledIntent from './intent/DefaultUnhandledIntent'
+import * as defaultSessionEndedRequest from './intent/DefaultSessionEndedRequest'
 import * as defaulWelcomeIntent from './intent/DefaultWelcomeIntent'
 import * as meme1Intent from './intent/Meme1Intent'
 import * as meme2Intent from './intent/Meme2Intent'
+import * as memeBooyahIntent from './intent/MemeBooyahIntent'
 import * as merchandiseIntent from './intent/MerchandiseIntent'
 import * as salmonRunIntent from './intent/SalmonRunIntent'
 import * as scheduleCurrentIntent from './intent/ScheduleCurrentIntent'
@@ -26,13 +28,9 @@ interface Intent {
 }
 
 module.exports.splatTim = function(event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: any) {
-    const alexa = Alexa.handler(event, context)
+    const alexa = Alexa.handler(event, context, callback)
     alexa.appId = process.env.ALEXA_APP_ID
-
-    const sessionEnded: Intent = {
-        name: 'SessionEndedRequest',
-        handler: () => {}
-    }
+    alexa.dynamoDBTableName = process.env.ALEXA_ATTRIBUTES_TABLE
 
     const intents: Intent[] = [
         defaultCancelIntent,
@@ -42,6 +40,7 @@ module.exports.splatTim = function(event: Alexa.RequestBody<Alexa.Request>, cont
         defaulWelcomeIntent,
         meme1Intent,
         meme2Intent,
+        memeBooyahIntent,
         merchandiseIntent,
         salmonRunIntent,
         scheduleCurrentIntent,
@@ -54,7 +53,7 @@ module.exports.splatTim = function(event: Alexa.RequestBody<Alexa.Request>, cont
         smallTalkInsultingIntent,
         splatfestResultIntent,
         splatfestUpcomingIntent,
-        sessionEnded
+        defaultSessionEndedRequest,
     ]
 
     alexa.registerHandlers(intents.reduce(

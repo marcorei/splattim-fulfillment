@@ -23,3 +23,7 @@ export function nowInSplatFormat(): number {
 export function randomEntry<T>(arr: T[]) : T {
     return arr[Math.floor(Math.random() * arr.length)]
 }
+
+export function wrapWithSpeak(input: string) : string {
+    return `<speak>${input}</speak>`
+}

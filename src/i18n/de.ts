@@ -4,6 +4,13 @@ export const dict: typeof index = {
     global_error_default: 'Trauriges woomy. Mich hat\'s erwischt!',
     global_error_missing_param: 'Trauriges woomy. Ich brauche mehr Infos!',
     global_reprompt: 'Was möchtest Du wissen?',
+    global_suggest_salmon: 'Salmon Run',
+    global_suggest_stages: 'Aktuelle Arenen',
+    global_suggest_merchandise: 'Ausrüstung',
+    global_suggest_splatfest: 'Splatfest',
+    global_suggest_help: 'Hilfe',
+    global_suggest_command_link_name: 'Liste aller Befehle',
+    global_suggest_command_link_url: 'https://splat-tim.com/de/commands',
 
     // [Action] Schedules
 
@@ -134,9 +141,13 @@ export const dict: typeof index = {
 
     // [Simple] Welcome
 
-    s_welcome_000: 'Hi! Was möchtest Du wissen?',
-    s_welcome_001: 'Woomy! Wie kann ich Dir helfen?',
-    s_welcome_002: 'Ng-yes! Was möchtest Du wissen?',
+    s_welcome_hi_000: 'Hi!',
+    s_welcome_hi_001: 'Hey!',
+    s_welcome_intro: 'Ich bin Tintenfisch Tony.',
+    s_welcome_returning: 'Lange nicht gesehen!',
+    s_welcome_help_long: 'Willst du Infos über aktuelle Arenen, Salmon Run, Ausrüstung oder Splatfest?',
+    s_welcome_help_short_000: 'Was möchtest Du wissen?',
+    s_welcome_help_short_001: 'Wie kann ich Dir helfen?',
 
     // [Simple] Cancel
 
@@ -144,9 +155,7 @@ export const dict: typeof index = {
 
     // [Simple] Help
 
-    s_help_000: 'Ich bin Tintenfisch Tony. Frag mich nach den aktuellen Arenen für den Rangkampf. Oder wann die Bär GmbH wieder einstellt. Wie kann ich Dir helfen?',
-    s_help_001: 'Ich bin Tintenfisch Tony. Frage mich nach den anstehenden Arenen für Ligakampf. Oder welche Ausrüstung gerade im Shop verfügbar ist. Wie kann ich Dir helfen?',
-    s_help_002: 'Ich bin Tintenfisch Tony und ich bin hier um zu helfen. Frag mich, ob Salmon Run gerade offen ist. Oder wann welche Arenen es gerade im Standardkampf gibt. Was möchtest Du wissen?',
+    s_help_complete: 'Ich bin Tintenfisch Tony. Frage mich nach den aktuellen Arenen, Salmon Run, Ausrüstung oder Splatfest. Was möchtest Du wissen?',
 
     // [Simple] Age
 
@@ -181,5 +190,9 @@ export const dict: typeof index = {
     // [Simple] Meme2
 
     s_meme2_000: 'He does it!',
-    s_meme2_001: 'Booyah!'
+    s_meme2_001: 'It\'s him!',
+
+    // [Simple] Booyah
+
+    s_meme_booyah: 'Booyah!'
 }

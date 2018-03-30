@@ -1,6 +1,5 @@
 import * as Alexa from 'alexa-sdk'
-import { Dict, DictProvider } from '../DictProvider'
-import { ContentDict } from '../../../i18n/ContentDict'
+import { Dict } from '../DictProvider'
 import { sortByStartTime, nowInSplatFormat } from '../../../util/utils'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
@@ -10,46 +9,44 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/t
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { secondsToTime, wrapTimeString } from '../util/utils'
+import { HandlerHelper } from '../util/HandlerHelper'
 
 export const name = 'RequestStagesUpcoming'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const dictProvider = new DictProvider(this)
-    const dict = dictProvider.getDict()
+    const helper = new HandlerHelper(this)
 
     if (this.event.request['dialogState'] !== 'COMPLETED'){
         return this.emit(':delegate')
     }
-    const slotParser = new SlotParser(this, dict)
+    const slotParser = new SlotParser(this, helper.dict)
     const requestedGameMode = slotParser.string(GameModeSlot.key)
     if (!slotParser.isOk()) return slotParser.tellAndLog()
 
     const converter = new Converter()
     const modeKey = converter.modeToApi(requestedGameMode)
-    return new SchedulesAggregator(dictProvider.getLang())
+    return new SchedulesAggregator(helper.lang)
         .scheduleForMode(modeKey)
-        .then(result => respondWithSchedules(this, dict, result.contentDict, result.content))
+        .then(result => respondWithSchedules(helper.withContentDict(result.contentDict), result.content))
         .catch(error => {
             console.error(error)
-            this.response.speak(dict.global_error_default)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.global_error_default)
         })
 }
 
 
-function respondWithSchedules(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, schedules: Schedule[]) {
+function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[]) {
     if (isNullOrUndefined(schedules) || schedules.length < 2) {
-        handler.response.speak(dict.a_asched_error_empty_data)
-        return handler.emit(':responseReady')
+        return helper.speakRplcEmit(helper.dict.a_asched_error_empty_data)
     }
 
-    const gameModeName = contentDict.mode(schedules[0].game_mode)
+    const gameModeName = helper.contentDict.mode(schedules[0].game_mode)
     const now = nowInSplatFormat()
     const scheduleInfos: ScheduleInfo[] = schedules
         .sort(sortByStartTime)
-        .map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
+        .map(schedule => mapScheduleToInfo(schedule, now, helper.contentDict, secondsToTime))
 
-    handler.response.speak(dict.a_asched_000_a(
+    helper.speakRplc(helper.dict.a_asched_000_a(
         gameModeName,
         scheduleInfos[0].ruleName,
         scheduleInfos[0].stageA.name,
@@ -59,22 +56,22 @@ function respondWithSchedules(handler: Alexa.Handler<Alexa.Request>, dict: Dict,
         scheduleInfos[1].stageA.name,
         scheduleInfos[1].stageB.name))
 
-    if (handler.event.context.System.device.supportedInterfaces.Display) {
+    if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
         scheduleInfos.forEach((info, index) => {
-            buildStageListItem(listItemBuilder, dict, info, info.stageA) 
-            buildStageListItem(listItemBuilder, dict, info, info.stageB)    
+            buildStageListItem(listItemBuilder, helper.dict, info, info.stageA) 
+            buildStageListItem(listItemBuilder, helper.dict, info, info.stageB)    
         })
 
         const template = new Alexa.templateBuilders.ListTemplate2Builder()
             .setToken('stageList')
-            .setTitle(dict.a_sched_006)
+            .setTitle(helper.dict.a_sched_006)
             .setListItems(listItemBuilder.build())
             .build()
-        handler.response.renderTemplate(template)
+        helper.handler.response.renderTemplate(template)
     }
 
-    return handler.emit(':responseReady')
+    return helper.emit()
 }
 
 function buildStageListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, info: ScheduleInfo, stageInfo: StageInfo) {

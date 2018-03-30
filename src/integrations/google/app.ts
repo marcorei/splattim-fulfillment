@@ -12,6 +12,9 @@ import * as salmonRunWeaponOptionAction from './action/SalmonRunWeaponOptionActi
 import * as splatfestResultAction from './action/SplatfestResultAction'
 import * as splatfestUpcomingAction from './action/SplatfestUpcomingAction'
 import * as scheduleForStageAction from './action/ScheduleForStageAction'
+import * as welcomeAction from './action/WelcomeAction'
+import * as helpAction from './action/HelpAction'
+import * as memeBooyahAction from './action/MemeBooyahAction'
 
 interface Action {
     name: string,
@@ -31,7 +34,10 @@ export function createDialogflowApp(request: Request, response: Response) {
         salmonRunWeaponOptionAction,
         splatfestResultAction,
         splatfestUpcomingAction,
-        scheduleForStageAction
+        scheduleForStageAction,
+        welcomeAction,
+        helpAction,
+        memeBooyahAction
     ]
 
     app.handleRequest(actions.reduce(
