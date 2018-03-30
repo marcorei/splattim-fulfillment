@@ -7,6 +7,10 @@ The fulfillment layer of Splat Tim, an Action for the Google Assitant and a skil
 - Install serverless `npm install -g serverless`
 - Setup AWS credentials `serverless config credentials --provider aws --key <YOUR_KEY> --secret <YOUR_SECRET>`
 - Install dependencies `npm install`
+- Create two DynamoDB tables (for prod and dev)
+- Add roles to the lambdas that allow read and write access to the DynamoDb tables
+- Add env files for prod and dev
+- Upload files for sound fx to s3
 
 # Guide
 
