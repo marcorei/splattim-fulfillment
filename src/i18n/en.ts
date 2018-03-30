@@ -154,7 +154,7 @@ export const dict = {
 
     // [Simple] Help
 
-    s_help_complete: 'I\'m Splat Tim. Ask me about current stage of Splatoon 2, Salmon Run, merchandise or Splatfest. What do you want to know?',
+    s_help_complete: 'I\'m Splat Tim. Ask me about current stages of Splatoon 2, Salmon Run, merchandise or Splatfest. What do you want to know?',
 
 
     // [Simple] Age
