@@ -1,62 +1,56 @@
 import * as Alexa from 'alexa-sdk'
-import { Dict, DictProvider } from '../DictProvider'
-import { ContentDict } from '../../../i18n/ContentDict'
+import { Dict } from '../DictProvider'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Detail } from '../../../splatoon2ink/model/SalmonRunSchedules'
 import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from '../../../procedure/transform/SalmonRunMapper'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
 import { secondsToTime, wrapTimeString } from '../util/utils'
-import { AttributeHelper } from '../util/Attributes'
+import { HandlerHelper } from '../util/HandlerHelper'
 
 export const name = 'RequestSalmonRun'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
-    new AttributeHelper(this).updateLastSeen()
-    const dictProvider = new DictProvider(this)
-    const dict = dictProvider.getDict()
+    const helper = new HandlerHelper(this)
 
-    return new SalmonRunAggregator(dictProvider.getLang()).detailsSorted()
+    return new SalmonRunAggregator(helper.lang).detailsSorted()
         .then(result => {
             if (result.content.length === 0) {
-                this.response.speak(dict.a_sr_000)
-                return this.emit(':responseReady')
+                return helper.speakRplcEmit(helper.dict.a_sr_000)
             }
-            return respondWithDetail(this, dict, result.contentDict, result.content[0])
+            return respondWithDetail(helper.withContentDict(result.contentDict), result.content[0])
         })
         .catch(error => {
             console.error(error)
-            this.response.speak(dict.global_error_default)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.global_error_default)
         })
 }
 
-function respondWithDetail(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, detail: Detail) {
+function respondWithDetail(helper: HandlerHelper, detail: Detail) {
     if (detail.weapons.length < 4) {
         console.error('less than four weapons in salmon run info')
-        handler.response.speak(dict.a_sr_000)
-        return handler.emit(':responseReady')
+        return helper.speakRplcEmit(helper.dict.a_sr_000)
     }
 
-    const info = mapDetailToInfo(detail, nowInSplatFormat(), dict, contentDict, secondsToTime)
+    const info = mapDetailToInfo(detail, nowInSplatFormat(), helper.dict, helper.contentDict, secondsToTime)
     const uniqueWeapons = removeDuplicateWeapons(info.weapons)
     
     if (uniqueWeapons.length > 1) {
-        return respondWithMultipleWeapons(handler, dict, info, uniqueWeapons)
+        return respondWithMultipleWeapons(helper, info, uniqueWeapons)
     } else {
-        return respondWithSingleWeapon(handler, dict, info, uniqueWeapons[0])
+        return respondWithSingleWeapon(helper, info, uniqueWeapons[0])
     }
 }
 
-function respondWithMultipleWeapons(handler: Alexa.Handler<Alexa.Request>, dict: Dict, info: DetailInfo, uniqueWeapons: WeaponInfo[]) {
-    handler.response.speak(info.open ?
-        dict.a_sr_002_a(
+function respondWithMultipleWeapons(helper: HandlerHelper, info: DetailInfo, uniqueWeapons: WeaponInfo[]) {
+    helper.speakRplc(info.open ?
+        helper.dict.a_sr_002_a(
             info.stageName, 
             wrapTimeString(info.timeString),
             info.weapons[0].name,
             info.weapons[1].name,
             info.weapons[2].name,
             info.weapons[3].name) :
-        dict.a_sr_003_a(
+        helper.dict.a_sr_003_a(
             info.stageName, 
             wrapTimeString(info.timeString),
             info.weapons[0].name,
@@ -64,34 +58,34 @@ function respondWithMultipleWeapons(handler: Alexa.Handler<Alexa.Request>, dict:
             info.weapons[2].name,
             info.weapons[3].name))
 
-    if (handler.event.context.System.device.supportedInterfaces.Display) {
+    if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
-        uniqueWeapons.forEach((info, index) => buildWeaponListItem(listItemBuilder, dict, info))
+        uniqueWeapons.forEach((info, index) => buildWeaponListItem(listItemBuilder, helper.dict, info))
 
         const template = new Alexa.templateBuilders.ListTemplate1Builder()
             .setToken('weaponList')
-            .setTitle(dict.a_sr_007)
+            .setTitle(helper.dict.a_sr_007)
             .setListItems(listItemBuilder.build())
             .build()
-        handler.response.renderTemplate(template)
+        helper.handler.response.renderTemplate(template)
     }
 
-    return handler.emit(':responseReady')
+    return helper.emit()
 }
 
-function respondWithSingleWeapon(handler: Alexa.Handler<Alexa.Request>, dict: Dict, info: DetailInfo, weaponInfo: WeaponInfo) {
-    handler.response.speak(info.open ?
-        dict.a_sr_005_s(
+function respondWithSingleWeapon(helper: HandlerHelper, info: DetailInfo, weaponInfo: WeaponInfo) {
+    helper.speakRplc(info.open ?
+        helper.dict.a_sr_005_s(
             info.stageName, 
             wrapTimeString(info.timeString),
             weaponInfo.name) :
-        dict.a_sr_006_s(
+        helper.dict.a_sr_006_s(
             info.stageName, 
             wrapTimeString(info.timeString),
             weaponInfo.name))
 
-    if (handler.event.context.System.device.supportedInterfaces.Display) {
-        handler.response.cardRenderer(
+    if (helper.hasDisplay()) {
+        helper.handler.response.cardRenderer(
             weaponInfo.name, 
             info.timeString, 
             {
@@ -100,7 +94,7 @@ function respondWithSingleWeapon(handler: Alexa.Handler<Alexa.Request>, dict: Di
             })
     }
         
-    return handler.emit(':responseReady')
+    return helper.emit()
 }
 
 function buildWeaponListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, weaponInfo: WeaponInfo) {

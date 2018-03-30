@@ -1,59 +1,54 @@
 import * as Alexa from 'alexa-sdk'
-import { Dict, DictProvider } from '../DictProvider'
+import { Dict } from '../DictProvider'
 import { MerchandiseAggregator } from '../../../procedure/aggregate/MerchandiseAggregator'
-import { ContentDict } from '../../../i18n/ContentDict'
 import { Merchandise } from '../../../splatoon2ink/model/Gear'
 import { nowInSplatFormat } from '../../../util/utils'
 import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/MerchandiseMapper'
 import { secondsToTime } from '../util/utils'
-import { AttributeHelper } from '../util/Attributes'
+import { HandlerHelper } from '../util/HandlerHelper'
 
 export const name = 'RequestMerchandise'
 
 export function handler(this: Alexa.Handler<Alexa.Request>) {
-    new AttributeHelper(this).updateLastSeen()
-    const dictProvider = new DictProvider(this)
-    const dict = dictProvider.getDict()
+    const helper = new HandlerHelper(this)
 
-    return new MerchandiseAggregator(dictProvider.getLang()).merchandiseSorted()
-        .then(result => respondWithMerch(this, dict, result.contentDict, result.content))
+    return new MerchandiseAggregator(helper.lang).merchandiseSorted()
+        .then(result => respondWithMerch(helper.withContentDict(result.contentDict),result.content))
         .catch(error => {
             console.error(error)
-            this.response.speak(dict.global_error_default)
-            return this.emit(':responseReady')
+            return helper.speakRplcEmit(helper.dict.global_error_default)
         })
 }
 
-function respondWithMerch(handler: Alexa.Handler<Alexa.Request>, dict: Dict, contentDict: ContentDict, merchandises: Merchandise[]) {
+function respondWithMerch(helper: HandlerHelper, merchandises: Merchandise[]) {
     if (merchandises.length < 3) {
-        handler.response.speak(dict.a_merch_002)
-        return handler.emit(':responseReady')
+        return helper.speakRplcEmit(helper.dict.a_merch_002)
     }
 
     const now = nowInSplatFormat()
     const infos = merchandises.map(merch => {
-        return mapMerchandiseToInfo(merch, now, contentDict, secondsToTime)
+        return mapMerchandiseToInfo(merch, now, helper.contentDict, secondsToTime)
     })
 
-    handler.response.speak(dict.a_merch_000_a(
+    helper.speakRplc(helper.dict.a_merch_000_a(
         infos[0].merchName,
         infos[1].merchName,
         infos[2].merchName
     ))
 
-    if (handler.event.context.System.device.supportedInterfaces.Display) {
+    if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
-        infos.forEach((info, index) => buildMerchListItem(listItemBuilder, dict, info))
+        infos.forEach((info, index) => buildMerchListItem(listItemBuilder, helper.dict, info))
 
         const template = new Alexa.templateBuilders.ListTemplate2Builder()
             .setToken('merchList')
-            .setTitle(dict.a_merch_003)
+            .setTitle(helper.dict.a_merch_003)
             .setListItems(listItemBuilder.build())
             .build()
-        handler.response.renderTemplate(template)
+        helper.handler.response.renderTemplate(template)
     }
     
-    return handler.emit(':responseReady')
+    return helper.emit()
 }
 
 function buildMerchListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, merchInfo: MerchInfo) {
