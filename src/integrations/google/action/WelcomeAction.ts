@@ -1,6 +1,7 @@
 import { I18NDialogflowApp } from '../I18NDialogflowApp'
 import { isNullOrUndefined } from 'util'
-import { randomEntry } from '../../../util/utils'
+import { randomEntry, wrapWithSpeak } from '../../../util/utils'
+import { SoundFx } from '../../../resources/SoundFx'
 
 export const name = 'welcome'
 
@@ -22,7 +23,7 @@ export function handler(app: I18NDialogflowApp) {
         const text = `${dict.s_welcome_hi_001} ${dict.s_welcome_intro} ${dict.s_welcome_help_long}`
         return app.ask(app.buildRichResponse()
             .addSimpleResponse({
-                speech: text,
+                speech: woomyPrefix(text),
                 displayText: text
             })
             .addSuggestions([
@@ -53,7 +54,7 @@ export function handler(app: I18NDialogflowApp) {
         const text = `${hi} ${help}`
         return app.ask(app.buildRichResponse()
             .addSimpleResponse({
-                speech: text,
+                speech: woomyPrefix(text),
                 displayText: text
             })
             .addSuggestions([
@@ -72,7 +73,7 @@ export function handler(app: I18NDialogflowApp) {
         const text = `${dict.s_welcome_intro} ${dict.s_welcome_returning} ${dict.s_welcome_help_long}`
         return app.ask(app.buildRichResponse()
             .addSimpleResponse({
-                speech: text,
+                speech: woomyPrefix(text),
                 displayText: text
             })
             .addSuggestions([
@@ -82,4 +83,13 @@ export function handler(app: I18NDialogflowApp) {
                 dict.global_suggest_splatfest
             ]))
     }
+}
+
+function woomyPrefix(input: string) : string {
+    let soundFx = new SoundFx()
+    let sound = randomEntry([
+        soundFx.ngyes(),
+        soundFx.squeemy()
+    ])
+    return wrapWithSpeak(`${sound} ${input}`)
 }
