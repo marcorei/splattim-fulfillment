@@ -60,7 +60,7 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
             scheduleInfos[0].stageA.name,
             scheduleInfos[0].stageB.name,
             scheduleInfos[1].ruleName,
-            scheduleInfos[1].timeString,
+            scheduleInfos[1].timeStringStart,
             scheduleInfos[1].stageA.name,
             scheduleInfos[1].stageB.name))
     }
@@ -72,7 +72,7 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
                 scheduleInfos[0].stageA.name,
                 scheduleInfos[0].stageB.name,
                 scheduleInfos[1].ruleName,
-                scheduleInfos[1].timeString,
+                scheduleInfos[1].timeStringStart,
                 scheduleInfos[1].stageA.name,
                 scheduleInfos[1].stageB.name),
             displayText: app.getDict().a_asched_000_t(gameModeName)
@@ -90,10 +90,10 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
  * Builds an OptionItem which can trigger a ScheduleStageOption.
  */
 function buildStageOptionItem(app: I18NDialogflowApp, stageInfo: StageInfo, info: ScheduleInfo): OptionItem {
-    const optionKey = buildOptionKey(stageInfo.name, undefined, info.timeDiff)
-    const etaTimeString = info.timeDiff <= 0 ? 
+    const optionKey = buildOptionKey(stageInfo.name, undefined, info.timeDiffStart)
+    const etaTimeString = info.timeDiffStart <= 0 ? 
         app.getDict().a_asched_001_now :
-        app.getDict().a_asched_001_future + info.timeString
+        app.getDict().a_asched_001_future + info.timeStringStart
 
     return app.buildOptionItem(optionKey, stageInfo.name)
         .setTitle(`${stageInfo.name} - ${etaTimeString}`)

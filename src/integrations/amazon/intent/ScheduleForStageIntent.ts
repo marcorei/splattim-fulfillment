@@ -60,8 +60,8 @@ function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[], stag
 
 function buildStageListItem(builder: ImageFreeItemBuilder, dict: Dict, info: ScheduleInfo, stageName: string) {
     const desc = `${info.ruleName} in ${info.modeName}`
-    const timeInfo = info.timeDiff > 0 ? 
-        `in ${info.timeString}` : 
+    const timeInfo = info.timeDiffStart > 0 ? 
+        `in ${info.timeStringStart}` : 
         dict.a_ssched_004
     return builder.addItemNoImage(
         `${stageName}_${timeInfo}_${info.modeName}`,
