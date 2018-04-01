@@ -9,7 +9,7 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo, buildCurrentStageSpeechOver
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { config } from '../../../config'
-import { secondsToTime } from '../util/utils'
+import { secondsToTime, wrapTimeString } from '../util/utils'
 import { HandlerHelper } from '../util/HandlerHelper'
 
 export const name = 'RequestStagesCurrent'
@@ -55,7 +55,7 @@ function respondWithSchedule(helper: HandlerHelper, schedule: Schedule | null) {
         info.modeName,
         info.stageA.name,
         info.stageB.name,
-        info.timeStringEnd))
+        wrapTimeString(info.timeStringEnd)))
 
     if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
