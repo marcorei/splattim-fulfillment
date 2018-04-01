@@ -54,7 +54,8 @@ function respondWithSchedule(helper: HandlerHelper, schedule: Schedule | null) {
         info.ruleName,
         info.modeName,
         info.stageA.name,
-        info.stageB.name))
+        info.stageB.name,
+        info.timeStringEnd))
 
     if (helper.hasDisplay()) {
         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()

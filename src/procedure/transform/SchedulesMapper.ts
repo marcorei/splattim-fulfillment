@@ -15,12 +15,15 @@ export interface ScheduleInfo {
     ruleName: string,
     stageA: StageInfo,
     stageB: StageInfo,
-    timeDiff: number,
-    timeString: string
+    timeDiffStart: number,
+    timeStringStart: string,
+    timeDiffEnd: number,
+    timeStringEnd: string,
 }
 
 export function mapScheduleToInfo(schedule: Schedule, now: number, contentDict: ContentDict, secondsToTime: SecondsToTimeType): ScheduleInfo {
-    const timeDiff = schedule.start_time - now
+    const timeDiffStart = schedule.start_time - now
+    const timeDiffEnd = schedule.end_time - now
     return {
         modeName: contentDict.mode(schedule.game_mode),
         ruleName: contentDict.rule(schedule.rule),
@@ -32,8 +35,10 @@ export function mapScheduleToInfo(schedule: Schedule, now: number, contentDict: 
             name: contentDict.schedStage(schedule.stage_b),
             image: getSplatnetResUrl(schedule.stage_b.image)
         },
-        timeDiff: timeDiff,
-        timeString: secondsToTime(timeDiff)
+        timeDiffStart: timeDiffStart,
+        timeStringStart: secondsToTime(timeDiffStart),
+        timeDiffEnd: timeDiffEnd,
+        timeStringEnd: secondsToTime(timeDiffEnd),
     }
 }
 
@@ -83,9 +88,9 @@ export function buildScheduleForStageSpeechOverview(dict: Dict, infos: ScheduleI
                 output += ', '
         }
         const timeString: string = isNullOrUndefined(wrapTime) ? 
-            info.timeString :
-            wrapTime(info.timeString)
-        output += info.timeDiff > 0 ? 
+            info.timeStringStart :
+            wrapTime(info.timeStringStart)
+        output += info.timeDiffStart > 0 ? 
             dict.a_ssched_002_middle(info.ruleName, info.modeName, timeString) :
             dict.a_ssched_002_middle_now(info.ruleName, info.modeName)
     })
