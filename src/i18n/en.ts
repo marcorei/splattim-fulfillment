@@ -15,10 +15,10 @@ export const dict = {
 
     a_sched_000_s: (url: string) => `I can't help you right now. But check out ${url}!`,
     a_sched_000_t: 'I can\'t help you squiddo. But check out this link!',
-    a_sched_002_a: (rule: string, mode: string, stage1: string, stage2: string) => `You can play ${rule} in ${mode} on ${stage1} and ${stage2}.`,
+    a_sched_002_a: (rule: string, mode: string, stage1: string, stage2: string, time: string) => `You can play ${rule} in ${mode} on ${stage1} and ${stage2}. The rotation changes in ${time}.`,
     a_sched_002_s: (rule: string, mode: string, stage1: string, stage2: string) => `You can play ${rule} in ${mode} on ${stage1} and ${stage2}. Which do you like more?`,
     a_sched_002_t: (rule: string, mode: string) => `You can play ${rule} in ${mode} on these two maps. Which do you like more?`,
-    a_sched_003: (mode: string) => `Active stages for ${mode}`,
+    a_sched_003: (mode: string, time: string) => `Stages for ${mode} (${time} left)`,
     
     a_sched_004: 'Here you go, all current stages. On which one are you going to play?',
 

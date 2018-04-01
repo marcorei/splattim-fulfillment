@@ -73,9 +73,9 @@ export function handler(app: I18NDialogflowApp) {
  */
 function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedule: Schedule) {
     const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
-    const eta = info.timeString === '' ? 
+    const eta = info.timeStringStart === '' ? 
         app.getDict().a_eta_001_now : 
-        app.getDict().a_eta_001_future + info.timeString
+        app.getDict().a_eta_001_future + info.timeStringStart
 
     if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
         return app.tell(app.getDict().a_eta_002_a(
@@ -109,7 +109,7 @@ function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, s
  * Builds an OptionItem which can trigger a ScheduleStageOption.
  */
 function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageInfo: StageInfo): Responses.OptionItem {
-    const optionKey = buildOptionKey(stageInfo.name, info.modeName, info.timeDiff)
+    const optionKey = buildOptionKey(stageInfo.name, info.modeName, info.timeDiffStart)
 
     return app.buildOptionItem(optionKey, [stageInfo.name])
         .setTitle(stageInfo.name)

@@ -52,7 +52,7 @@ function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[]) {
         scheduleInfos[0].stageA.name,
         scheduleInfos[0].stageB.name,
         scheduleInfos[1].ruleName,
-        wrapTimeString(scheduleInfos[1].timeString),
+        wrapTimeString(scheduleInfos[1].timeStringStart),
         scheduleInfos[1].stageA.name,
         scheduleInfos[1].stageB.name))
 
@@ -75,13 +75,13 @@ function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[]) {
 }
 
 function buildStageListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, info: ScheduleInfo, stageInfo: StageInfo) {
-    const etaTimeString = info.timeDiff <= 0 ? 
+    const etaTimeString = info.timeDiffStart <= 0 ? 
         dict.a_asched_001_now :
-        dict.a_asched_001_future + info.timeString
+        dict.a_asched_001_future + info.timeStringStart
 
     return builder.addItem(
         Alexa.utils.ImageUtils.makeImage(stageInfo.image),
-        `${stageInfo.name}_${info.timeDiff}`,
+        `${stageInfo.name}_${info.timeDiffStart}`,
         Alexa.utils.TextUtils.makePlainText(`${stageInfo.name} - ${etaTimeString}`),
         Alexa.utils.TextUtils.makePlainText(info.ruleName)
     )

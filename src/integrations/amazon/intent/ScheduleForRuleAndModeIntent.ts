@@ -69,9 +69,9 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
 
 function respondWithSchedule(helper: HandlerHelper, schedule: Schedule) {
     const info = mapScheduleToInfo(schedule, nowInSplatFormat(), helper.contentDict, secondsToTime)
-    const eta = info.timeString === '' ? 
+    const eta = info.timeStringStart === '' ? 
         helper.dict.a_eta_001_now : 
-        helper.dict.a_eta_001_future + wrapTimeString(info.timeString)
+        helper.dict.a_eta_001_future + wrapTimeString(info.timeStringStart)
 
     helper.speakRplc(helper.dict.a_eta_002_a(
         info.ruleName,

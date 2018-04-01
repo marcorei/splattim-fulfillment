@@ -58,9 +58,9 @@ function respondWithSchedules(app: I18NDialogflowApp, contentDict: ContentDict, 
  */
 function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageName: string): Responses.OptionItem {
     const desc = `${info.ruleName} in ${info.modeName}`
-    const optionKey = buildOptionKey(stageName, info.modeName, info.timeDiff)
-    const timeInfo = info.timeDiff > 0 ? 
-        `in ${info.timeString}` : 
+    const optionKey = buildOptionKey(stageName, info.modeName, info.timeDiffStart)
+    const timeInfo = info.timeDiffStart > 0 ? 
+        `in ${info.timeStringStart}` : 
         app.getDict().a_ssched_004
 
     return app.buildOptionItem(optionKey, [timeInfo, info.modeName])

@@ -67,7 +67,8 @@ function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, s
             info.ruleName,
             info.modeName,
             info.stageA.name,
-            info.stageB.name))
+            info.stageB.name,
+            info.timeStringEnd))
     }
 
     return app.askWithList({
@@ -80,7 +81,7 @@ function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, s
                 info.ruleName,
                 info.modeName)
         },
-        app.buildList(app.getDict().a_sched_003(info.modeName))
+        app.buildList(app.getDict().a_sched_003(info.modeName, info.timeStringEnd))
             .addItems([
                 buildStageOptionItem(app, info, info.stageA, false),
                 buildStageOptionItem(app, info, info.stageB, false)
@@ -121,7 +122,7 @@ function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageI
     const desc = useMode ? 
         `${info.modeName} - ${info.ruleName}` : 
         info.ruleName
-    const optionKey = buildOptionKey(stageInfo.name, info.modeName, info.timeDiff)
+    const optionKey = buildOptionKey(stageInfo.name, info.modeName, info.timeDiffStart)
 
     return app.buildOptionItem(optionKey, [stageInfo.name])
         .setTitle(stageInfo.name)
