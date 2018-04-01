@@ -16,7 +16,7 @@ export const dict: typeof index = {
 
     a_sched_000_s: (url: string) => `Ich kann Dir nicht helfen. Aber schau mal auf ${url}!`,
     a_sched_000_t: 'Ich kann Dir nicht helfen. Aber schau mal auf dieser Website nach!',
-    a_sched_002_a: (rule: string, mode: string, stage1: string, stage2: string, time: string) => `Du kannst ${rule} im ${mode} in den Arenen ${stage1} und ${stage2} spielen. Die Arenen wechseln in ${time}.`,
+    a_sched_002_a: (rule: string, mode: string, stage1: string, stage2: string, time: string) => `Du kannst ${rule} im ${mode} in den Arenen ${stage1} und ${stage2} spielen. Noch ${time} bis die Arenen wechseln.`,
     a_sched_002_s: (rule: string, mode: string, stage1: string, stage2: string) => `Du kannst ${rule} im ${mode} in den Arenen ${stage1} und ${stage2} spielen. Welche magst Du lieber?`,
     a_sched_002_t: (rule: string, mode: string) => `Du kannst ${rule} im ${mode} auf diesen Arenen spielen. Welche magst Du lieber?`,
     a_sched_003: (mode: string, time: string) => `Arenen für ${mode} (Noch ${time})`,
