@@ -1,32 +1,37 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response } from 'ask-sdk-model'
 import { SlotParser } from '../util/SlotParser'
 import { Converter } from '../util/Converter'
 import { resultsToInfo } from '../../../procedure/transform/SplatfestMapper'
 import { SplatfestAggregator, FestivalResultTuple } from '../../../procedure/aggregate/SplatfestAggregator'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
 import { RegionSlot } from '../model/RegionSlot'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
 
-export const name = 'RequestSplatfestResult'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('RequestSplatfestResult')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        
+        if (helper.isIncompleteIntent()) return helper.delegate()
+        const slotParser = new SlotParser(input, helper.dict)
+        const requestedRegion = slotParser.string(RegionSlot.key)
+        if (!slotParser.isOk()) return slotParser.tellAndLog()
 
-    if (this.event.request['dialogState'] !== 'COMPLETED'){
-        return this.emit(':delegate')
-    }
-    const slotParser = new SlotParser(this, helper.dict)
-    const requestedRegion = slotParser.string(RegionSlot.key)
-    if (!slotParser.isOk()) return slotParser.tellAndLog()
+        const converter = new Converter()
+        const regionId = converter.regionToApi(requestedRegion)
+        return new SplatfestAggregator(helper.lang).latestResult(regionId)
+            .then(result => respond(helper.withContentDict(result.contentDict), result.content))
+            .catch(error => {
+                console.error(error)
+                return helper.speakRplcEmit(helper.dict.global_error_default)
+            })
 
-    const converter = new Converter()
-    const regionId = converter.regionToApi(requestedRegion)
-    return new SplatfestAggregator(helper.lang).latestResult(regionId)
-        .then(result => respond(helper.withContentDict(result.contentDict), result.content))
-        .catch(error => {
-            console.error(error)
-            return helper.speakRplcEmit(helper.dict.global_error_default)
-        })
+    })
 }
 
 function respond(helper: HandlerHelper, tuple: FestivalResultTuple) {
@@ -37,13 +42,11 @@ function respond(helper: HandlerHelper, tuple: FestivalResultTuple) {
     helper.speakRplc(`${info.part1} ${info.part2}`)
 
     if (helper.hasDisplay()) {
-        helper.handler.response.cardRenderer(
-            helper.dict.a_splres_003(info.alpha, info.bravo), 
-            helper.dict.a_splres_006(`${info.winner}\n${info.rates}`), 
-            {
-                smallImageUrl: image,
-                largeImageUrl: image
-            })
+        helper.addCard({
+            title: helper.dict.a_splres_003(info.alpha, info.bravo),
+            content: helper.dict.a_splres_006(`${info.winner}\n${info.rates}`),
+            image: image
+        })
     }
 
     return helper.emit()

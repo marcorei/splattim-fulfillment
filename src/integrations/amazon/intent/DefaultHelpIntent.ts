@@ -1,12 +1,18 @@
-import * as Alexa from 'alexa-sdk'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response } from 'ask-sdk-model'
+import { CanHandleHelper, HandlerHelper } from '../util/HandlerHelper'
 
-export const name = 'AMAZON.HelpIntent'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('AMAZON.HelpIntent')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
-    return helper.speakListenRplcEmit(
-        helper.dict.s_help_complete,
-        helper.dict.global_reprompt
-    )
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        return helper.speakListenRplcEmit(
+            helper.dict.s_help_complete,
+            helper.dict.global_reprompt
+        )
+    })
 }
