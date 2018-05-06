@@ -22,6 +22,7 @@ import * as smallTalkHowAreYouIntent from './intent/SmallTalkHowAreYouIntent'
 import * as smallTalkInsultingIntent from './intent/SmallTalkInsultingIntent'
 import * as splatfestResultIntent from './intent/SplatfestResultIntent'
 import * as splatfestUpcomingIntent from './intent/SplatfestUpcomingIntent'
+import * as errorHandler from './intent/ErrorHandler'
 
 let skill: Skill | undefined
 
@@ -58,7 +59,7 @@ module.exports.splatTim = function(event: RequestEnvelope, context: any, callbac
                 defaultSessionEndedRequest,
                 defaultUnhandledIntent,
             )
-            .addErrorHandlers()
+            .addErrorHandlers(errorHandler)
             .create()
     }
 
