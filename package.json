@@ -14,7 +14,6 @@
   "dependencies": {
     "actions-on-google": "^2.0.1",
     "ask-sdk": "^2.0.1",
-    "ask-sdk-v1adapter": "^2.0.2",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "serverless-http": "^1.5.5"

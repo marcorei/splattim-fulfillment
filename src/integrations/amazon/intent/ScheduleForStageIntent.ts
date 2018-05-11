@@ -9,7 +9,7 @@ import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } 
 import { StageSlot } from '../model/StageSlot'
 import { secondsToTime, wrapTimeString } from '../util/utils'
 import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
-import { ListItemBuilder } from '../util/DisplayTemplateUtil'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {

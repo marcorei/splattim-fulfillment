@@ -11,7 +11,7 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/t
 import { GameRuleSlot } from '../model/GameRuleSlot'
 import { secondsToTime, wrapTimeString } from '../util/utils'
 import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
-import { ListItemBuilder } from '../util/DisplayTemplateUtil'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {

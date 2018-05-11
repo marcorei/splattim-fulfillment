@@ -7,7 +7,7 @@ import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from 
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
 import { secondsToTime, wrapTimeString } from '../util/utils'
 import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
-import { ListItemBuilder } from '../util/DisplayTemplateUtil'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {

@@ -7,7 +7,7 @@ import { Merchandise } from '../../../splatoon2ink/model/Gear'
 import { nowInSplatFormat } from '../../../util/utils'
 import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/MerchandiseMapper'
 import { secondsToTime } from '../util/utils'
-import { ListItemBuilder } from '../util/DisplayTemplateUtil'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {

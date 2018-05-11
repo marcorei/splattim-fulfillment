@@ -12,7 +12,7 @@ import { isNullOrUndefined } from 'util'
 import { config } from '../../../config'
 import { secondsToTime, wrapTimeString } from '../util/utils'
 import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
-import { ListItemBuilder } from '../util/DisplayTemplateUtil'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {
