@@ -1,4 +1,5 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
+import { SimpleResponse, RichResponse, BasicCard } from 'actions-on-google'
+import { CustomConversation } from '../util/CustomConversation'
 import { getSplatnetResUrl } from '../../../splatoon2ink/Splatoon2inkApi'
 import { ArgParser } from '../util/ArgParser'
 import { RegionArg } from '../model/RegionArg'
@@ -15,51 +16,59 @@ export const name = 'splatfest_upcoming'
  * Tells if there is an active Splatfest or an upcoming on
  * annouced recently.
  */
-export function handler(app: I18NDialogflowApp) {
-    const argParser = new ArgParser(app)
+export function handler(conv: CustomConversation) {
+    const argParser = new ArgParser(conv)
     const requestedRegion = argParser.string(RegionArg.key)
     if (!argParser.isOk()) return argParser.tellAndLog()
     
     const converter = new Converter()
     const regionId = converter.regionToApi(requestedRegion)
-    new SplatfestAggregator(app.getLang()).latestFestival(regionId)
-        .then(result => respond(app, result.contentDict, result.content))
+    new SplatfestAggregator(conv.lang).latestFestival(regionId)
+        .then(result => respond(conv, result.contentDict, result.content))
         .catch(error => {
             console.error(error)
-            app.tell(app.getDict().global_error_default)
+            return conv.close(conv.dict.global_error_default)
         })
 }
 
-function respond(app: I18NDialogflowApp, contentDict: ContentDict, fest: Festival) {
-    const dict = app.getDict()
+function respond(conv: CustomConversation, contentDict: ContentDict, fest: Festival) {
+    const dict = conv.dict
     const now = nowInSplatFormat()
     const translated = contentDict.festival(fest)
 
     if (now >= fest.times.end) {
-        return app.tell(dict.a_splup_000)
+        return conv.close(dict.a_splup_000)
     }
-
-    const card = app.buildBasicCard()
-        .setTitle(dict.a_splup_001(translated.alpha, translated.bravo))
-        .setImage(getSplatnetResUrl(fest.images.panel), dict.a_splup_002)
 
     if (now >= fest.times.start) {
         const timeTillEnd = secondsToTime(fest.times.end - now)
-        return app.tell(app.buildRichResponse()
-            .addSimpleResponse({
+        return conv.close(new RichResponse()
+            .add(new SimpleResponse({
                 speech: dict.a_splup_003_s(timeTillEnd, translated.alpha, translated.bravo),
-                displayText: dict.a_splup_003_t(timeTillEnd)
-            })
-            .addBasicCard(card
-                .setSubtitle(dict.a_splup_003_b(timeTillEnd))))
+                text: dict.a_splup_003_t(timeTillEnd)
+            }))
+            .add(new BasicCard({
+                title: dict.a_splup_001(translated.alpha, translated.bravo),
+                subtitle: dict.a_splup_003_b(timeTillEnd),
+                image: {
+                    url: getSplatnetResUrl(fest.images.panel),
+                    accessibilityText: dict.a_splup_002
+                }
+            })))
     }
 
     const timeTillStart = secondsToTime(fest.times.start - now)
-    return app.tell(app.buildRichResponse()
-        .addSimpleResponse({
+    return conv.close(new RichResponse()
+        .add(new SimpleResponse({
             speech: dict.a_splup_004_s(timeTillStart, translated.alpha, translated.bravo),
-            displayText: dict.a_splup_004_t(timeTillStart)
-        })
-        .addBasicCard(card
-            .setSubtitle(dict.a_splup_004_b(timeTillStart))))
+            text: dict.a_splup_004_t(timeTillStart)
+        }))
+        .add(new BasicCard({
+            title: dict.a_splup_001(translated.alpha, translated.bravo),
+            subtitle: dict.a_splup_004_b(timeTillStart),
+            image: {
+                url: getSplatnetResUrl(fest.images.panel),
+                accessibilityText: dict.a_splup_002
+            }
+        })))
 }

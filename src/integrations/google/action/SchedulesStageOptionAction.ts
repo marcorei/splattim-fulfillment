@@ -1,4 +1,5 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
+import { OptionArgument, Parameters } from 'actions-on-google'
+import { CustomConversation } from '../util/CustomConversation'
 import { isNullOrUndefined } from 'util'
 import { gameModeKeyValues } from '../../../splatoon2ink/model/Schedules'
 import { secondsToTime } from '../util/utils'
@@ -18,10 +19,10 @@ export function buildOptionKey(stageName: string, modeKey?: string, timeDiff?: n
 /**
  * Replies to a stage selected previously.
  */
-export function handler(app: I18NDialogflowApp) {
-    const optionKeyParts = app.getSelectedOption().split(seperator)
+export function handler(conv: CustomConversation, params: Parameters, optionKey: OptionArgument) {
+    const optionKeyParts = optionKey.split(seperator)
     if (optionKeyParts.length < 4) {
-        return app.tell(app.getDict().o_schedstage_000)
+        return conv.close(conv.dict.o_schedstage_000)
     }
     const stageName = optionKeyParts[1]
     const modeKey = optionKeyParts[2]
@@ -31,13 +32,13 @@ export function handler(app: I18NDialogflowApp) {
         const timeDiff = parseInt(timeDiffString)
         if (timeDiff > 0) {
             const timeString = secondsToTime(timeDiff)
-            return app.tell(app.getDict().o_schedstage_002(timeString))
+            return conv.close(conv.dict.o_schedstage_002(timeString))
         } 
     }
 
     if (modeKey == gameModeKeyValues.ranked) {
-        return app.tell(app.getDict().o_schedstage_001)
+        return conv.close(conv.dict.o_schedstage_001)
     }
 
-    return app.tell(app.getDict().o_schedstage_003(stageName))
+    return conv.close(conv.dict.o_schedstage_003(stageName))
 }

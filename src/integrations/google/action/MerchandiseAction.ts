@@ -1,5 +1,5 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
-import { Responses } from 'actions-on-google'
+import { Carousel, GoogleActionsV2UiElementsCarouselSelectCarouselItem, SimpleResponse } from 'actions-on-google'
+import { CustomConversation } from '../util/CustomConversation'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Merchandise } from '../../../splatoon2ink/model/Gear'
 import { mapMerchandiseToInfo, MerchInfo } from '../../../procedure/transform/MerchandiseMapper'
@@ -14,55 +14,62 @@ export const name = 'merchandise'
  * Lists all available gear as carousel.
  * Also gives a shorter spech overview.
  */
-export function handler(app: I18NDialogflowApp) {
-    return new MerchandiseAggregator(app.getLang()).merchandiseSorted()
-        .then(result => respondWithMerch(app, result.contentDict, result.content))
+export function handler(conv: CustomConversation) {
+    return new MerchandiseAggregator(conv.lang).merchandiseSorted()
+        .then(result => respondWithMerch(conv, result.contentDict, result.content))
         .catch(error => {
             console.error(error)
-            app.tell(app.getDict().global_error_default)
+            return conv.close(conv.dict.global_error_default)
         })
 }
 
-function respondWithMerch(app: I18NDialogflowApp, contentDict: ContentDict, merchandises: Merchandise[]) {
+function respondWithMerch(conv: CustomConversation, contentDict: ContentDict, merchandises: Merchandise[]) {
     if (merchandises.length < 3) {
-        return app.tell(app.getDict().a_merch_002)
+        return conv.close(conv.dict.a_merch_002)
     }
     
     const now = nowInSplatFormat()
-    const infos = merchandises.map(merch => {
-        return mapMerchandiseToInfo(merch, now, contentDict, secondsToTime)
-    })
-
-    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        return app.tell(app.getDict().a_merch_000_a(
+    const infos = merchandises.map(merch => mapMerchandiseToInfo(merch, now, contentDict, secondsToTime))
+    
+    if (!conv.hasDisplay()) {
+        return conv.close(conv.dict.a_merch_000_a(
             infos[0].merchName,
             infos[1].merchName,
             infos[2].merchName
         ))
     }
-    
-    return app.askWithCarousel({
-            speech: app.getDict().a_merch_000_s(
-                infos[0].merchName,
-                infos[1].merchName,
-                infos[2].merchName
-            ),
-            displayText: app.getDict().a_merch_000_t},
-        app.buildCarousel()
-            .addItems(
-                infos.map(merch => buildMerchOptionItem(app, merch))))
+
+    conv.ask(new SimpleResponse({
+        text: conv.dict.a_merch_000_t,
+        speech: conv.dict.a_merch_000_s(
+            infos[0].merchName,
+            infos[1].merchName,
+            infos[2].merchName
+        )
+    }))
+
+    return conv.ask(new Carousel({
+        items: infos.map(info => buildMerchOptionItem(conv, info))
+    }))
 }
 
-function buildMerchOptionItem(app: I18NDialogflowApp, merchInfo: MerchInfo): Responses.OptionItem {
-    const optionKey = buildOptionKey(
-        merchInfo.merchName, 
-        merchInfo.skillName,
-        merchInfo.timeDiff)
-    return app.buildOptionItem(optionKey, [merchInfo.merchName])
-        .setTitle(merchInfo.merchName + ' (' + merchInfo.timeString + ')')
-        .setDescription(app.getDict().a_merch_001(
+function buildMerchOptionItem(conv: CustomConversation, merchInfo: MerchInfo) : GoogleActionsV2UiElementsCarouselSelectCarouselItem {
+    return {
+        optionInfo: {
+            key: buildOptionKey(
+                merchInfo.merchName, 
+                merchInfo.skillName,
+                merchInfo.timeDiff),
+            synonyms: [merchInfo.merchName]
+        },
+        title: `${merchInfo.merchName} (${merchInfo.timeString})`,
+        description: conv.dict.a_merch_001(
             merchInfo.skillName, 
             merchInfo.brandName,
-            merchInfo.timeString))
-        .setImage(merchInfo.merchImage, merchInfo.merchName)
+            merchInfo.timeString),
+        image: {
+            url: merchInfo.merchImage,
+            accessibilityText: merchInfo.merchName
+        }
+    }
 }

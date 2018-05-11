@@ -1,4 +1,5 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
+import { SimpleResponse, RichResponse, Suggestions } from 'actions-on-google'
+import { CustomConversation } from '../util/CustomConversation'
 import { isNullOrUndefined } from 'util'
 import { randomEntry, wrapWithSpeak } from '../../../util/utils'
 import { SoundFx } from '../../../resources/SoundFx'
@@ -9,9 +10,9 @@ export const name = 'welcome'
  * Lists all available gear as carousel.
  * Also gives a shorter spech overview.
  */
-export function handler(app: I18NDialogflowApp) {
-    const lastSeen = app.getLastSeen()
-    const dict = app.getDict()
+export function handler(conv: CustomConversation) {
+    const lastSeen = conv.user.last.seen
+    const dict = conv.dict
 
     if (isNullOrUndefined(lastSeen)) {
         // New User
@@ -21,17 +22,17 @@ export function handler(app: I18NDialogflowApp) {
         // Duggestion bubbles.
 
         const text = `${dict.s_welcome_hi_001} ${dict.s_welcome_intro} ${dict.s_welcome_help_long}`
-        return app.ask(app.buildRichResponse()
-            .addSimpleResponse({
+        return conv.ask(new RichResponse()
+            .add(new SimpleResponse({
                 speech: woomyPrefix(text),
-                displayText: text
-            })
-            .addSuggestions([
+                text: text
+            }))
+            .addSuggestion(new Suggestions([
                 dict.global_suggest_salmon,
                 dict.global_suggest_stages,
                 dict.global_suggest_merchandise,
                 dict.global_suggest_splatfest
-            ]))
+            ])))
     }
     
     const timeDiff = Math.abs(Date.now() - new Date(lastSeen).getTime())
@@ -52,18 +53,18 @@ export function handler(app: I18NDialogflowApp) {
             dict.s_welcome_help_short_001
         ])
         const text = `${hi} ${help}`
-        return app.ask(app.buildRichResponse()
-            .addSimpleResponse({
+        return conv.ask(new RichResponse()
+            .add(new SimpleResponse({
                 speech: woomyPrefix(text),
-                displayText: text
-            })
-            .addSuggestions([
+                text: text
+            }))
+            .addSuggestion(new Suggestions([
                 dict.global_suggest_help,
                 dict.global_suggest_salmon,
                 dict.global_suggest_stages,
                 dict.global_suggest_merchandise,
                 dict.global_suggest_splatfest]
-            ))
+            )))
     } else {
         // repeat help stuff
 
@@ -71,17 +72,17 @@ export function handler(app: I18NDialogflowApp) {
         // current stages, Salmon Run or merchandise?
 
         const text = `${dict.s_welcome_intro} ${dict.s_welcome_returning} ${dict.s_welcome_help_long}`
-        return app.ask(app.buildRichResponse()
-            .addSimpleResponse({
+        return conv.ask(new RichResponse()
+            .add(new SimpleResponse({
                 speech: woomyPrefix(text),
-                displayText: text
-            })
-            .addSuggestions([
+                text: text
+            }))
+            .addSuggestion(new Suggestions([
                 dict.global_suggest_salmon,
                 dict.global_suggest_stages,
                 dict.global_suggest_merchandise,
                 dict.global_suggest_splatfest
-            ]))
+            ])))
     }
 }
 

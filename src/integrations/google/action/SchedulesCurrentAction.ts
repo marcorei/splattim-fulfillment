@@ -1,10 +1,9 @@
 import { isNullOrUndefined } from 'util'
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
-import { Responses } from 'actions-on-google'
+import { CustomConversation } from '../util/CustomConversation'
+import { SimpleResponse, GoogleActionsV2UiElementsCarouselSelectCarouselItem, GoogleActionsV2UiElementsListSelectListItem, List, RichResponse, LinkOutSuggestion, Carousel } from 'actions-on-google'
 import { config } from '../../../config'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
 import { GameModeArg } from '../model/GameModeArg'
-import { OptionItem } from 'actions-on-google/response-builder'
 import { nowInSplatFormat } from '../../../util/utils'
 import { ArgParser } from '../util/ArgParser'
 import { buildOptionKey } from './SchedulesStageOptionAction'
@@ -22,8 +21,8 @@ export const name = 'schedules'
  * Either as carousel for all modes, or as list for a specific mode.
  * Asks a follow up question about the preferred satge.
  */
-export function handler(app: I18NDialogflowApp) {
-    const argParser = new ArgParser(app)
+export function handler(conv: CustomConversation) {
+    const argParser = new ArgParser(conv)
     const requestedGameMode = argParser.stringWithDefault(GameModeArg.key, GameModeArg.values.all)
     if (!argParser.isOk()) return argParser.tellAndLog()
 
@@ -34,36 +33,39 @@ export function handler(app: I18NDialogflowApp) {
         const converter = new Converter()
         modeKey = converter.modeToApi(requestedGameMode)
     }
-    return new SchedulesAggregator(app.getLang()).currentSchedulesForModeOrAll(modeKey)
+    return new SchedulesAggregator(conv.lang).currentSchedulesForModeOrAll(modeKey)
         .then(result => {
             if (result.content.length > 1) {
-                return respondWithoutSpecificSchedule(app, result.contentDict, result.content)
+                return respondWithoutSpecificSchedule(conv, result.contentDict, result.content)
             }
-            return respondWithSchedule(app, result.contentDict, result.content[0])
+            return respondWithSchedule(conv, result.contentDict, result.content[0])
         })
         .catch(error => {
             console.error(error)
-            app.tell(app.getDict().global_error_default)
+            return conv.close(conv.dict.global_error_default)
         })
 }
 
 /**
  * Responds by showing two stages of a given schedule in a list.
  */
-function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedule: Schedule | null) {
+function respondWithSchedule(conv: CustomConversation, contentDict: ContentDict, schedule: Schedule | null) {
     if (isNullOrUndefined(schedule)) {
-        return app.tell(app.buildRichResponse()
-            .addSimpleResponse({
-                speech: app.getDict().a_sched_000_s(config.splatoonInk.baseUrl),
-                displayText: app.getDict().a_sched_000_t
-            })
-            .addSuggestionLink('Splatoon.ink', config.splatoonInk.baseUrl))
+        return conv.close(new RichResponse()
+            .add(new SimpleResponse({
+                speech: conv.dict.a_sched_000_s(config.splatoonInk.baseUrl),
+                text: conv.dict.a_sched_000_t
+            }))
+            .add(new LinkOutSuggestion({
+                name: 'Splatoon.ink',
+                url: config.splatoonInk.baseUrl
+            })))
     }
 
     const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
 
-    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        return app.tell(app.getDict().a_sched_002_a(
+    if (!conv.hasDisplay()) {
+        return conv.close(conv.dict.a_sched_002_a(
             info.ruleName,
             info.modeName,
             info.stageA.name,
@@ -71,62 +73,74 @@ function respondWithSchedule(app: I18NDialogflowApp, contentDict: ContentDict, s
             info.timeStringEnd))
     }
 
-    return app.askWithList({
-            speech: app.getDict().a_sched_002_s(
-                info.ruleName,
-                info.modeName,
-                info.stageA.name,
-                info.stageB.name),
-            displayText: app.getDict().a_sched_002_t(
-                info.ruleName,
-                info.modeName)
-        },
-        app.buildList(app.getDict().a_sched_003(info.modeName, info.timeStringEnd))
-            .addItems([
-                buildStageOptionItem(app, info, info.stageA, false),
-                buildStageOptionItem(app, info, info.stageB, false)
-            ]))
+    conv.ask(new SimpleResponse({
+        speech: conv.dict.a_sched_002_s(
+            info.ruleName,
+            info.modeName,
+            info.stageA.name,
+            info.stageB.name),
+        text: conv.dict.a_sched_002_t(
+            info.ruleName,
+            info.modeName)
+    }))
+
+    return conv.ask(new List({
+        title: conv.dict.a_sched_003(info.modeName, info.timeStringEnd),
+        items: [
+            buildStageOptionItem(conv, info, info.stageA, false),
+            buildStageOptionItem(conv, info, info.stageB, false)
+        ]
+    }))
 }
 
 /**
  * Reponds by showing all stages of all active schedules in a carousel.
  */
-function respondWithoutSpecificSchedule(app: I18NDialogflowApp, contentDict: ContentDict, schedules: Schedule[]) {
+function respondWithoutSpecificSchedule(conv: CustomConversation, contentDict: ContentDict, schedules: Schedule[]) {
     const now = nowInSplatFormat()
     const infos: ScheduleInfo[] = schedules
         .filter(schedule => schedule != null)
         .map(schedule => mapScheduleToInfo(schedule!, now, contentDict, secondsToTime))
     
-    if (!app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
-        return app.tell(buildCurrentStageSpeechOverview(app.getDict(), infos, false))
+    if (!conv.hasDisplay()) {
+        return conv.close(buildCurrentStageSpeechOverview(conv.dict, infos, false))
     }
 
-    return app.askWithCarousel({
-            speech: buildCurrentStageSpeechOverview(app.getDict(), infos, true),
-            displayText: app.getDict().a_sched_004
-        }, 
-        app.buildCarousel()
-            .addItems(infos.reduce((arr: OptionItem[], info) => {
-                arr.push(
-                    buildStageOptionItem(app, info, info.stageA, true),
-                    buildStageOptionItem(app, info, info.stageB, true)
-                )
-                return arr
-            }, [])))
+    conv.ask(new SimpleResponse({
+        speech: buildCurrentStageSpeechOverview(conv.dict, infos, true),
+        text: conv.dict.a_sched_004
+    }))
+
+    return conv.ask(new Carousel({
+        items: infos.reduce((arr: GoogleActionsV2UiElementsCarouselSelectCarouselItem[], info) => {
+            arr.push(
+                buildStageOptionItem(conv, info, info.stageA, true),
+                buildStageOptionItem(conv, info, info.stageB, true)
+            )
+            return arr
+        }, [])
+    }))
 }
+
+type OptionItem = GoogleActionsV2UiElementsCarouselSelectCarouselItem & GoogleActionsV2UiElementsListSelectListItem
 
 /**
  * Builds an OptionItem which can trigger a ScheduleStageOption.
  */
-function buildStageOptionItem(app: I18NDialogflowApp, info: ScheduleInfo, stageInfo: StageInfo, useMode: boolean): Responses.OptionItem {
-    const desc = useMode ? 
-        `${info.modeName} - ${info.ruleName}` : 
-        info.ruleName
-    const optionKey = buildOptionKey(stageInfo.name, info.modeName, info.timeDiffStart)
-
-    return app.buildOptionItem(optionKey, [stageInfo.name])
-        .setTitle(stageInfo.name)
-        .setDescription(desc)
-        .setImage(stageInfo.image, stageInfo.name)
+function buildStageOptionItem(conv: CustomConversation, info: ScheduleInfo, stageInfo: StageInfo, useMode: boolean) : OptionItem {
+    return {
+        optionInfo: {
+            key: buildOptionKey(stageInfo.name, info.modeName, info.timeDiffStart),
+            synonyms: [stageInfo.name]
+        },
+        title: stageInfo.name,
+        description: useMode ? 
+            `${info.modeName} - ${info.ruleName}` : 
+            info.ruleName,
+        image: {
+            url: stageInfo.image,
+            accessibilityText: stageInfo.name
+        }
+    }
 }
 

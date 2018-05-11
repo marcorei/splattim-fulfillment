@@ -1,4 +1,5 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
+import { CustomConversation } from '../util/CustomConversation'
+import { RichResponse, SimpleResponse, LinkOutSuggestion } from 'actions-on-google'
 
 export const name = 'help'
 
@@ -6,17 +7,17 @@ export const name = 'help'
  * Lists all available gear as carousel.
  * Also gives a shorter spech overview.
  */
-export function handler(app: I18NDialogflowApp) {
-    const dict = app.getDict()
-
+export function handler(conv: CustomConversation) {
+    const dict = conv.dict
     const text = dict.s_help_complete
-    return app.ask(app.buildRichResponse()
-        .addSimpleResponse({
+
+    return conv.ask(new RichResponse()
+        .add(new SimpleResponse({
             speech: text,
-            displayText: text
-        })
-        .addSuggestionLink(
-            dict.global_suggest_command_link_name,
-            dict.global_suggest_command_link_url
-        ))   
+            text: text
+        }))
+        .add(new LinkOutSuggestion({
+            name: dict.global_suggest_command_link_name,
+            url: dict.global_suggest_command_link_url
+        }))) 
 }
