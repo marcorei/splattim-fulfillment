@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Splat Tim Lambda function for DialogFlow and splatton2.ink",
   "main": "handler.js",
+  "repository": {
+    "url": "https://github.com/marcorei/splattim-fulfillment"
+  },
   "scripts": {
     "deploy:dev": "serverless deploy --stage dev",
     "deploy:prod": "serverless deploy --stage prod",
