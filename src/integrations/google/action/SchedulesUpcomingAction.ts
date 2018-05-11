@@ -12,7 +12,7 @@ import { Converter } from '../util/Converter'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'all_schedules'
+export const names = ['Request - Schedules Upcoming']
 
 /**
  * Lists current and future stages for a given game mode as carousel.
@@ -53,7 +53,7 @@ function respondWithSchedules(conv: CustomConversation, contentDict: ContentDict
         .sort(sortByStartTime)
         .map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(conv.dict.a_asched_000_a(
             gameModeName,
             scheduleInfos[0].ruleName,

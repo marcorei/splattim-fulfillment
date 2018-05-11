@@ -10,7 +10,7 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { Converter } from '../util/Converter'
 import { SplatfestAggregator } from '../../../procedure/aggregate/SplatfestAggregator'
 
-export const name = 'splatfest_upcoming'
+export const names = ['Request - Splatfest Upcoming']
 
 /**
  * Tells if there is an active Splatfest or an upcoming on
@@ -23,7 +23,7 @@ export function handler(conv: CustomConversation) {
     
     const converter = new Converter()
     const regionId = converter.regionToApi(requestedRegion)
-    new SplatfestAggregator(conv.lang).latestFestival(regionId)
+    return new SplatfestAggregator(conv.lang).latestFestival(regionId)
         .then(result => respond(conv, result.contentDict, result.content))
         .catch(error => {
             console.error(error)

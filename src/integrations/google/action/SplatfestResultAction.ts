@@ -8,7 +8,7 @@ import { SplatfestAggregator, FestivalResultTuple } from '../../../procedure/agg
 import { Converter } from '../util/Converter'
 import { resultsToInfo } from '../../../procedure/transform/SplatfestMapper'
 
-export const name = 'splatfest_result'
+export const names = ['Request - Splatfest Result']
 
 /**
  * Tells the result of the last Splatfest.

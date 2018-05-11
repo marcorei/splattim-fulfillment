@@ -10,14 +10,14 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'stage_schedule'
+export const names = ['Request - Schedule for Stage']
 
 export function handler(conv: CustomConversation) {
     const argParser = new ArgParser(conv)
     const requestedStage = argParser.int(StageArg.key)
     if (!argParser.isOk()) return argParser.tellAndLog()
 
-    new SchedulesAggregator(conv.lang)
+    return new SchedulesAggregator(conv.lang)
         .schedulesWithStage(requestedStage)
         .then(result => respondWithSchedules(conv, result.contentDict, result.content, requestedStage))
         .catch(error => {
@@ -40,7 +40,7 @@ function respondWithSchedules(conv: CustomConversation, contentDict: ContentDict
     const now = nowInSplatFormat()
     const infos = schedules.map(schedule => mapScheduleToInfo(schedule, now, contentDict, secondsToTime))
 
-    if (!conv.hasDisplay() || 
+    if (!conv.hasDisplay || 
         infos.length == 1) {
         return conv.close(buildScheduleForStageSpeechOverview(dict, infos, requestedStageName, false))
     }

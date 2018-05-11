@@ -3,7 +3,7 @@ import { SimpleResponse } from 'actions-on-google'
 import { randomEntry, wrapWithSpeak } from '../../../util/utils'
 import { SoundFx } from '../../../resources/SoundFx'
 
-export const name = 'booyah'
+export const names = ['Meme - Booyah!']
 
 /**
  * Lists all available gear as carousel.

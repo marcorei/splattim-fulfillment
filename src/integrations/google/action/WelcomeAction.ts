@@ -4,7 +4,7 @@ import { isNullOrUndefined } from 'util'
 import { randomEntry, wrapWithSpeak } from '../../../util/utils'
 import { SoundFx } from '../../../resources/SoundFx'
 
-export const name = 'welcome'
+export const names = ['Default Welcome Intent']
 
 /**
  * Lists all available gear as carousel.

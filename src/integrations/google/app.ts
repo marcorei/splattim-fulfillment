@@ -1,5 +1,5 @@
 import { dialogflow, DialogflowIntentHandler, Contexts, Parameters, Argument, OmniHandler } from 'actions-on-google'
-import { I18NConversation, i18nMiddleware } from './util/I18NConversation'
+import { CustomConversation, i18nMiddleware, displayMiddleware } from './util/CustomConversation'
 
 import * as schedulesCurrentAction from './action/SchedulesCurrentAction'
 import * as schedulesUpcomingAction from './action/SchedulesUpcomingAction'
@@ -17,14 +17,15 @@ import * as helpAction from './action/HelpAction'
 import * as memeBooyahAction from './action/MemeBooyahAction'
 
 export function createApp() : OmniHandler {
-    const app = dialogflow<{}, {}, Contexts, I18NConversation>({
+    const app = dialogflow<{}, {}, Contexts, CustomConversation>({
         debug: false
     })
     app.middleware(i18nMiddleware)
+    app.middleware(displayMiddleware)
     
     interface Intent {
-        name: string,
-        handler: DialogflowIntentHandler<{}, {}, Contexts, I18NConversation, Parameters, Argument>
+        names: string[],
+        handler: DialogflowIntentHandler<{}, {}, Contexts, CustomConversation, Parameters, Argument>
     }
     const intents: Intent[] = [
         schedulesCurrentAction,
@@ -42,7 +43,9 @@ export function createApp() : OmniHandler {
         helpAction,
         memeBooyahAction
     ]
-    intents.forEach(intent => app.intent(intent.name, intent.handler))
+    intents.forEach(intent => 
+        intent.names.forEach(name => 
+            app.intent(name, intent.handler)))
 
     return app
 }

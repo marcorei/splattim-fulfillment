@@ -2,7 +2,7 @@ import { CustomConversation } from '../util/CustomConversation'
 import { OptionArgument, Parameters } from 'actions-on-google'
 const seperator = '_'
 
-export const name = 'grizzco-option-weapon'
+export const names = ['Option - Salmon Run']
 
 export function buildOptionKey(weaponName: string): string {
     return [

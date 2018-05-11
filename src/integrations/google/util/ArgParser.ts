@@ -12,7 +12,7 @@ export class ArgParser extends AbstractArgParser {
     }
 
     protected getValue(key: string) : any {
-        return this.conv.arguments.get(key)
+        return this.conv.parameters[key]
     }
 }
     

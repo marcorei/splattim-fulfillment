@@ -13,7 +13,7 @@ import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggre
 import { Converter } from '../util/Converter'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'schedules'
+export const names = ['Request - Schedule Current']
 
 /**
  * Lists the current stages of either one game mode, or all current stages
@@ -64,7 +64,7 @@ function respondWithSchedule(conv: CustomConversation, contentDict: ContentDict,
 
     const info = mapScheduleToInfo(schedule, nowInSplatFormat(), contentDict, secondsToTime)
 
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(conv.dict.a_sched_002_a(
             info.ruleName,
             info.modeName,
@@ -102,7 +102,7 @@ function respondWithoutSpecificSchedule(conv: CustomConversation, contentDict: C
         .filter(schedule => schedule != null)
         .map(schedule => mapScheduleToInfo(schedule!, now, contentDict, secondsToTime))
     
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(buildCurrentStageSpeechOverview(conv.dict, infos, false))
     }
 

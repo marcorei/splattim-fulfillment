@@ -5,7 +5,12 @@ import { gameModeKeyValues } from '../../../splatoon2ink/model/Schedules'
 import { secondsToTime } from '../util/utils'
 const seperator = '_'
 
-export const name = 'schedules-option-stage'
+export const names = [
+    'Option - Schedule for Rule and Mode',
+    'Option - Schedule for Stage',
+    'Option - Schedule Current',
+    'Option - Schedules Upcoming',
+]
 
 export function buildOptionKey(stageName: string, modeKey?: string, timeDiff?: number): string {
     return [

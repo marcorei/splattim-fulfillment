@@ -4,7 +4,7 @@ import { isNullOrUndefined } from 'util'
 import { secondsToTime } from '../util/utils'
 const seperator = '_'
 
-export const name = 'merchandise-option-merch'
+export const names = ['Option - Merchandise']
 
 export function buildOptionKey(merchName: string, skillName: string, timeDiff?: number): string {
     return [

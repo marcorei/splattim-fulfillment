@@ -8,7 +8,7 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'next_grizzco'
+export const names = ['Request - Salmon Run']
 
 /**
  * Info about current or upcoming Salmon Run.
@@ -47,7 +47,7 @@ function respondWithDetail(conv: CustomConversation, contentDict: ContentDict, d
 }
 
 function respondWithMultipleWeapons(conv: CustomConversation, info: DetailInfo, uniqueWeapons: WeaponInfo[]) {
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(info.open ?
             conv.dict.a_sr_002_a(
                 info.stageName, 
@@ -102,7 +102,7 @@ function respondWithSingleWeapon(conv: CustomConversation, info: DetailInfo, wea
             info.timeString,
             weaponInfo.name)
     
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(speech)
     }
 

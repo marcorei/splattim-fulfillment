@@ -8,7 +8,7 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { MerchandiseAggregator } from '../../../procedure/aggregate/MerchandiseAggregator'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'merchandise'
+export const names = ['Request - Merchandise']
 
 /**
  * Lists all available gear as carousel.
@@ -31,7 +31,7 @@ function respondWithMerch(conv: CustomConversation, contentDict: ContentDict, me
     const now = nowInSplatFormat()
     const infos = merchandises.map(merch => mapMerchandiseToInfo(merch, now, contentDict, secondsToTime))
     
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(conv.dict.a_merch_000_a(
             infos[0].merchName,
             infos[1].merchName,

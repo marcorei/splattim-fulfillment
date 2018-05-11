@@ -12,7 +12,7 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggregator'
 import { secondsToTime } from '../util/utils'
 
-export const name = 'eta_rule'
+export const names = ['Request - Schedule for Rule and Mode']
 
 /**
  * Lists the stages for next schedule that matches both the mode and rule given.
@@ -77,7 +77,7 @@ function respondWithSchedule(conv: CustomConversation, contentDict: ContentDict,
         conv.dict.a_eta_001_now : 
         conv.dict.a_eta_001_future + info.timeStringStart
 
-    if (!conv.hasDisplay()) {
+    if (!conv.hasDisplay) {
         return conv.close(conv.dict.a_eta_002_a(
             info.ruleName,
             info.modeName,

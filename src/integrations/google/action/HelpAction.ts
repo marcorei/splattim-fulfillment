@@ -1,7 +1,7 @@
 import { CustomConversation } from '../util/CustomConversation'
 import { RichResponse, SimpleResponse, LinkOutSuggestion } from 'actions-on-google'
 
-export const name = 'help'
+export const names = ['Help']
 
 /**
  * Lists all available gear as carousel.
