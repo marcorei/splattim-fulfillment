@@ -4,6 +4,7 @@ import { DictProvider, Dict } from '../DictProvider'
 import { AttributeHelper } from '../util/Attributes'
 import { Phonetics } from '../util/Phonetics'
 import { ContentDict } from '../../../i18n/ContentDict'
+import { isNullOrUndefined } from 'util'
 
 export class CanHandleHelper {
     static get(handlerInput: HandlerInput) : Promise<CanHandleHelper> {
@@ -41,6 +42,9 @@ export class HandlerHelper {
         this.lang = dictProvider.getLang()
         this.attributeHelper = new AttributeHelper(handlerInput)
         this.phonetics = new Phonetics(dictProvider.getLang())
+
+        // End the session per default.
+        handlerInput.responseBuilder.withShouldEndSession(true)
     }
 
     private init() : Promise<HandlerHelper> {
@@ -61,11 +65,7 @@ export class HandlerHelper {
     // Info shortcuts
 
     hasDisplay() : boolean {
-        return this.handlerInput.context &&
-            this.handlerInput.context.System &&
-            this.handlerInput.context.System.device &&
-            this.handlerInput.context.System.device.supportedInterfaces &&
-            this.handlerInput.context.System.device.supportedInterfaces.Display
+        return !isNullOrUndefined(this.handlerInput.requestEnvelope.context.System.device.supportedInterfaces.Display)
     }
 
     isIncompleteIntent() : boolean {
@@ -99,6 +99,7 @@ export class HandlerHelper {
 
     listenRplc(input: string) {
         return this.handlerInput.responseBuilder
+            .withShouldEndSession(false)
             .reprompt(this.replace(input))
     }
 
@@ -119,6 +120,7 @@ export class HandlerHelper {
 
     delegate() : Response {
         return this.handlerInput.responseBuilder
+            .withShouldEndSession(false)
             .addDelegateDirective()
             .getResponse()
     }

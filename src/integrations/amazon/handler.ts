@@ -1,6 +1,7 @@
-import { SkillBuilders, Skill } from 'ask-sdk-core'
-import { RequestEnvelope } from 'ask-sdk-model'
+import { SkillBuilders, Skill, HandlerInput } from 'ask-sdk-core'
+import { RequestEnvelope, Response } from 'ask-sdk-model'
 import { DynamoDbPersistenceAdapter } from 'ask-sdk-dynamodb-persistence-adapter'
+import { AttributeHelper } from './util/Attributes'
 
 import * as defaultCancelIntent from './intent/DefaultCancelIntent'
 import * as defaultHelpIntent from './intent/DefaultHelpIntent'
@@ -35,7 +36,9 @@ module.exports.splatTim = function(event: RequestEnvelope, context: any, callbac
         skill = SkillBuilders.custom()
             .withSkillId(process.env.ALEXA_APP_ID)
             .withPersistenceAdapter(new DynamoDbPersistenceAdapter({
-                tableName: process.env.ALEXA_ATTRIBUTES_TABLE
+                tableName: process.env.ALEXA_ATTRIBUTES_TABLE,
+                partitionKeyName: 'userId',
+                attributesName: 'mapAttr',
             }))
             .addRequestHandlers(
                 defaultCancelIntent,
@@ -60,6 +63,12 @@ module.exports.splatTim = function(event: RequestEnvelope, context: any, callbac
                 defaultUnhandledIntent,
             )
             .addErrorHandlers(errorHandler)
+            .addResponseInterceptors((input: HandlerInput, response?: Response) => {
+                if (response && response.shouldEndSession) {
+                    return new AttributeHelper(input).savePersistentSessionAttributesToPersistence()
+                }
+                return Promise.resolve()
+            })
             .create()
     }
 

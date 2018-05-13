@@ -7,6 +7,7 @@ export function canHandle(input: HandlerInput, error: Error): Promise<boolean> |
 }
 export function handle(input: HandlerInput, error: Error): Promise<Response> | Response {
     return HandlerHelper.get(input).then(helper => {
+        console.error(`Error catched: ${error}`)
         return helper.speakRplcEmit(helper.dict.global_error_default)
     })
 }

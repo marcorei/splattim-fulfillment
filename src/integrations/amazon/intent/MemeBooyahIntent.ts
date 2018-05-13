@@ -6,7 +6,7 @@ import { CanHandleHelper, HandlerHelper } from '../util/HandlerHelper'
 
 export function canHandle(input: HandlerInput) : Promise<boolean> {
     return CanHandleHelper.get(input).then(helper => {
-        return helper.isIntent('MemeHeDoesIt')
+        return helper.isIntent('MemeBooyah')
     })
 }
 

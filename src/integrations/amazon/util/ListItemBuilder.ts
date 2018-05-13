@@ -36,6 +36,7 @@ export class ListItemBuilder {
                 text: tertiary
             }
         }
+        this.item.textContent = textContent
         return this
     }
 
