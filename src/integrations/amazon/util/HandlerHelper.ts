@@ -2,7 +2,7 @@ import { HandlerInput, ResponseBuilder } from 'ask-sdk-core'
 import { Response, interfaces, IntentRequest } from 'ask-sdk-model'
 import { DictProvider, Dict } from '../DictProvider'
 import { AttributeHelper } from '../util/Attributes'
-import { Phonetics } from '../util/Phonetics'
+import { SsmlHelper } from '../util/SsmlHelper'
 import { ContentDict } from '../../../i18n/ContentDict'
 import { isNullOrUndefined } from 'util'
 
@@ -27,7 +27,7 @@ export class HandlerHelper {
     public readonly dict: Dict
     public readonly lang: string
     public readonly attributeHelper: AttributeHelper
-    public readonly phonetics: Phonetics
+    public readonly ssmlHelper: SsmlHelper
     public lastSeenDiff: number
     public contentDict: ContentDict
 
@@ -41,7 +41,7 @@ export class HandlerHelper {
         this.dict = dictProvider.getDict()
         this.lang = dictProvider.getLang()
         this.attributeHelper = new AttributeHelper(handlerInput)
-        this.phonetics = new Phonetics(dictProvider.getLang())
+        this.ssmlHelper = new SsmlHelper(dictProvider.getLang())
 
         // End the session per default.
         handlerInput.responseBuilder.withShouldEndSession(true)
@@ -89,7 +89,7 @@ export class HandlerHelper {
     }
 
     replace(input: string) : string {
-        return this.phonetics.replace(input)
+        return this.ssmlHelper.replace(input)
     }
 
     speakRplc(input: string) : ResponseBuilder {
