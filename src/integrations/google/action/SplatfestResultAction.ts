@@ -37,7 +37,7 @@ function respond(conv: CustomConversation, contentDict: ContentDict, tuple: Fest
     
     const info = resultsToInfo(translatedNames, tuple.result, dict, true)
 
-    return conv.ask(new RichResponse()
+    return conv.close(new RichResponse()
         .add(new SimpleResponse({
             speech: `${info.part1} ${info.part2}`,
             text: info.part1
