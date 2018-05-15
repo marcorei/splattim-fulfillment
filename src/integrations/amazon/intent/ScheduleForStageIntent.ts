@@ -1,4 +1,5 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response, interfaces } from 'ask-sdk-model'
 import { Dict } from '../DictProvider'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
@@ -6,29 +7,33 @@ import { SchedulesAggregator } from '../../../procedure/aggregate/SchedulesAggre
 import { SlotParser } from '../util/SlotParser'
 import { ScheduleInfo, mapScheduleToInfo, buildScheduleForStageSpeechOverview } from '../../../procedure/transform/SchedulesMapper'
 import { StageSlot } from '../model/StageSlot'
-import { ImageFreeItemBuilder } from '../util/ImageFreeItemBuilder'
 import { secondsToTime, wrapTimeString } from '../util/utils'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
-export const name = 'RequestScheduleForStage'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('RequestScheduleForStage')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        
+        if (helper.isIncompleteIntent()) return helper.delegate()
+        const slotParser = new SlotParser(input, helper.dict)
+        const requestedStage = slotParser.int(StageSlot.key)
+        if (!slotParser.isOk()) return slotParser.tellAndLog()
 
-    if (this.event.request['dialogState'] !== 'COMPLETED'){
-        return this.emit(':delegate')
-    }
-    const slotParser = new SlotParser(this, helper.dict)
-    const requestedStage = slotParser.int(StageSlot.key)
-    if (!slotParser.isOk()) return slotParser.tellAndLog()
+        return new SchedulesAggregator(helper.lang)
+            .schedulesWithStage(requestedStage)
+            .then(result => respondWithSchedules(helper.withContentDict(result.contentDict), result.content, requestedStage))
+            .catch(error => {
+                console.error(error)
+                return helper.speakRplcEmit(helper.dict.global_error_default)
+            })
 
-    new SchedulesAggregator(helper.lang)
-        .schedulesWithStage(requestedStage)
-        .then(result => respondWithSchedules(helper.withContentDict(result.contentDict), result.content, requestedStage))
-        .catch(error => {
-            console.error(error)
-            return helper.speakRplcEmit(helper.dict.global_error_default)
-        })
+    })
 }
 
 function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[], stageId: number) {
@@ -44,29 +49,26 @@ function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[], stag
     helper.speakRplc(buildScheduleForStageSpeechOverview(helper.dict, infos, requestedStageName, false, wrapTimeString))
 
     if (helper.hasDisplay() && infos.length > 0) {
-        const listItemBuilder = new ImageFreeItemBuilder()
-        infos.forEach((info, index) => buildStageListItem(listItemBuilder, helper.dict, info, requestedStageName))
+        const listItems = infos.map(info => buildStageListItem(helper.dict, info, requestedStageName))
 
-        const template = new Alexa.templateBuilders.ListTemplate1Builder()
-            .setToken('stageList')
-            .setTitle(helper.dict.a_sched_006)
-            .setListItems(listItemBuilder.build())
-            .build()
-        helper.handler.response.renderTemplate(template)
+        helper.addTemplate({
+            type: 'ListTemplate1',
+            token: 'stageList',
+            title: helper.dict.a_sched_006,
+            listItems: listItems
+        })
     }
 
     return helper.emit()
 }
 
-function buildStageListItem(builder: ImageFreeItemBuilder, dict: Dict, info: ScheduleInfo, stageName: string) {
+function buildStageListItem(dict: Dict, info: ScheduleInfo, stageName: string) : interfaces.display.ListItem {
     const desc = `${info.ruleName} in ${info.modeName}`
     const timeInfo = info.timeDiffStart > 0 ? 
         `in ${info.timeStringStart}` : 
         dict.a_ssched_004
-    return builder.addItemNoImage(
-        `${stageName}_${timeInfo}_${info.modeName}`,
-        Alexa.utils.TextUtils.makePlainText(timeInfo),
-        Alexa.utils.TextUtils.makePlainText(desc)
-    )
+    return new ListItemBuilder(`${stageName}_${timeInfo}_${info.modeName}`)
+        .addPlainText(timeInfo, desc)
+        .build()
 }
 

@@ -1,4 +1,5 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response, interfaces } from 'ask-sdk-model'
 import { Dict } from '../DictProvider'
 import { sortByStartTime, nowInSplatFormat } from '../../../util/utils'
 import { Schedule } from '../../../splatoon2ink/model/Schedules'
@@ -9,31 +10,35 @@ import { ScheduleInfo, StageInfo, mapScheduleToInfo } from '../../../procedure/t
 import { GameModeSlot } from '../model/GameModeSlot'
 import { isNullOrUndefined } from 'util'
 import { secondsToTime, wrapTimeString } from '../util/utils'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
-export const name = 'RequestStagesUpcoming'
-
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
-
-    if (this.event.request['dialogState'] !== 'COMPLETED'){
-        return this.emit(':delegate')
-    }
-    const slotParser = new SlotParser(this, helper.dict)
-    const requestedGameMode = slotParser.string(GameModeSlot.key)
-    if (!slotParser.isOk()) return slotParser.tellAndLog()
-
-    const converter = new Converter()
-    const modeKey = converter.modeToApi(requestedGameMode)
-    return new SchedulesAggregator(helper.lang)
-        .scheduleForMode(modeKey)
-        .then(result => respondWithSchedules(helper.withContentDict(result.contentDict), result.content))
-        .catch(error => {
-            console.error(error)
-            return helper.speakRplcEmit(helper.dict.global_error_default)
-        })
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('RequestStagesUpcoming')
+    })
 }
 
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        
+        if (helper.isIncompleteIntent()) return helper.delegate()
+        const slotParser = new SlotParser(input, helper.dict)
+        const requestedGameMode = slotParser.string(GameModeSlot.key)
+        if (!slotParser.isOk()) return slotParser.tellAndLog()
+
+        const converter = new Converter()
+        const modeKey = converter.modeToApi(requestedGameMode)
+        return new SchedulesAggregator(helper.lang)
+            .scheduleForMode(modeKey)
+            .then(result => respondWithSchedules(helper.withContentDict(result.contentDict), result.content))
+            .catch(error => {
+                console.error(error)
+                return helper.speakRplcEmit(helper.dict.global_error_default)
+            })
+
+    })
+}
 
 function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[]) {
     if (isNullOrUndefined(schedules) || schedules.length < 2) {
@@ -57,32 +62,30 @@ function respondWithSchedules(helper: HandlerHelper, schedules: Schedule[]) {
         scheduleInfos[1].stageB.name))
 
     if (helper.hasDisplay()) {
-        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
-        scheduleInfos.forEach((info, index) => {
-            buildStageListItem(listItemBuilder, helper.dict, info, info.stageA) 
-            buildStageListItem(listItemBuilder, helper.dict, info, info.stageB)    
+        const listItems = scheduleInfos
+            .map(info => [
+                buildStageListItem(helper.dict, info, info.stageA),
+                buildStageListItem(helper.dict, info, info.stageB)  
+            ])
+            .reduce((prev, next) => prev.concat(next))
+        
+        helper.addTemplate({
+            type: 'ListTemplate2',
+            token: 'stageList',
+            title: helper.dict.a_sched_006,
+            listItems: listItems
         })
-
-        const template = new Alexa.templateBuilders.ListTemplate2Builder()
-            .setToken('stageList')
-            .setTitle(helper.dict.a_sched_006)
-            .setListItems(listItemBuilder.build())
-            .build()
-        helper.handler.response.renderTemplate(template)
     }
 
     return helper.emit()
 }
 
-function buildStageListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, info: ScheduleInfo, stageInfo: StageInfo) {
+function buildStageListItem(dict: Dict, info: ScheduleInfo, stageInfo: StageInfo) : interfaces.display.ListItem {
     const etaTimeString = info.timeDiffStart <= 0 ? 
         dict.a_asched_001_now :
         dict.a_asched_001_future + info.timeStringStart
-
-    return builder.addItem(
-        Alexa.utils.ImageUtils.makeImage(stageInfo.image),
-        `${stageInfo.name}_${info.timeDiffStart}`,
-        Alexa.utils.TextUtils.makePlainText(`${stageInfo.name} - ${etaTimeString}`),
-        Alexa.utils.TextUtils.makePlainText(info.ruleName)
-    )
+    return new ListItemBuilder(`${stageInfo.name}_${info.timeDiffStart}`)
+        .addImage(stageInfo.image)
+        .addPlainText(`${stageInfo.name} - ${etaTimeString}`, info.ruleName)
+        .build()
 }

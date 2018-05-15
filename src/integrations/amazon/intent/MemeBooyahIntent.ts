@@ -1,13 +1,19 @@
-import * as Alexa from 'alexa-sdk'
+import { SoundFx } from '../../../resources/SoundFx'
 import { randomEntry } from '../../../util/utils'
-import { HandlerHelper } from '../util/HandlerHelper'
-import { SoundFx } from '../../../resources/SoundFx';
+import { HandlerInput } from 'ask-sdk-core'
+import { Response } from 'ask-sdk-model'
+import { CanHandleHelper, HandlerHelper } from '../util/HandlerHelper'
 
-export const name = 'MemeBooyah'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('MemeBooyah')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
-    return helper.speakRplcEmit(woomyPrefix(helper.dict.s_meme_booyah))
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        return helper.speakRplcEmit(woomyPrefix(helper.dict.s_meme_booyah))
+    })
 }
 
 function woomyPrefix(input: string) : string {

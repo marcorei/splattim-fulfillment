@@ -1,8 +1,10 @@
-import * as Alexa from 'alexa-sdk'
+import { SkillBuilders, Skill, HandlerInput } from 'ask-sdk-core'
+import { RequestEnvelope, Response } from 'ask-sdk-model'
+import { DynamoDbPersistenceAdapter } from 'ask-sdk-dynamodb-persistence-adapter'
+import { AttributeHelper } from './util/Attributes'
 
 import * as defaultCancelIntent from './intent/DefaultCancelIntent'
 import * as defaultHelpIntent from './intent/DefaultHelpIntent'
-import * as defaultStopIntent from './intent/DefaultStopIntent'
 import * as defaultUnhandledIntent from './intent/DefaultUnhandledIntent'
 import * as defaultSessionEndedRequest from './intent/DefaultSessionEndedRequest'
 import * as defaulWelcomeIntent from './intent/DefaultWelcomeIntent'
@@ -21,46 +23,54 @@ import * as smallTalkHowAreYouIntent from './intent/SmallTalkHowAreYouIntent'
 import * as smallTalkInsultingIntent from './intent/SmallTalkInsultingIntent'
 import * as splatfestResultIntent from './intent/SplatfestResultIntent'
 import * as splatfestUpcomingIntent from './intent/SplatfestUpcomingIntent'
+import * as errorHandler from './intent/ErrorHandler'
 
-interface Intent {
-    name: string,
-    handler: (this: Alexa.Handler<Alexa.Request>) => void
-}
+let skill: Skill | undefined
 
-module.exports.splatTim = function(event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: any) {
-    const alexa = Alexa.handler(event, context, callback)
-    alexa.appId = process.env.ALEXA_APP_ID
-    alexa.dynamoDBTableName = process.env.ALEXA_ATTRIBUTES_TABLE
+module.exports.splatTim = function(event: RequestEnvelope, context: any, callback: any) {
+    if (!skill) {
+        if (!process.env.ALEXA_APP_ID || !process.env.ALEXA_ATTRIBUTES_TABLE) {
+            throw new Error('Lambda env not configured properly')
+        }
 
-    const intents: Intent[] = [
-        defaultCancelIntent,
-        defaultHelpIntent,
-        defaultStopIntent,
-        defaultUnhandledIntent,
-        defaulWelcomeIntent,
-        meme1Intent,
-        meme2Intent,
-        memeBooyahIntent,
-        merchandiseIntent,
-        salmonRunIntent,
-        scheduleCurrentIntent,
-        scheduleForRuleAndModeIntent,
-        scheduleForStageIntent,
-        scheduleUpcomingIntent,
-        smallTalkAgeIntent,
-        smallTalkHelloIntent,
-        smallTalkHowAreYouIntent,
-        smallTalkInsultingIntent,
-        splatfestResultIntent,
-        splatfestUpcomingIntent,
-        defaultSessionEndedRequest,
-    ]
+        skill = SkillBuilders.custom()
+            .withSkillId(process.env.ALEXA_APP_ID)
+            .withPersistenceAdapter(new DynamoDbPersistenceAdapter({
+                tableName: process.env.ALEXA_ATTRIBUTES_TABLE,
+                partitionKeyName: 'userId',
+                attributesName: 'mapAttr',
+            }))
+            .addRequestHandlers(
+                defaultCancelIntent,
+                defaultHelpIntent,
+                defaulWelcomeIntent,
+                meme1Intent,
+                meme2Intent,
+                memeBooyahIntent,
+                merchandiseIntent,
+                salmonRunIntent,
+                scheduleCurrentIntent,
+                scheduleForRuleAndModeIntent,
+                scheduleForStageIntent,
+                scheduleUpcomingIntent,
+                smallTalkAgeIntent,
+                smallTalkHelloIntent,
+                smallTalkHowAreYouIntent,
+                smallTalkInsultingIntent,
+                splatfestResultIntent,
+                splatfestUpcomingIntent,
+                defaultSessionEndedRequest,
+                defaultUnhandledIntent,
+            )
+            .addErrorHandlers(errorHandler)
+            .addResponseInterceptors((input: HandlerInput, response?: Response) => {
+                if (response && response.shouldEndSession) {
+                    return new AttributeHelper(input).savePersistentSessionAttributesToPersistence()
+                }
+                return Promise.resolve()
+            })
+            .create()
+    }
 
-    alexa.registerHandlers(intents.reduce(
-        (map, intent) => { 
-            map[intent.name] = intent.handler 
-            return map
-        },
-        {}))
-    alexa.execute()
+    return skill.invoke(event, context)
 }

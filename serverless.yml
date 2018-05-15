@@ -4,7 +4,7 @@ custom: ${file(./env.${opt:stage, 'dev'}.yml)}
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
 
 package:
   exclude:

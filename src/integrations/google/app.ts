@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import { I18NDialogflowApp } from './I18NDialogflowApp'
+import { dialogflow, DialogflowIntentHandler, Contexts, Parameters, Argument, OmniHandler } from 'actions-on-google'
+import { CustomConversation, i18nMiddleware, displayMiddleware } from './util/CustomConversation'
 
 import * as schedulesCurrentAction from './action/SchedulesCurrentAction'
 import * as schedulesUpcomingAction from './action/SchedulesUpcomingAction'
@@ -16,14 +16,18 @@ import * as welcomeAction from './action/WelcomeAction'
 import * as helpAction from './action/HelpAction'
 import * as memeBooyahAction from './action/MemeBooyahAction'
 
-interface Action {
-    name: string,
-    handler: (app: I18NDialogflowApp) => void
-}
-
-export function createDialogflowApp(request: Request, response: Response) {
-    const app = new I18NDialogflowApp({ request, response })
-    const actions: Action[] = [
+export function createApp() : OmniHandler {
+    const app = dialogflow<{}, {}, Contexts, CustomConversation>({
+        debug: false
+    })
+    app.middleware(i18nMiddleware)
+    app.middleware(displayMiddleware)
+    
+    interface Intent {
+        names: string[],
+        handler: DialogflowIntentHandler<{}, {}, Contexts, CustomConversation, Parameters, Argument>
+    }
+    const intents: Intent[] = [
         schedulesCurrentAction,
         schedulesUpcomingAction,
         scheduleForRuleAndModeAction,
@@ -39,9 +43,11 @@ export function createDialogflowApp(request: Request, response: Response) {
         helpAction,
         memeBooyahAction
     ]
+    intents.forEach(intent => 
+        intent.names.forEach(name => 
+            app.intent(name, intent.handler)))
 
-    app.handleRequest(actions.reduce(
-            (map, action) => map.set(action.name, action.handler), 
-            new Map<string, Action['handler']>()))
+    return app
 }
+
   

@@ -1,7 +1,17 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response } from 'ask-sdk-model'
+import { CanHandleHelper } from '../util/HandlerHelper'
+import { AttributeHelper } from '../util/Attributes'
 
-export const name = 'SessionEndedRequest'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isType('SessionEndedRequest')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    this.emit(':saveState', true)
+export function handle(input: HandlerInput) : Promise<Response> {
+    return new AttributeHelper(input).savePersistentSessionAttributesToPersistence()
+        .then(_ => {
+            return input.responseBuilder.getResponse()
+        })
 }

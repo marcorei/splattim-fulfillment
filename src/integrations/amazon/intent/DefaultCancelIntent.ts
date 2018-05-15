@@ -1,9 +1,18 @@
-import * as Alexa from 'alexa-sdk'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response } from 'ask-sdk-model'
+import { CanHandleHelper, HandlerHelper } from '../util/HandlerHelper'
 
-export const name = 'AMAZON.CancelIntent'
+// Cancel and stop intent.
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
-    return helper.speakRplcEmit(helper.dict.s_cancel_000)
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('AMAZON.CancelIntent') ||
+            helper.isIntent('AMAZON.StopIntent')
+    })
+}
+
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        return helper.speakRplcEmit(helper.dict.s_cancel_000)
+    })
 }

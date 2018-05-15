@@ -1,9 +1,10 @@
-import { I18NDialogflowApp } from '../I18NDialogflowApp'
+import { CustomConversation } from '../util/CustomConversation'
+import { OptionArgument, Parameters } from 'actions-on-google'
 import { isNullOrUndefined } from 'util'
-import { secondsToTime } from '..//util/utils'
+import { secondsToTime } from '../util/utils'
 const seperator = '_'
 
-export const name = 'merchandise-option-merch'
+export const names = ['Option - Merchandise']
 
 export function buildOptionKey(merchName: string, skillName: string, timeDiff?: number): string {
     return [
@@ -17,10 +18,10 @@ export function buildOptionKey(merchName: string, skillName: string, timeDiff?: 
 /**
  * Replies to a merch option that waa selected previously.
  */
-export function handler(app: I18NDialogflowApp) {
-    const optionKeyParts = app.getSelectedOption().split(seperator)
+export function handler(conv: CustomConversation, params: Parameters, optionKey: OptionArgument) {
+    const optionKeyParts = optionKey.split(seperator)
     if (optionKeyParts.length < 4) {
-        return app.tell(app.getDict().o_merch_000)
+        return conv.close(conv.dict.o_merch_000)
     }
     const merchName = optionKeyParts[1]
     const skillName = optionKeyParts[2]
@@ -30,13 +31,13 @@ export function handler(app: I18NDialogflowApp) {
         const timeDiff = parseInt(timeDiffString)
         if (timeDiff > 0) {
             const timeString = secondsToTime(timeDiff)
-            return app.tell(app.getDict().o_merch_001(timeString))
+            return conv.close(conv.dict.o_merch_001(timeString))
         }
     }
 
     if (Math.random() > 0.5) {
-        return app.tell(app.getDict().o_merch_002(skillName))
+        return conv.close(conv.dict.o_merch_002(skillName))
     }
     
-    return app.tell(app.getDict().o_merch_003(merchName))
+    return conv.close(conv.dict.o_merch_003(merchName))
 }

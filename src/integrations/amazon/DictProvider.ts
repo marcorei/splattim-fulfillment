@@ -1,4 +1,4 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk'
 import { Dict } from '../../i18n/Dict'
 import { dict } from '../../i18n/en'
 import { dict as de } from '../../i18n/de'
@@ -23,8 +23,8 @@ export class DictProvider {
     private dict: Dict
     private lang: string
 
-    constructor(private handler: Alexa.Handler<Alexa.Request>) {
-        this.lang = cleanLang(this.handler.event.request.locale)
+    constructor(private handlerInput: HandlerInput) {
+        this.lang = cleanLang(this.handlerInput.requestEnvelope.request.locale)
         this.dict = resolveLang(this.lang)
     }
 

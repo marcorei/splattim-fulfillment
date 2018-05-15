@@ -1,18 +1,23 @@
-import * as Alexa from 'alexa-sdk'
+import { HandlerInput } from 'ask-sdk-core'
+import { Response, interfaces } from 'ask-sdk-model'
 import { Dict } from '../DictProvider'
 import { nowInSplatFormat } from '../../../util/utils'
 import { Detail } from '../../../splatoon2ink/model/SalmonRunSchedules'
 import { mapDetailToInfo, removeDuplicateWeapons, WeaponInfo, DetailInfo } from '../../../procedure/transform/SalmonRunMapper'
 import { SalmonRunAggregator } from '../../../procedure/aggregate/SalmunRunAggregator'
 import { secondsToTime, wrapTimeString } from '../util/utils'
-import { HandlerHelper } from '../util/HandlerHelper'
+import { HandlerHelper, CanHandleHelper } from '../util/HandlerHelper'
+import { ListItemBuilder } from '../util/ListItemBuilder'
 
-export const name = 'RequestSalmonRun'
+export function canHandle(input: HandlerInput) : Promise<boolean> {
+    return CanHandleHelper.get(input).then(helper => {
+        return helper.isIntent('RequestSalmonRun')
+    })
+}
 
-export function handler(this: Alexa.Handler<Alexa.Request>) {
-    const helper = new HandlerHelper(this)
-
-    return new SalmonRunAggregator(helper.lang).detailsSorted()
+export function handle(input: HandlerInput) : Promise<Response> {
+    return HandlerHelper.get(input).then(helper => {
+        return new SalmonRunAggregator(helper.lang).detailsSorted()
         .then(result => {
             if (result.content.length === 0) {
                 return helper.speakRplcEmit(helper.dict.a_sr_000)
@@ -23,6 +28,7 @@ export function handler(this: Alexa.Handler<Alexa.Request>) {
             console.error(error)
             return helper.speakRplcEmit(helper.dict.global_error_default)
         })
+    })
 }
 
 function respondWithDetail(helper: HandlerHelper, detail: Detail) {
@@ -59,15 +65,15 @@ function respondWithMultipleWeapons(helper: HandlerHelper, info: DetailInfo, uni
             info.weapons[3].name))
 
     if (helper.hasDisplay()) {
-        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder()
-        uniqueWeapons.forEach((info, index) => buildWeaponListItem(listItemBuilder, helper.dict, info))
+        const listItems = uniqueWeapons.map(info => 
+            buildWeaponListItem(helper.dict, info))
 
-        const template = new Alexa.templateBuilders.ListTemplate1Builder()
-            .setToken('weaponList')
-            .setTitle(helper.dict.a_sr_007)
-            .setListItems(listItemBuilder.build())
-            .build()
-        helper.handler.response.renderTemplate(template)
+        helper.addTemplate({
+            type: 'ListTemplate1',
+            token: 'weaponList',
+            title: helper.dict.a_sr_007,
+            listItems: listItems
+        })
     }
 
     return helper.emit()
@@ -85,21 +91,19 @@ function respondWithSingleWeapon(helper: HandlerHelper, info: DetailInfo, weapon
             weaponInfo.name))
 
     if (helper.hasDisplay()) {
-        helper.handler.response.cardRenderer(
-            weaponInfo.name, 
-            info.timeString, 
-            {
-                smallImageUrl: weaponInfo.image,
-                largeImageUrl: weaponInfo.image
-            })
+        helper.addCard({
+            title: weaponInfo.name,
+            content: info.timeString,
+            image: weaponInfo.image
+        })
     }
         
     return helper.emit()
 }
 
-function buildWeaponListItem(builder: Alexa.templateBuilders.ListItemBuilder, dict: Dict, weaponInfo: WeaponInfo) {
-    return builder.addItem(
-        Alexa.utils.ImageUtils.makeImage(weaponInfo.image),
-        weaponInfo.name,
-        Alexa.utils.TextUtils.makePlainText(weaponInfo.name))
+function buildWeaponListItem(dict: Dict, weaponInfo: WeaponInfo) : interfaces.display.ListItem {
+    return new ListItemBuilder(weaponInfo.name)
+        .addImage(weaponInfo.image)
+        .addPlainText(weaponInfo.name)
+        .build()
 }
