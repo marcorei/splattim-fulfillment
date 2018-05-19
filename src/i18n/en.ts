@@ -10,6 +10,8 @@ export const dict = {
     global_suggest_help: 'help',
     global_suggest_command_link_name: 'list of all commands',
     global_suggest_command_link_url: 'https://splat-tim.com/commands',
+    global_name_pearl: 'Pearl',
+    global_name_marina: 'Marina',
 
     // [Action] Schedules
 
@@ -117,6 +119,14 @@ export const dict = {
     a_splup_004_s: (time: string, alpha: string, bravo: string) => `The next Splatfest starts in ${time}! ${alpha} vs ${bravo}.`,
     a_splup_004_t: (time: string) => `The next Splatfest starts in ${time}.`,
     a_splup_004_b: (time: string) => `in ${time}`,
+
+    // [Action] Briefing
+
+    a_brief_000_a: (eta: string) => `Today Salmon Run will open in ${eta}.`,
+    a_brief_000_b: (remaining: string) => `Salmon Run is still open for another ${remaining} today.`,
+    a_brief_last_connector: 'and',
+    a_brief_001: 'Here are the recent Splatfest results: ',
+    a_brief_002: (winner: string, loser: string, regions: string) => `Team ${winner} won against team ${loser} in ${regions}`,
 
     // [Option] Schedule Stage
 

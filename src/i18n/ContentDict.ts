@@ -73,7 +73,7 @@ export class ContentDict {
         return isNullOrUndefined(t) ? i.name : t.name
     }
 
-    festival(i: splatfest.Festival): FestivalTranslation {
+    festival(i: splatfest.Festival, fallbackAlpha: string, fallbackBeta: string): FestivalTranslation {
         const t = this.locale.festivals[i.festival_id]
         if(!isNullOrUndefined(t)) {
             return {
@@ -90,8 +90,8 @@ export class ContentDict {
         // Using untranslated version (e.g. Japanese) causes problems
         // for the voice assistants. Use generic terms for now.
         return {
-            alpha: 'A',
-            bravo: 'B'
+            alpha: fallbackAlpha,
+            bravo: fallbackBeta
         }
     }
 }

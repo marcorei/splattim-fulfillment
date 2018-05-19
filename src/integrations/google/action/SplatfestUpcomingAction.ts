@@ -34,7 +34,7 @@ export function handler(conv: CustomConversation) {
 function respond(conv: CustomConversation, contentDict: ContentDict, fest: Festival) {
     const dict = conv.dict
     const now = nowInSplatFormat()
-    const translated = contentDict.festival(fest)
+    const translated = contentDict.festival(fest, dict.global_name_pearl, dict.global_name_marina)
 
     if (now >= fest.times.end) {
         return conv.close(dict.a_splup_000)

@@ -33,7 +33,7 @@ export function handler(conv: CustomConversation) {
  */
 function respond(conv: CustomConversation, contentDict: ContentDict, tuple: FestivalResultTuple) {
     const dict = conv.dict
-    const translatedNames = contentDict.festival(tuple.festival)
+    const translatedNames = contentDict.festival(tuple.festival, dict.global_name_pearl, dict.global_name_marina)
     
     const info = resultsToInfo(translatedNames, tuple.result, dict, true)
 
