@@ -29,15 +29,15 @@ export interface Coop {
 // Weapon Availability
 
 export interface Weapon {
-    id: number // ??
+    id: string
     name: string
     image: string
     special: {
-        id: number // ??
+        id: string
         image_a: string        
     },
     sub: {
-        id: number // ??
+        id: string
         image_a: string
     }
 }

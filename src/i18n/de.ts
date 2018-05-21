@@ -11,6 +11,11 @@ export const dict: typeof index = {
     global_suggest_help: 'Hilfe',
     global_suggest_command_link_name: 'Liste aller Befehle',
     global_suggest_command_link_url: 'https://splat-tim.com/de/commands',
+    global_name_pearl: 'Perla',
+    global_name_marina: 'Marina',
+    global_region_eu: 'Europa',
+    global_region_na: 'Nord Amerika',
+    global_region_jp: 'Japan',
 
     // [Action] Schedules
 
@@ -119,7 +124,21 @@ export const dict: typeof index = {
     a_splup_004_t: (time: string) => `Das nächste Splatfest beginnt in ${time}.`,
     a_splup_004_b: (time: string) => `in ${time}`,
     
-    // [Option] Schedule Stage
+   // [Action] Briefing
+
+   a_brief_intro_000: `Ich bin Tintenfisch Tony live vom Inkopolis-Platz. Hier sind deine Splatoon Nachrichten.`,
+   a_brief_intro_001: `Ich bin Tintenfisch Tony und hier sind deine Splatoon Nachrichten.`,
+   a_brief_finally: 'Und zu guter Letzt: ',
+   a_brief_000_b: (eta: string) => `Salmon Run startet wieder in ${eta}.`,
+   a_brief_000_a: (remaining: string) => `Salmon Run ist heute noch ${remaining} verfügbar.`,
+   a_brief_last_connector: 'und',
+   a_brief_001: 'Aktuelle Splatfest-Ergebnisse sind da!',
+   a_brief_002: (winner: string, loser: string, regions: string) => `In ${regions} hat Team ${winner} gegen Team ${loser} gewonnen`,
+   a_brief_003: (regions: string) => `Mach dich bereit! Dieses Wochenende ist Splatfest in ${regions}!`,
+   a_brief_004: (weapons: string) => `Arty hat eine neue Lieferung bekommen: ${weapons}`,
+   a_brief_005: (gear: string) => `Neuer Monat, neue Belohnung von Herrn Bär! Diesmal ist es ${gear}.`,
+   
+   // [Option] Schedule Stage
 
     o_schedstage_000: 'Fresh! Immer fleißig alles einfärben!',
     o_schedstage_001: 'Ng-yes, auf zu S+50!',

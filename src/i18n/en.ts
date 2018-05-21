@@ -12,6 +12,9 @@ export const dict = {
     global_suggest_command_link_url: 'https://splat-tim.com/commands',
     global_name_pearl: 'Pearl',
     global_name_marina: 'Marina',
+    global_region_eu: 'Europe',
+    global_region_na: 'North America',
+    global_region_jp: 'Japan',
 
     // [Action] Schedules
 
@@ -122,11 +125,17 @@ export const dict = {
 
     // [Action] Briefing
 
-    a_brief_000_a: (eta: string) => `Today Salmon Run will open in ${eta}.`,
-    a_brief_000_b: (remaining: string) => `Salmon Run is still open for another ${remaining} today.`,
+    a_brief_intro_000: `I'm Splat Tim reporting live from Inkopolis Square. This is your Splatoon Briefing.`,
+    a_brief_intro_001: `I'm Splat Tim and this is your Splatoon Briefing.`,
+    a_brief_finally: 'And finally, ',
+    a_brief_000_b: (eta: string) => `Salmon Run will open in ${eta}.`,
+    a_brief_000_a: (remaining: string) => `Salmon Run is still open for another ${remaining} today.`,
     a_brief_last_connector: 'and',
-    a_brief_001: 'Here are the recent Splatfest results: ',
-    a_brief_002: (winner: string, loser: string, regions: string) => `Team ${winner} won against team ${loser} in ${regions}`,
+    a_brief_001: 'Recent Splatfest results are in!',
+    a_brief_002: (winner: string, loser: string, regions: string) => `team ${winner} won against team ${loser} in ${regions}`,
+    a_brief_003: (regions: string) => `Be ready! This weekend is Splatfest in ${regions}!`,
+    a_brief_004: (weapons: string) => `Sheldon got a fresh delivery: ${weapons}`,
+    a_brief_005: (gear: string) => `New month, new reward from Mr.Grizz! This month it's ${gear}.`,
 
     // [Option] Schedule Stage
 

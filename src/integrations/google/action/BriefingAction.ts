@@ -4,12 +4,13 @@ import { ContentDict } from '../../../i18n/ContentDict'
 import { Timeline } from '../../../splatoon2ink/model/Timeline'
 import { Splatfests, regionKeyValues as splatfestRegionKeyValues } from '../../../splatoon2ink/model/Splatfest'
 import { SalmonRunSchedules } from '../../../splatoon2ink/model/SalmonRunSchedules'
-import { randomEntry, wrapWithSpeak } from '../../../util/utils'
+import { randomEntry, wrapWithSpeak, sortByStartTime } from '../../../util/utils'
 import { SoundFx } from '../../../resources/SoundFx'
 import { nowInSplatFormat } from '../../../util/utils'
 import { mapDetailToInfo as mapSalmonRun } from '../../../procedure/transform/SalmonRunMapper'
 import { secondsToTime } from '../util/utils'
 import { SplatfestAggregator } from '../../../procedure/aggregate/SplatfestAggregator'
+import { Dict } from '../../../i18n/Dict'
 
 export const names = ['Request - Briefing']
 
@@ -23,40 +24,16 @@ export const names = ['Request - Briefing']
  * And mayber later if I can convince Matt: new stages!
  */
 export function handler(conv: CustomConversation) {
-
-    // TODO: 
-    // - define what is new in general terms.
-    // - Ponder if it is worth to track individual news.
-    // - Define strategies for when to announce and repeat certain things.
-
-
-    // Salmon Run availability.
-    // - This should just contain the time and different wording.
-    // - "Today's Salmon Run will open in x hours. Todays Salmon Run is still open for x"
-    
-    // New Salmon Run gear.
-    // - I think this is news on the first three days of the month.
-    // - Idealy once per user?
-    // - "${gear} is this month Salmon run gear."
-
-    // New weapon.
-    // - So idealy we would tell each user once?
-    // - Save the id of the last annouced weapon per user.
-    // - Give this news for up to three days.
-
-    // New Splatfest / or winner.
-    // - Blah
-
     const api = new Splatoon2inkApi()
 
-    Promise.all([
+    return Promise.all([
             api.readLocale(conv.lang),
             api.readTimeline(),
             api.readSplatfest(),
             api.readSalmonRunSchedules()
         ])
         .then(results => {
-            respond(conv, {
+            return respond(conv, {
                 contentDict: new ContentDict(results[0]),
                 timeline: results[1],
                 splatfest: results[2],
@@ -73,6 +50,8 @@ function respond(conv: CustomConversation, results: CombinedResults) {
     const now = nowInSplatFormat()
     const dict = conv.dict
     const contentDict = results.contentDict
+    const builder = new SSMLReponseBuilder()
+
 
 
     // Woomy at the beginning!
@@ -82,7 +61,12 @@ function respond(conv: CustomConversation, results: CombinedResults) {
         soundFx.ngyes(),
         soundFx.squeemy()
     ])
-    conv.close(wrapWithSpeak(sound))
+    const welcome = randomEntry([
+        dict.a_brief_intro_000,
+        dict.a_brief_intro_001,
+    ])
+    builder.add(`${sound}${welcome}`)
+
 
 
 
@@ -98,7 +82,8 @@ function respond(conv: CustomConversation, results: CombinedResults) {
             region: splatfestRegionKeyValues.jp,
             fest: results.splatfest.jp
         }]
-    
+
+    // Prepare data for results.
     const splatfestResultTimeThreshold = now + (3 * 24 * 60 * 60)
     const splatfestResultsRegions : { [key: number] : string[] } = {}
     const splatfestResults = splatfests
@@ -116,6 +101,7 @@ function respond(conv: CustomConversation, results: CombinedResults) {
         })
         .filter(fest => fest.result.festival.times.end < splatfestResultTimeThreshold)
 
+    // Prepare data for upcoming fests.
     const upcomingSplatfestTimeThreshold = now - (3 * 24 * 60 * 60)
     const upcomingSplatfestRegions: { [key: number] : string[] } = {}
     const upcomingSplatfests = splatfests
@@ -131,41 +117,94 @@ function respond(conv: CustomConversation, results: CombinedResults) {
             upcomingSplatfestRegions[fest.fest.festival_id].push(fest.region)
             return false
         })
-        .filter(fest =>
-            fest.fest.times.end < now &&
+        .filter(fest => 
+            fest.fest.times.end > now &&
             fest.fest.times.start > upcomingSplatfestTimeThreshold)
     
+    // Compose string for upcoming splatfests.
+    if (upcomingSplatfests.length > 0) {
+        // TODO: filter finished splatfest!
+        const upcomingSplatfestString = upcomingSplatfests
+            .map(fest => upcomingSplatfestRegions[fest.fest.festival_id])
+            .reduce((prev, next) => {
+                return prev.concat(next)
+            }, [])
+            .map(region => regionLocalised(dict, region))
+        const regionString = concatTogether({
+            dict: dict,
+            arr: upcomingSplatfestString
+        })
+        builder.add(dict.a_brief_003(regionString))
+    }
+
+    // Compose string for splatfest results.
     if (splatfestResults.length > 0) {
-        // TODO compose result string with components
         const splatfestResultStrings = splatfestResults.map(result => {
             const translatedNames = contentDict.festival(result.result.festival, dict.global_name_pearl, dict.global_name_marina)
             const nameAlpha = translatedNames.alpha
             const nameBravo = translatedNames.bravo
             const winner = result.result.result.summary.total === 0 ? nameAlpha : nameBravo
             const loser = result.result.result.summary.total === 0 ? nameBravo : nameAlpha
-            const regionString = '' // TODO!
+            const regionString = concatTogether({
+                dict: dict,
+                arr: upcomingSplatfestRegions[result.result.festival.festival_id]
+                    .map(regionId => regionLocalised(dict, regionId)),
+            })
             return dict.a_brief_002(winner, loser, regionString)
         })
 
-        conv.close()
+        let splatfestResultResponse = `${dict.a_brief_001} ${
+            concatTogether({
+                dict: dict,
+                arr: splatfestResultStrings,
+                middleSeperator: '.',
+                endSeperator: `. ${upper(dict.a_brief_last_connector, true)}`,
+                upperFirstAndMid: true
+            })
+        }!`
+        builder.add(splatfestResultResponse)
     }
 
-    if (upcomingSplatfests.length > 0) {
-        // TODO compose upcoming string with components
-        conv.close()
-    }
+    
 
 
     // Get Timeline news in there!
+
+    // Sheldon got a new weapon
+    if (results.timeline.weapon_availability) {
+        const freshWeapons = results.timeline.weapon_availability.availabilities
+            .map(avail => results.contentDict.weapon(avail.weapon))
+        const freshWeaponsString = concatTogether({
+            dict: dict,
+            arr: freshWeapons
+        })
+        builder.add(dict.a_brief_004(freshWeaponsString))
+    }
+
+    // New Coop gear
+    const coopGearThreshold = results.timeline.coop.reward_gear.available_time 
+        + (3 * 24 * 60 * 60)
+    if (now < coopGearThreshold) {
+        const gearName = results.contentDict.gear(results.timeline.coop.reward_gear.gear)
+        builder.add(dict.a_brief_005(gearName))
+    }
 
 
 
     // Finally todays Salmon Run times!
 
-    const salmonRunInfo = mapSalmonRun(results.salmon[0], now, dict, contentDict, secondsToTime)
-    conv.close(salmonRunInfo.open ? 
+    const salmonRunInfo = mapSalmonRun(
+        results.salmon.details.sort(sortByStartTime)[0], 
+        now, dict, contentDict, secondsToTime)
+    const salmonRunString = salmonRunInfo.open ? 
         dict.a_brief_000_a(salmonRunInfo.timeString) :
-        dict.a_brief_000_b(salmonRunInfo.timeString))
+        dict.a_brief_000_b(salmonRunInfo.timeString)
+    builder.add(builder.length() > 1 ?
+        `${dict.a_brief_finally}${salmonRunString}` :
+        salmonRunString)
+
+
+    conv.close(builder.build())
 }
 
 type CombinedResults = {
@@ -173,4 +212,71 @@ type CombinedResults = {
     timeline: Timeline,
     splatfest: Splatfests,
     salmon: SalmonRunSchedules
+}
+
+function concatTogether(options: { 
+        dict: Dict, 
+        arr: string[], 
+        middleSeperator?: string, 
+        endSeperator?: string,
+        upperFirstAndMid?: boolean,
+        upperLast?: boolean
+    }) : string {
+    
+    let composed: string = ''
+    const dict = options.dict
+    const middleSeperator = options.middleSeperator ? options.middleSeperator! : ','
+    const endSeperator = options.endSeperator ? options.endSeperator! : ` ${dict.a_brief_last_connector}`
+    
+    options.arr.forEach((element, index) => {
+        if (index == 0) {
+            composed += upper(element, options.upperFirstAndMid)
+        } else if (index == options.arr.length - 1) {
+            composed += `${endSeperator} ${upper(element, options.upperFirstAndMid)}`
+        } else {
+            composed += `${middleSeperator} ${upper(element, options.upperLast)}`
+        }
+    })
+    return composed
+}
+
+function upper(input: string, should?: boolean) : string {
+    if (should) return input.charAt(0).toUpperCase() + input.slice(1)
+    return input
+}
+
+function regionLocalised(dict: Dict, regionId: string) : string {
+    switch(regionId) {
+        case splatfestRegionKeyValues.eu:
+            return dict.global_region_eu
+        case splatfestRegionKeyValues.na:
+            return dict.global_region_na
+        case splatfestRegionKeyValues.jp:
+            return dict.global_region_jp
+        default:
+            throw new Error('Unknown Region')
+    }
+}
+
+class SSMLReponseBuilder {
+    private parts: string[] = []
+
+    add(ssml: string) {
+        this.parts.push(ssml)
+    }
+
+    length() {
+        return this.parts.length
+    }
+
+    build() : string {
+        let combined: string = ''
+        this.parts.forEach((element, index) => {
+            if (index != 0) {
+                combined += '<break time="800ms"/>'
+            }
+            combined += element
+        })
+        return wrapWithSpeak(combined)
+    }
 }
