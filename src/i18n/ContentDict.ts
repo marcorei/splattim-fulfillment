@@ -9,6 +9,17 @@ interface HasName {
     name: string
 }
 
+interface HasIdAndName {
+    id: string,
+    name: string
+}
+
+interface HadIdNameAndKind {
+    id: string,
+    name: string,
+    kind: string
+}
+
 export interface FestivalTranslation {
     alpha: string,
     bravo: string
@@ -37,7 +48,7 @@ export class ContentDict {
         return isNullOrUndefined(t) ? 'Unknown' : t.name
     }
 
-    gear(i: gear.Gear): string {
+    gear(i: HadIdNameAndKind): string {
         // First search sub collection that may apply.
         // If nothing is found there we'll fall back to search directly in the gear collection.
         if(!isNullOrUndefined(i.kind)) {
@@ -68,12 +79,12 @@ export class ContentDict {
         return isNullOrUndefined(t) ? i.name : t.name
     }
 
-    weapon(i: coop.Weapon): string {
+    weapon(i: HasIdAndName): string {
         const t = this.locale.weapons[i.id] as HasName
         return isNullOrUndefined(t) ? i.name : t.name
     }
 
-    festival(i: splatfest.Festival): FestivalTranslation {
+    festival(i: splatfest.Festival, fallbackAlpha: string, fallbackBeta: string): FestivalTranslation {
         const t = this.locale.festivals[i.festival_id]
         if(!isNullOrUndefined(t)) {
             return {
@@ -90,8 +101,8 @@ export class ContentDict {
         // Using untranslated version (e.g. Japanese) causes problems
         // for the voice assistants. Use generic terms for now.
         return {
-            alpha: 'A',
-            bravo: 'B'
+            alpha: fallbackAlpha,
+            bravo: fallbackBeta
         }
     }
 }

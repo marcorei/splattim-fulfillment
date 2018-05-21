@@ -2,6 +2,7 @@ import { Schedules } from './model/Schedules'
 import { SalmonRunSchedules } from './model/SalmonRunSchedules'
 import { Inventory } from './model/Gear'
 import { Splatfests } from './model/Splatfest'
+import { Timeline } from './model/Timeline'
 import { Locale } from './model/Localization'
 import * as httpsPromise from '../util/httpsPromise'
 import * as jsonPromise from '../util/jsonPromise'
@@ -26,6 +27,11 @@ export class Splatoon2inkApi {
     readSplatfest(): Promise<Splatfests> {
         return httpsPromise.loadContent(config.splatoonInk.baseUrl + config.splatoonInk.data.splatfest)
             .then(json => jsonPromise.parse<Splatfests>(json))
+    }
+
+    readTimeline(): Promise<Timeline> {
+        return httpsPromise.loadContent(config.splatoonInk.baseUrl + config.splatoonInk.data.timeline)
+            .then(json => jsonPromise.parse<Timeline>(json))
     }
 
     readLocale(locale: string): Promise<Locale> {

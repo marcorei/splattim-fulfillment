@@ -6,6 +6,7 @@ export const config = {
             coopSchedules: '/data/coop-schedules.json',
             merchandise: '/data/merchandises.json',
             splatfest: '/data/festivals.json',
+            timeline: '/data/timeline.json',
             localization: '/data/locale'
         },
         assets: {

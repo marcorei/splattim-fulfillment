@@ -15,6 +15,7 @@ import * as scheduleForStageAction from './action/ScheduleForStageAction'
 import * as welcomeAction from './action/WelcomeAction'
 import * as helpAction from './action/HelpAction'
 import * as memeBooyahAction from './action/MemeBooyahAction'
+import * as briefingAction from './action/BriefingAction'
 
 export function createApp() : OmniHandler {
     const app = dialogflow<{}, {}, Contexts, CustomConversation>({
@@ -41,7 +42,8 @@ export function createApp() : OmniHandler {
         scheduleForStageAction,
         welcomeAction,
         helpAction,
-        memeBooyahAction
+        memeBooyahAction,
+        briefingAction
     ]
     intents.forEach(intent => 
         intent.names.forEach(name => 

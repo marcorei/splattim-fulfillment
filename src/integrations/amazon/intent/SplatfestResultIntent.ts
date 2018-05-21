@@ -35,7 +35,7 @@ export function handle(input: HandlerInput) : Promise<Response> {
 }
 
 function respond(helper: HandlerHelper, tuple: FestivalResultTuple) {
-    const translatedNames = helper.contentDict.festival(tuple.festival)
+    const translatedNames = helper.contentDict.festival(tuple.festival, helper.dict.global_name_pearl, helper.dict.global_name_marina)
     const info = resultsToInfo(translatedNames, tuple.result, helper.dict, false)
     const image = getSplatnetResUrl(tuple.festival.images.panel)
 

@@ -38,7 +38,7 @@ export function handle(input: HandlerInput) : Promise<Response> {
 
 function respond(helper: HandlerHelper, fest: Festival) {
     const now = nowInSplatFormat()
-    const translated = helper.contentDict.festival(fest)
+    const translated = helper.contentDict.festival(fest, helper.dict.global_name_pearl, helper.dict.global_name_marina)
 
     if (now >= fest.times.end) {
         return helper.speakRplcEmit(helper.dict.a_splup_000)
