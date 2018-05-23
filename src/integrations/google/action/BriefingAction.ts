@@ -147,7 +147,7 @@ function respond(conv: CustomConversation, results: CombinedResults) {
             const loser = result.result.result.summary.total === 0 ? nameBravo : nameAlpha
             const regionString = concatTogether({
                 dict: dict,
-                arr: upcomingSplatfestRegions[result.result.festival.festival_id]
+                arr: splatfestResultsRegions[result.result.festival.festival_id]
                     .map(regionId => regionLocalised(dict, regionId)),
             })
             return dict.a_brief_002(winner, loser, regionString)
