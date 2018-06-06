@@ -84,7 +84,7 @@ function respond(conv: CustomConversation, results: CombinedResults) {
         }]
 
     // Prepare data for results.
-    const splatfestResultTimeThreshold = now + (3 * 24 * 60 * 60)
+    const splatfestResultTimeThreshold = now - (3 * 24 * 60 * 60)
     const splatfestResultsRegions : { [key: number] : string[] } = {}
     const splatfestResults = splatfests
         .map(fest => { return {
@@ -99,10 +99,10 @@ function respond(conv: CustomConversation, results: CombinedResults) {
             splatfestResultsRegions[fest.result.festival.festival_id].push(fest.region)
             return false
         })
-        .filter(fest => fest.result.festival.times.end < splatfestResultTimeThreshold)
+        .filter(fest => fest.result.festival.times.end > splatfestResultTimeThreshold)
 
     // Prepare data for upcoming fests.
-    const upcomingSplatfestTimeThreshold = now - (3 * 24 * 60 * 60)
+    const upcomingSplatfestTimeThreshold = now + (3 * 24 * 60 * 60)
     const upcomingSplatfestRegions: { [key: number] : string[] } = {}
     const upcomingSplatfests = splatfests
         .map(fest => { return {
@@ -117,9 +117,8 @@ function respond(conv: CustomConversation, results: CombinedResults) {
             upcomingSplatfestRegions[fest.fest.festival_id].push(fest.region)
             return false
         })
-        .filter(fest => 
-            fest.fest.times.end > now &&
-            fest.fest.times.start > upcomingSplatfestTimeThreshold)
+        .filter(fest => fest.fest.times.end > now &&
+            fest.fest.times.start < upcomingSplatfestTimeThreshold)
     
     // Compose string for upcoming splatfests.
     if (upcomingSplatfests.length > 0) {
