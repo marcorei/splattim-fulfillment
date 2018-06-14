@@ -18,8 +18,13 @@ export interface Sub {
 }
 
 export interface Weapon {
-    image: string;
     id: string;
+    weapon: WeaponContent;
+}
+
+export interface WeaponContent {
+    id: string;
+    image: string;
     special: Special;
     sub: Sub;
     name: string;

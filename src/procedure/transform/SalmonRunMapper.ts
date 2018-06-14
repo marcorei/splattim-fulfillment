@@ -32,8 +32,8 @@ export function mapDetailToInfo(detail: Detail, now: number, dict:Dict, contentD
                 }
             }
             return {
-                name: contentDict.weapon(weapon),
-                image: getSplatnetResUrl(weapon.image)
+                name: contentDict.weapon(weapon.weapon),
+                image: getSplatnetResUrl(weapon.weapon.image)
             }
         })
     }
