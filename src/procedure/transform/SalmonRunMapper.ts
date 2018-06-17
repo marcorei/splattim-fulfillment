@@ -25,7 +25,7 @@ export function mapDetailToInfo(detail: Detail, now: number, dict:Dict, contentD
         timeString: secondsToTime(timeDiff),
         stageName: contentDict.coopStage(detail.stage),
         weapons: detail.weapons.map(weapon => {
-            if (isNullOrUndefined(weapon)) {
+            if (isNullOrUndefined(weapon) || isNullOrUndefined(weapon.weapon)) {
                 return {
                     name: dict.a_sr_004,
                     image: 'https://splatoon2.ink/assets/img/salmon-run-random-weapon.46415a.png'
