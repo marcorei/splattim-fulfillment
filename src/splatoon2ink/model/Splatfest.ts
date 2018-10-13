@@ -4,6 +4,8 @@ export interface Splatfests {
     jp: Region;
 }
 
+export type Result = ResultV1 | ResultV2
+
 export interface Region {
     festivals: Festival[];
     results: Result[];
@@ -60,32 +62,23 @@ export interface SpecialStage {
   name: string;
 }
 
-// Result
+// Result v1
 
-export interface Result {
-  num_participants: number;
-  summary: Summary;
-  team_scores: TeamScores;
+export interface ResultV1 {
+  festival_version: 1;
+  summary: SummaryV1;
   festival_id: number;
-  rates: Rates;
-  team_participants: TeamParticipants;
+  rates: RatesV1;
 }
 
-export interface Summary {
+export interface SummaryV1 {
   total: number;
   vote: number;
   team: number;
   solo: number;
 }
 
-export interface TeamScores {
-  alpha_solo: number;
-  alpha_team: number;
-  bravo_solo: number;
-  bravo_team: number;
-}
-
-export interface Rates {
+export interface RatesV1 {
   vote: Rate;
   team: Rate;
   solo: Rate;
@@ -96,13 +89,37 @@ export interface Rate {
   bravo: number;
 }
 
-export interface TeamParticipants {
-  alpha: number;
-  bravo: number;
-}
-
 export const regionKeyValues = {
   na: 'na',
   eu: 'eu',
   jp: 'jp'
+}
+
+// Result v2
+
+export interface ResultV2 {
+  festival_version: 2;
+  contribution_bravo: Contribution;
+  contribution_alpha: Contribution;
+  festival_id: number;
+  rates: RatesV2;
+  summary: SummaryV2;
+}
+
+export interface Contribution {
+  challenge: number;
+  regular: number;
+}
+
+export interface SummaryV2 {
+  total: number;
+  vote: number;
+  regular: number;
+  challenge: number;
+}
+
+export interface RatesV2 {
+  challenge: Rate;
+  vote: Rate;
+  regular: Rate;
 }
